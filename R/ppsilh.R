@@ -1,0 +1,75 @@
+#' Calculate Silhouette Width for Clustering and Block clustering using Cluster Membership Matrix
+#'
+#' This function calculates the silhouette width for each observation based on the clustering or block clustering results.
+#' The silhouette width is used to measure how similar an observation is to its own cluster compared
+#' to other clusters using Cluster membership Matrix (Posterior Probability Matrix).
+#'
+#' @param pp A matrix or list of matrices where each row represents an observation and each column represents a proximity measure
+#'   to different clusters. Typically, this matrix would be a membership matrix or dissimilarity matrix from clustering results or their variable names string in vector.
+#' @param pptype Character string indicating whether `pp` represents similarity ("sim") or dissimilarity ("dissim").
+#' @param silhmethod Character string indicating the silhouette calculation method: "pac" or "silh".
+#' @param clust_function Optional S3 function name (as a string) that produces the proximity measure matrix.
+#' @param ... Additional arguments passed to `clust_function`, if used.
+#'
+#' @return A list or two lists with the following components for row and column proximity measures:
+#' \itemize{
+#'   \item \code{widths}: A data frame containing the cluster assignments, nearest neighbor, and silhouette widths.
+#'   \item \code{clus.avg.widths}: A named vector of average silhouette widths for each cluster.
+#'   \item \code{avg.width}: The overall average silhouette width across all observations.
+#' }
+#' @return \code{block.shil.matrix} : A matrix containing silhout index of each data point from block clustering (if inputs are from block custering/ Bi-clustering/Coclustering).
+#' @export
+ppsilh <- function(pp,
+                 pptype = c("pp", "nlpp", "pd"),
+                 silhmethod = c("silh", "pac"),
+                 clust_function = NULL, ...) {
+  if (is.list(pp)) {
+    # Case 1: pp is a list of exactly two matrices with the same dimensions
+    if (length(pp) != 2) {
+      stop("When pp is a list, it must have exactly 2 elements.")
+    }
+    if (!all(sapply(pp, is.matrix))) {
+      stop("Both elements of pp must be matrices.")
+    }
+    if (pptype == "pp") {
+      mp
+    }
+    # Code block for list of two matrices
+    rowsilhobj <- silhobj(pp[[1]], pptype, silhmethod, clust_function, ...)
+    colsilhobj <- silhobj(pp[[2]], pptype, silhmethod, clust_function, ...)
+    out <- structure(list(rowsilhobj, colsilhobj), class = "bisilhobj")
+
+  } else if (is.character(pp) && length(pp) == 2) {
+    # Case 2: pp is a character vector of exactly two strings
+    # Code block for vector of two strings
+    rowsilhobj <- silhobj(pp[1], pptype, silhmethod, clust_function, ...)
+    colsilhobj <- silhobj(pp[2], pptype, silhmethod, clust_function, ...)
+    out <- structure(list(rowsilhobj, colsilhobj), class = "bisilhobj")
+
+  } else if (is.matrix(pp) || (is.character(pp) && length(pp) == 1)) {
+    # Case 3: pp is a single matrix OR a single string in a character vector
+    # Code block for single matrix or single string
+    out <- silhobj(pp, pptype, silhmethod, clust_function, ...)
+
+  } else {
+    # Invalid input case
+    stop("pp must be either:
+         - A list of two matrices with the same dimensions, or
+         - A character vector of exactly two strings, or
+         - A single matrix, or
+         - A single string in a character vector.")
+  }
+
+  return(out)
+}
+
+
+
+
+
+nlpp = function(pp){
+  out = -log(pp)
+  out
+}
+
+
