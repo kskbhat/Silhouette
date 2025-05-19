@@ -1,9 +1,15 @@
 Package: Silhouette
-Title: What the Package Does (One Line, Title Case)
+Title: Silhouette : R Package for all Silhouette cluster diagnoatics
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: c(person(given = "Shrikrishna",
+                      family = "Bhat K",
+                      role = c("aut", "cre","cph"),
+                      email = "skbhat.in@gmail.com"),
+               person(given = "Kiruthika",
+                      family = "C",
+                      role = "aut"))
+Maintainer: Shrikrishna Bhat K<skbhat.in@gmail.com>
+Description: Silhouette diagnoatics for clustering and block clustering for any clustering and block clustering.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
