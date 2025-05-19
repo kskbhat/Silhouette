@@ -21,6 +21,19 @@
 #' @references{
 #' Kaufman, L., & Rousseeuw, P. J. (1990). *Finding Groups in Data: An Introduction to Cluster Analysis*. Wiley.doi:10.1002/9780470316801
 #'  }
+#'
+#' @examples
+#' library(Silhouette)
+#' # Load the iris dataset
+#' data(iris)
+#' # Run k-means clustering (e.g., 3 clusters)
+#' kmeans_result <- kmeans(iris[, 1:4], centers = 3)
+#'
+#' # Compute distance matrix (obs x clusters)
+#' distance_matrix <- as.matrix(dist(rbind(kmeans_result$centers, iris[, 1:4])))[-(1:3), 1:3]
+#' out = silhobj(pm = distance_matrix,pmtype = "dissim")
+#' plot(out)
+#'
 #' @export
 silhobj <- function(pm,
                     pmtype = c("sim", "dissim"),
@@ -109,28 +122,6 @@ silhobj <- function(pm,
 #' @param print.summary A logical value indicating whether to print a summary of average silhouette widths for each cluster. Defaults to TRUE.
 #'
 #' @return A ggplot2 object representing the silhouette plot.
-#'
-#' @examples
-#' # Method 1:
-#' library(cluster)
-#' out <- fanny(iris[,-5], 3)
-#' silhout <- silhobj(out$membership)
-#' plot(silhout)
-#'
-#' library(mclust)
-#' out1 <- Mclust(iris[,-5], 3)
-#' silhout1 <- silhobj(out1$z)
-#' plot(silhout1)
-#'
-#' # Load the iris dataset
-#' data(iris)
-#' # Run k-means clustering (e.g., 3 clusters)
-#' kmeans_result <- kmeans(iris[, 1:4], centers = 3)
-#'
-#' # Compute distance matrix (obs x clusters)
-#' distance_matrix <- as.matrix(dist(rbind(kmeans_result$centers, iris[, 1:4])))[-(1:3), 1:3]
-#' out = silhobj(pm = distance_matrix,pmtype = "dissim")
-#'plot(out)
 #'
 #' @export
 plot.silhobj <- function(silhobj,

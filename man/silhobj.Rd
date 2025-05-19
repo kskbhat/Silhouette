@@ -49,17 +49,7 @@ The silhouette width is used to measure how similar an observation is to its own
 to other clusters.
 }
 \examples{
-# Method 1:
-library(cluster)
-out <- fanny(iris[,-5], 3)
-silhout <- silhobj(out$membership)
-plot(silhout)
-
-library(mclust)
-out1 <- Mclust(iris[,-5], 3)
-silhout1 <- silhobj(out1$z)
-plot(silhout1)
-
+library(Silhouette)
 # Load the iris dataset
 data(iris)
 # Run k-means clustering (e.g., 3 clusters)
