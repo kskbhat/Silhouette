@@ -56,9 +56,8 @@ silhobj <- function(pm,
     #################### Calculating pm when pm is a string ###########################
     clust_fun <- get(clust_function, mode = "function")
     clust_out <- clust_fun(...)  # Call the clustering function
-    pm <- clust_out[pm]
+    pm <- clust_out[[pm]]
   }
-
   # Ensure pm is a matrix at this point
   if (!is.matrix(pm)) {
     stop("pm must be a matrix after processing.")

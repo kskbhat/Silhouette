@@ -57,7 +57,7 @@ ppsilhobj <- function(pp,
     #################### Calculating pm when pm is a string ###########################
     clust_fun <- get(clust_function, mode = "function")
     clust_out <- clust_fun(...)  # Call the clustering function
-    pp <- clust_out[pp]
+    pp <- clust_out[[pp]]
   }
 
   # Ensure pm is a matrix at this point
