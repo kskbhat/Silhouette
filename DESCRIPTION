@@ -1,15 +1,17 @@
 Package: Silhouette
-Title: Silhouette : R Package for all Silhouette cluster diagnoatics
+Type: Package
+Title: Tools for Silhouette Cluster Diagnostics
 Version: 0.0.0.9000
 Authors@R: c(person(given = "Shrikrishna",
-                      family = "Bhat K",
-                      role = c("aut", "cre","cph"),
-                      email = "skbhat.in@gmail.com"),
-               person(given = "Kiruthika",
-                      family = "C",
-                      role = "aut"))
+           family = "Bhat K",
+           role = c("aut", "cre", "cph"),
+           email = "skbhat.in@gmail.com"),
+    person(given = "Kiruthika",
+           family = "C",
+           role = "aut"))
 Maintainer: Shrikrishna Bhat K<skbhat.in@gmail.com>
-Description: Silhouette diagnoatics for clustering and block clustering for any clustering and block clustering.
+Description: Provides functions for silhouette diagnostics in clustering and block clustering.
+    Supports both standard clustering and biclustering, with visualization and evaluation tools.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -18,3 +20,8 @@ Imports:
     dplyr,
     ggplot2,
     ggpubr
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
