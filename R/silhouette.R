@@ -46,8 +46,6 @@
 #' out1 <- silhouette(prox_matrix = "z", clust_fun = "Mclust", data = iris[, 1:4], G = 3)
 #' # Plot silhouette results
 #' plot(out1, label = FALSE, print.summary = TRUE)
-#'
-#'
 #' @export
 #' @import dplyr ggplot2 ggpubr
 silhouette <- function(prox_matrix,
