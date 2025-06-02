@@ -17,6 +17,8 @@
 #'   \item{avg.width}{A numeric value representing the overall average silhouette width across all observations.}
 #' }
 #'
+#' @seealso \code{\link{plot.Silhouette}}
+#'
 #' @references
 #' Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{Journal of Computational and Applied Mathematics}, 20, 53--65. \href{https://doi.org/10.1016/0377-0427(87)90125-7}{DOI:10.1016/0377-0427(87)90125-7}
 #'
@@ -28,6 +30,8 @@
 #'
 #' Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \href{https://doi.org/10.1007/s00357-008-9005-9}{DOI:10.1007/s00357-008-9005-9}
 #'
+#' Bhat, K.S., Kiruthika. Some density-based silhouette diagnostics for soft clustering algorithms. \emph{Communications in Statistics: Case Studies, Data Analysis and Applications}, 10(3–4), 221–238 (2024). \href{https://doi.org/10.1080/23737484.2024.2408534}{DOI:10.1080/23737484.2024.2408534}
+#'
 #' @examples
 #' # Example with iris dataset and k-means clustering
 #' # kmeans clustering dont have disimilarity measure in its output
@@ -36,19 +40,19 @@
 #'
 #' # Compute distance matrix (observations x clusters)
 #' distance_matrix <- as.matrix(dist(rbind(kmeans_result$centers, iris[, 1:4])))[-(1:3), 1:3]
-#' out <- silhouette(prox_matrix = distance_matrix, proximity_type = "dissimilarity")
+#' out <- Silhouette(prox_matrix = distance_matrix, proximity_type = "dissimilarity")
 #'
 #' # Plot silhouette results
 #' plot(out, label = FALSE, print.summary = TRUE)
 #'
 #' # Example with clustering function
-#' library(mclust)
-#' out1 <- silhouette(prox_matrix = "z", clust_fun = "Mclust", data = iris[, 1:4], G = 3)
+#' suppressPackageStartupMessages(library(mclust))
+#' out1 <- Silhouette(prox_matrix = "z", clust_fun = "Mclust", data = iris[, 1:4], G = 3)
 #' # Plot silhouette results
 #' plot(out1, label = FALSE, print.summary = TRUE)
 #' @export
-#' @import dplyr ggplot2 ggpubr
-silhouette <- function(prox_matrix,
+#' @import mclust
+Silhouette <- function(prox_matrix,
                        proximity_type = c("similarity", "dissimilarity"),
                        method = c("medoid", "pac"),
                        prob_matrix = NULL,
@@ -251,7 +255,7 @@ silhouette <- function(prox_matrix,
   cat("\n")
   cat("\nAvailable components:\n")
   print(names(result))
-  structure(result,class = "silhouette")
+  structure(result,class = "Silhouette")
 }
 
 
@@ -259,14 +263,14 @@ silhouette <- function(prox_matrix,
 #'
 #' Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics.
 #'
-#' @param x An object of class \code{"silhouette"}, typically the output of the \code{\link{silhouette}} function.
+#' @param x An object of class \code{"Silhouette"}, typically the output of the \code{\link{silhouette}} function.
 #' @param label Logical; if \code{TRUE}, the x-axis is labeled with observation names. Defaults to \code{FALSE}.
 #' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.
 #' @param ... Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}).
 #'
 #' @return A \code{ggplot2} object representing the silhouette plot.
 #'
-#' @seealso \code{\link{silhouette}}
+#' @seealso \code{\link{Silhouette}}
 #'
 #' @references
 #' Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{Journal of Computational and Applied Mathematics}, 20, 53--65. \href{https://doi.org/10.1016/0377-0427(87)90125-7}{DOI:10.1016/0377-0427(87)90125-7}
@@ -280,17 +284,17 @@ silhouette <- function(prox_matrix,
 #' Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \href{https://doi.org/10.1007/s00357-008-9005-9}{DOI:10.1007/s00357-008-9005-9}
 #'
 #' @examples
-#' # See examples in ?silhouette
+#' # See examples in ?Silhouette
 #'
 #' @export
-#' @method plot silhouette
+#' @method plot Silhouette
 #' @import dplyr ggplot2 ggpubr
-plot.silhouette <- function(x,
+plot.Silhouette <- function(x,
                             label = FALSE,
                             print.summary = TRUE,
                             ...) {
-  if (!inherits(x, "silhouette")) {
-    stop("Argument 'x' must be an object of class 'silhouette'.")
+  if (!inherits(x, "Silhouette")) {
+    stop("Argument 'x' must be an object of class 'Silhouette'.")
   }
 
   df <- as.data.frame(x$widths)
