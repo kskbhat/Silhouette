@@ -5,10 +5,12 @@ Version: 0.0.0.9000
 Authors@R: c(person(given = "Shrikrishna",
            family = "Bhat K",
            role = c("aut", "cre", "cph"),
-           email = "skbhat.in@gmail.com"),
+           email = "skbhat.in@gmail.com",
+           comment = c(ORCID = "0009-0000-6180-5783")),
     person(given = "Kiruthika",
            family = "C",
-           role = "aut"))
+           role = "aut",
+           comment = c(ORCID = "0000-0001-9655-702X")))
 Maintainer: Shrikrishna Bhat K<skbhat.in@gmail.com>
 Description: Provides functions for silhouette diagnostics in clustering and block clustering.
     Supports both standard clustering and biclustering, with visualization and evaluation tools.
@@ -23,5 +25,6 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    ppclust
 VignetteBuilder: knitr

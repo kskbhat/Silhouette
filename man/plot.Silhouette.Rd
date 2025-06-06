@@ -4,14 +4,16 @@
 \alias{plot.Silhouette}
 \title{Plot Silhouette Analysis Results}
 \usage{
-\method{plot}{Silhouette}(x, label = FALSE, print.summary = TRUE, ...)
+\method{plot}{Silhouette}(x, label = FALSE, summary.legend = TRUE, grayscale = FALSE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{silhouette}} function.}
+\item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} function.}
 
-\item{label}{Logical; if \code{TRUE}, the x-axis is labeled with observation names. Defaults to \code{FALSE}.}
+\item{label}{Logical; if \code{TRUE}, the x-axis is labeled with observation names from the input data and titled "row index". Defaults to \code{FALSE}.}
 
-\item{print.summary}{Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.}
+\item{summary.legend}{Logical; if \code{TRUE}, prints a summary of average silhouette widths and sizes for each cluster in legend ("Cluster (Size): Width"). If \code{FALSE}, the legend shows only cluster numbers. Defaults to \code{TRUE}.}
+
+\item{grayscale}{Logical; if \code{TRUE}, the plot uses a grayscale color palette for clusters. If \code{FALSE}, uses the default or specified color palette. Defaults to \code{FALSE}.}
 
 \item{...}{Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}).}
 }
@@ -37,5 +39,5 @@ Campello, R. J., & Hruschka, E. R. (2006). A fuzzy extension of the silhouette w
 Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \href{https://doi.org/10.1007/s00357-008-9005-9}{DOI:10.1007/s00357-008-9005-9}
 }
 \seealso{
-\code{\link{Silhouette}}
+\code{\link{Silhouette}}, \code{\link{soft_silhouette}}
 }
