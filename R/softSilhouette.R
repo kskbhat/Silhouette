@@ -1,20 +1,24 @@
 #' Calculate Silhouette Width for Soft Clustering Algorithms
 #'
-#' Computes the silhouette width for each observation based on soft clustering results, using cluster membership probabilities. The silhouette width measures how similar an observation is to its own cluster compared to other clusters, ranging from -1 to 1, where higher values indicate better cluster cohesion and separation.
+#' Computes the silhouette width for each observation based on soft clustering results, leveraging cluster membership probabilities to assess cluster cohesion and separation. The silhouette width, ranging from -1 to 1, enables comparison of the stability and quality of different soft clustering methods, with higher values indicating better-defined clusters.
 #'
 #' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"z"} for \code{Mclust}).
 #' @param prob_type Character string specifying the type of membership matrix in \code{prob_matrix}. Options are:
 #' \describe{
-#'   \item{\code{"pp"}}{Posterior probabilities (non-negative, typically summing to 1 per row).}
-#'   \item{\code{"nlpp"}}{Negative log of posterior probabilities (non-positive, treated as dissimilarities).}
+#'   \item{\code{"pp"}}{Posterior probabilities \eqn{[\gamma_{ik}]_{n \times K}} (non-negative, typically summing to 1 per row).}
+#'   \item{\code{"nlpp"}}{Negative log of posterior probabilities \eqn{[-\ln\gamma_{ik}]_{n \times K}} (non-positive, treated as dissimilarities).}
 #'   \item{\code{"pd"}}{Probability distribution (normalized probabilities relative to cluster totals).}
 #' }
 #' Defaults to \code{"pp"}.
-#' @param method Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"medoid"}.
+#' @param method Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"pac"}.
 #' @param average Character string specifying the type of average silhouette width calculation. Options are \code{"crisp"} (simple average) or \code{"fuzzy"} (weighted average based on membership differences). Defaults to \code{"crisp"}.
 #' @param a Numeric value controlling the weight calculation based on membership difference. Must be positive. Defaults to \code{2}.
+#' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.
 #' @param clust_fun Optional function object specifying a clustering function that produces the probability matrix, such as \code{Mclust} or \code{fanny}. If provided, \code{prob_matrix} must be the name of the matrix component in the clustering output. Defaults to \code{NULL}.
 #' @param ... Additional arguments passed to \code{clust_fun}, such as \code{G} for \code{Mclust} or \code{k} for \code{fanny}.
+#'
+#' @details
+#' Read \doi{10.1080/23737484.2024.2408534}
 #'
 #' @return A list of class \code{"Silhouette"} with the following components:
 #' \describe{
@@ -23,42 +27,40 @@
 #'   \item{avg.width}{A numeric value representing the overall average silhouette width across all observations.}
 #' }
 #'
-#' @seealso \code{\link{Silhouette}}, \code{\link{plot.Silhouette}}
+#' @seealso \code{\link{Silhouette}},\code{\link{plot.Silhouette}}
 #'
 #' @references
-#' Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{Journal of Computational and Applied Mathematics}, 20, 53--65. \href{https://doi.org/10.1016/0377-0427(87)90125-7}{DOI:10.1016/0377-0427(87)90125-7}
 #'
-#' Van der Laan, M., Pollard, K., & Bryan, J. (2003). A new partitioning around medoids algorithm. \emph{Journal of Statistical Computation and Simulation}, 73(8), 575--584. \href{https://doi.org/10.1080/0094965031000136012}{DOI:10.1080/0094965031000136012}
+#' Raymaekers, J., & Rousseeuw, P. J. (2022). Silhouettes and quasi residual plots for neural nets and tree-based classifiers. \emph{Journal of Computational and Graphical Statistics}, 31(4), 1332--1343. \doi{10.1080/10618600.2022.2050249}
 #'
-#' Raymaekers, J., & Rousseeuw, P. J. (2022). Silhouettes and quasi residual plots for neural nets and tree-based classifiers. \emph{Journal of Computational and Graphical Statistics}, 31(4), 1332--1343. \href{https://doi.org/10.1080/10618600.2022.2050249}{DOI:10.1080/10618600.2022.2050249}
-#'
-#' Campello, R. J., & Hruschka, E. R. (2006). A fuzzy extension of the silhouette width criterion for cluster analysis. \emph{Fuzzy Sets and Systems}, 157(21), 2858--2875. \href{https://doi.org/10.1016/j.fss.2006.07.006}{DOI:10.1016/j.fss.2006.07.006}
-#'
-#' Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \href{https://doi.org/10.1007/s00357-008-9005-9}{DOI:10.1007/s00357-008-9005-9}
+#' Bhat, K.S., Kiruthika. Some density-based silhouette diagnostics for soft clustering algorithms. \emph{Communications in Statistics: Case Studies, Data Analysis and Applications}, 10(3–4), 221–238 (2024). \doi{10.1080/23737484.2024.2408534}
 #'
 #' @examples
-#' # Example with synthetic probability matrix
-#' set.seed(123)
-#' prob_matrix <- matrix(runif(150 * 3), nrow = 150, ncol = 3)
-#' prob_matrix <- prob_matrix / rowSums(prob_matrix) # Normalize to sum to 1
-#' out <- softSilhouette(prob_matrix = prob_matrix, prob_type = "pp")
-#' plot(out)
-#'
+
 #' # Example with ppclust (if available)
-#' if (requireNamespace("ppclust", quietly = TRUE)) {
-#'   data(iris)
-#'   fcm_result <- ppclust::fcm(iris[, 1:4], 3)
-#'   out <- softSilhouette(prob_matrix = fcm_result$u, prob_type = "pp")
-#'   plot(out)
-#' } else {
-#'   message("Install 'ppclust' to run this example: install.packages('ppclust')")
-#' }
+#'  data(iris)
+#'  # install.packages("ppclust")
+#'  if (requireNamespace("ppclust", quietly = TRUE)) {
+#'    fcm_result <- ppclust::fcm(iris[, 1:4], 3)
+#'    out_fcm <- softSilhouette(prob_matrix = fcm_result$u)
+#'    plot(out_fcm)
+#'  } else {
+#'    message("Install 'ppclust' to run this example: install.packages('ppclust')")
+#'  }
+#'  if (requireNamespace("ppclust", quietly = TRUE)) {
+#'    fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
+#'    out_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
+#'    plot(out_fcm2)
+#'  } else {
+#'    message("Install 'ppclust' to run this example: install.packages('ppclust')")
+#'  }
 #' @export
 softSilhouette <- function(prob_matrix,
                            prob_type = c("pp", "nlpp", "pd"),
-                           method = c("medoid", "pac"),
+                           method = c("pac", "medoid"),
                            average = c("crisp", "fuzzy"),
                            a = 2,
+                           print.summary = TRUE,
                            clust_fun = NULL, ...) {
   # Validate prob_matrix and clust_fun
   if (is.null(clust_fun)) {
@@ -157,7 +159,8 @@ softSilhouette <- function(prob_matrix,
     prox_matrix = prox_matrix,
     proximity_type = proximity_type,
     method = method,
-    a = a
+    a = a,
+    print.summary = print.summary
   )
 
   # Set prob_matrix for fuzzy average

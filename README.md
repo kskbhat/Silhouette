@@ -1,45 +1,63 @@
+Silhouette: Tools for Silhouette Cluster Diagnostics
+The Silhouette package provides tools for silhouette-based diagnostics in clustering, including standard, soft, and multi-way (e.g., biclustering, triclustering) clustering. It computes silhouette widths to evaluate cluster quality, supports both crisp and fuzzy clustering, and includes visualization functions to assess cohesion and separation. Ideal for researchers and data scientists analyzing clustering results.
+Installation
+Install from CRAN (once accepted):
+install.packages("Silhouette")
 
-# Installation and Help for the `Silhouette` Package
-
-## Installing the `Silhouette` Package from GitHub
-
-To install the development version of the `Silhouette` package from
-GitHub, you will need the `devtools` package. Follow the steps below to
-ensure you have `devtools` installed and then use it to install
-`Silhouette`.
-
-### Step 1: Install `devtools` (if not already installed)
-
-If you do not have the `devtools` package installed, you can install it
-using the following R code:
-
-``` r
+Or install the development version from GitHub:
+# Install devtools if needed
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
-```
+devtools::install_github("yourusername/Silhouette")
 
-### Step 2: Install `blockclusterPDQ` from GitHub
+Usage
+library(Silhouette)
 
-Once `devtools` is installed, you can install the `Silhouette`
-package from GitHub with the following command:
+# Example with synthetic probability matrix for soft clustering
+set.seed(123)
+prob_matrix <- matrix(runif(150 * 3), nrow = 150, ncol = 3)
+prob_matrix <- prob_matrix / rowSums(prob_matrix)
+out <- softSilhouette(prob_matrix = prob_matrix)
+plot(out)
 
-``` r
-devtools::install_github("kskbhat/Silhouette", quiet = TRUE, build_vignettes = TRUE)
-```
+Features
 
-### Step 3: Access Package Documentation
+Compute silhouette widths for standard (Silhouette), soft (softSilhouette), and multi-way clustering (extSilhouette).
+Support for crisp and fuzzy clustering with methods like pac and medoid.
+Visualize cluster quality with customizable silhouette plots (plot.Silhouette).
+Compatible with clustering functions like ppclust::fcm and blockcluster::coclusterContinuous.
 
-After installation, you can access detailed help and function
-documentation for the `Silhouette` package by running:
+Release Notes
+Version 0.9.2 (2025-06-19) - Resubmission to CRAN
 
-``` r
-help(package = "Silhouette")
-```
+Bugfixes:
+Reduced example runtime in Silhouette function to under 10 seconds for CRAN compliance.
+Corrected LICENSE file naming (renamed from LICENSE.md to LICENSE) and removed from .Rbuildignore.
 
-This command will open the comprehensive help files and function
-documentation, providing you with all the necessary information to use
-the `Silhouette` package effectively.
 
-By following these steps, you can easily install and start using the
-`Silhouette` package for your block clustering needs.
+Improvements:
+Added conditional checks for suggested packages (ppclust, blockcluster) to ensure robust examples.
+Enhanced documentation with clearer Rd files and additional examples.
+
+
+Notes:
+Addressed CRAN feedback from initial submission of version 0.9.1.
+No vignettes added yet; planned for future releases.
+
+
+
+Version 0.9.1 (2025-05-01) - Initial CRAN Submission
+
+Initial release with core functions: Silhouette, softSilhouette, extSilhouette, and plot.Silhouette.
+Support for silhouette diagnostics in standard, soft, and multi-way clustering.
+Comprehensive documentation and examples using the iris dataset.
+Dependencies: dplyr, ggplot2, ggpubr, methods.
+Suggested packages: ppclust, blockcluster, knitr, rmarkdown, testthat.
+
+Contributing
+Contributions are welcome! Please submit issues or pull requests on the GitHub repository.
+License
+This package is licensed under the Apache License (>= 2.0). See the LICENSE file for details.
+Contact
+Maintainer: Shrikrishna Bhat K (skbhat.in@gmail.com)

@@ -1,7 +1,7 @@
 Package: Silhouette
 Type: Package
 Title: Tools for Silhouette Cluster Diagnostics
-Version: 0.0.0.9000
+Version: 0.9.1
 Authors@R: c(person(given = "Shrikrishna",
            family = "Bhat K",
            role = c("aut", "cre", "cph"),
@@ -12,19 +12,19 @@ Authors@R: c(person(given = "Shrikrishna",
            role = "aut",
            comment = c(ORCID = "0000-0001-9655-702X")))
 Maintainer: Shrikrishna Bhat K<skbhat.in@gmail.com>
-Description: Provides functions for silhouette diagnostics in clustering and block clustering.
-    Supports both standard clustering and biclustering, with visualization and evaluation tools.
-License: MIT + file LICENSE
+Description: Offers tools for silhouette-based diagnostics in clustering, including standard clustering and n-way tensor clustering (e.g., biclustering, triclustering). Provides functions for computing silhouette widths, extended silhouette widths for multi-way clustering, and visualization tools to evaluate cluster quality and cohesion.
+License: Apache License (>= 2) | file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     dplyr,
     ggplot2,
-    ggpubr
+    ggpubr,
+    methods
 Suggests:
     knitr,
     rmarkdown,
     testthat,
-    ppclust
-VignetteBuilder: knitr
+    ppclust,
+    blockcluster
