@@ -11,7 +11,7 @@ Authors@R: c(person(given = "Shrikrishna",
            family = "C",
            role = "aut",
            comment = c(ORCID = "0000-0001-9655-702X")))
-Maintainer: Shrikrishna Bhat K<skbhat.in@gmail.com>
+Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
 Description: Offers tools for silhouette-based diagnostics in clustering, including standard clustering and n-way tensor clustering (e.g., biclustering, triclustering). Provides functions for computing silhouette widths, extended silhouette widths for multi-way clustering, and visualization tools to evaluate cluster quality and cohesion.
 License: Apache License (>= 2) | file LICENSE
 Encoding: UTF-8
