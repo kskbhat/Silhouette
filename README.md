@@ -4,7 +4,7 @@
 
 # Silhouette: Tools for Silhouette Cluster Diagnostics
 
-The **Silhouette** package provides tools for silhouette-based diagnostics in clustering, including standard, soft, and multi-way (e.g., biclustering, triclustering) clustering. It computes silhouette widths to evaluate cluster quality, supports both crisp and fuzzy clustering, and includes visualization functions to assess cohesion and separation. This package is ideal for researchers and data scientists analyzing clustering results.
+The **Silhouette** package provides tools for silhouette-based diagnostics in clustering, including standard, soft, and multi-way (e.g., biclustering, triclustering) clustering. It computes silhouette widths to evaluate cluster quality, supports both crisp and fuzzy clustering, and includes visualisation functions to assess cohesion and separation. This package is ideal for researchers and data scientists analysing clustering results.
 
 ---
 
@@ -52,7 +52,7 @@ plot(out)
   * Soft clustering (`softSilhouette`)
   * Multi-way clustering (`extSilhouette`)
 * Support for **crisp** and **fuzzy** clustering with methods like `pac` and `medoid`
-* Visualize cluster quality with customizable silhouette plots (`plot.Silhouette`)
+* Visualise cluster quality with customizable silhouette plots (`plot.Silhouette`)
 * Compatible with any clustering functions that return distance or membership matrices, such as:
   * `ppclust::fcm`
   * `blockcluster::coclusterContinuous`
