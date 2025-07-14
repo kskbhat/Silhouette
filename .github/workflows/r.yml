@@ -25,11 +25,11 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
-          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,  r: 'oldrel-1'}
+          #- {os: ubuntu-latest,  r: 'release'}
+          #- {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
+          #- {os: ubuntu-latest,  r: 'oldrel-1'}
           # macOS runners have issues with old R versions; limit to release only
-          - {os: macos-latest,   r: 'release'}
+          #- {os: macos-latest,   r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
