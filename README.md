@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 
+=======
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 # Silhouette: Tools for Silhouette Cluster Diagnostics
 
 The **Silhouette** package provides tools for silhouette-based diagnostics in clustering, including standard, soft, and multi-way (e.g., biclustering, triclustering) clustering. It computes silhouette widths to evaluate cluster quality, supports both crisp and fuzzy clustering, and includes visualisation functions to assess cohesion and separation. This package is ideal for researchers and data scientists analysing clustering results.
