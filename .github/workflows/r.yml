@@ -19,10 +19,12 @@ permissions:
 
 jobs:
   R-CMD-check:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         r-version: ['3.6.3', '4.1.1']
 
     steps:
@@ -33,7 +35,7 @@ jobs:
         with:
           r-version: ${{ matrix.r-version }}
 
-      - name: Install system dependencies
+      - name: Install dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
