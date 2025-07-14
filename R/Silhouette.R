@@ -1,48 +1,77 @@
 #' Calculate Silhouette Width for Clustering
 #'
-#' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to other clusters. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
+#' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearesh neighbour cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 #'
-#' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string.
+#' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).
 #' @param proximity_type Character string specifying the type of proximity measure in \code{prox_matrix}. Options are \code{"similarity"} (higher values indicate closer proximity) or \code{"dissimilarity"} (lower values indicate closer proximity). Defaults to \code{"dissimilarity"}.
 #' @param method Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"medoid"}.
-#' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{fcm}). When not \code{NULL}, fuzzy silhouette width is calculated. Defaults to \code{NULL} for crisp silhouette.
-#' @param a Numeric value controlling the weight calculation based on membership difference for fuzzy silhouettes. Must be positive. Defaults to \code{2}.
+#' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}). When not \code{NULL}, fuzzy silhouette width is calculated. Defaults to \code{NULL} for crisp silhouette.
+#' @param a Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.
+#' @param sort Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.
 #' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.
-#' @param clust_fun Optional S3 or S4 function object specifying a clustering function that produces the proximity measure matrix. For example, \code{fanny}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"membership"} for \code{fanny} when \code{proximity_type = "similarity"}). Defaults to \code{NULL}.
-#' @param ... Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{fcm}.
+#' @param clust_fun Optional S3 or S4 function object or function as character string specifying a clustering function that produces the proximity measure matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"d"} for \code{\link[ppclust]{fcm}} when \code{proximity_type = "dissimilarity"}). Defaults to \code{NULL}.
+#' @param ... Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{\link[ppclust]{fcm}}.
 #'
 #' @details
-#' The `Silhouette` function employs the Simplified Silhouette method introduced by Van der Laan et al. (2003), differing from the original silhouette method proposed by Rousseeuw (1987).
+#' The `Silhouette` function employs the Simplified Silhouette method introduced by Van der Laan et al. (2003),
+#' differing from the original silhouette method proposed by Rousseeuw (1987).
 #'
-#' It evaluates clustering quality using a proximity matrix, denoted as \eqn{\Delta = [\delta_{ik}]_{n \times K}} for dissimilarity measures or \eqn{\Delta' = [\delta'_{ik}]_{n \times K}} for similarity measures. Here, \eqn{i = 1, \ldots, n} represents the number of observations, and \eqn{k = 1, \ldots, K} denotes the number of clusters. The elements \eqn{\delta_{ik}} indicate dissimilarity (e.g., distance) between observation \eqn{i} and cluster \eqn{k}, while \eqn{\delta'_{ik}} represent similarity between observation with the cluster \eqn{k}.
+#' It evaluates clustering quality using a proximity matrix, denoted as
+#' \eqn{\Delta = [\delta_{ik}]_{n \times K}} for dissimilarity measures or
+#' \eqn{\Delta' = [\delta'_{ik}]_{n \times K}} for similarity measures.
+#' Here, \eqn{i = 1, \ldots, n} represents the number of observations, and
+#' \eqn{k = 1, \ldots, K} denotes the number of clusters. The elements
+#' \eqn{\delta_{ik}} indicate dissimilarity (e.g., distance) between observation \eqn{i} and cluster \eqn{k},
+#' while \eqn{\delta'_{ik}} represent similarity between observation \eqn{i} and cluster \eqn{k}.
 #'
-#' The silhouette width \eqn{S(x_i)} for observation \eqn{i} is calculated based on the proximity type. For dissimilarity measures, it is given by:
-#' \deqn{S(x_i) = \dfrac{(\min_{k' \neq k} \delta_{ik'}) - \delta_{ik}}{N(x_i)},}
-#' where \eqn{\min_{k' \neq k} \delta_{ik'}} is the smallest dissimilarity to any other cluster \eqn{k' \neq k}. For similarity measures, it is:
-#' \deqn{S(x_i) = \dfrac{\delta'_{ik} - (\max_{k' \neq k} \delta'_{ik'})}{N(x_i)},}
-#' where \eqn{\max_{k' \neq k} \delta'_{ik'}} is the largest similarity to any other cluster and \eqn{N(x_i)} is the normaliser.
+#' The silhouette width \eqn{S(x_i)} for observation \eqn{i} is calculated based on the proximity type.
 #'
-#' The Normaliser depends on the `method` argument:
+#' For **dissimilarity** measures:
+#' \deqn{
+#'   S(x_i) = \dfrac{(\min_{k' \neq k} \delta_{ik'}) - \delta_{ik}}{N(x_i)},
+#' }
+#' where \eqn{\min_{k' \neq k} \delta_{ik'}} is the smallest dissimilarity to any other cluster \eqn{k' \neq k}.
 #'
-#' for `medoid`, it is \eqn{\max(\delta_{ik}, \min_{k' \neq k} \delta_{ik'})} (dissimilarity) or \eqn{\max(\delta'_{ik}, \max_{k' \neq k} \delta'_{ik'})} (similarity);
-#' for `pac`, it is \eqn{\delta_{ik} + \min_{k' \neq k} \delta_{ik'}} (dissimilarity) or \eqn{\delta'_{ik} + \max_{k' \neq k} \delta'_{ik'}} (similarity).
+#' For **similarity** measures:
+#' \deqn{
+#'   S(x_i) = \dfrac{\delta'_{ik} - (\max_{k' \neq k} \delta'_{ik'})}{N(x_i)},
+#' }
+#' where \eqn{\max_{k' \neq k} \delta'_{ik'}} is the largest similarity to any other cluster, and
+#' \eqn{N(x_i)} is the normaliser.
 #'
-#' When `prob_matrix` is `NULL`, the function computes the crisp overall silhouette index \eqn{CS} as:
-#' \deqn{CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i).}
+#' The **Normaliser** depends on the `method` argument:
+#'
+#' - For `medoid`:
+#'   - Dissimilarity: \eqn{\max(\delta_{ik}, \min_{k' \neq k} \delta_{ik'})}
+#'   - Similarity:    \eqn{\max(\delta'_{ik}, \max_{k' \neq k} \delta'_{ik'})}
+#'
+#' - For `pac`:
+#'   - Dissimilarity: \eqn{\delta_{ik} + \min_{k' \neq k} \delta_{ik'}}
+#'   - Similarity:    \eqn{\delta'_{ik} + \max_{k' \neq k} \delta'_{ik'}}
+#'
+#' When `prob_matrix` is `NULL`, the function computes the **crisp overall silhouette index** \eqn{CS} as:
+#' \deqn{
+#'   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i).
+#' }
 #' This represents the average silhouette width across all observations, providing a measure of overall clustering quality.
 #'
-#' If `prob_matrix` is provided, it is denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}}, where \eqn{\gamma_{ik}} represents the membership probability of observation \eqn{i} to cluster \eqn{k}. The fuzzy silhouette index \eqn{FS} is then calculated as:
-#' \deqn{FS = \frac{\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i)}{\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}},}
-#' where \eqn{\alpha} (set by the argument `a`) controls the weighting based on membership differences. Higher \eqn{\alpha} values emphasize observations with more confident cluster assignments, accounting for uncertainty in fuzzy clustering.
-#'
-#' @return A list of class \code{"silhouette"} with the following components:
-#' \describe{
-#'   \item{widths}{A data frame containing cluster assignments, nearest neighbor clusters, and silhouette widths for each observation.}
-#'   \item{clus.avg.widths}{A named numeric vector of average silhouette widths per cluster.}
-#'   \item{avg.width}{A numeric value representing the overall average silhouette width across all observations.}
+#' If `prob_matrix` is provided, it is denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+#' where \eqn{\gamma_{ik}} represents the membership probability of observation \eqn{i} to cluster \eqn{k}.
+#' The **fuzzy silhouette index** \eqn{FS} is then calculated as:
+#' \deqn{
+#'   FS = \frac{\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i)}
+#'             {\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}},
 #' }
+#' where \eqn{\alpha} (set by the argument `a`) controls the weighting based on membership differences.
+#' Higher \eqn{\alpha} values emphasize observations with more confident cluster assignments,
+#' accounting for uncertainty in fuzzy clustering.
 #'
-#' @seealso \code{\link{softSilhouette}}, \code{\link{plot.Silhouette}}
+#' @return A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
+#' \describe{
+#'   \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
+#'   \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+#' }
+#' @seealso \code{\link{softSilhouette}}, \code{\link{plotSilhouette}}
 #'
 #' @references
 #' Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{Journal of Computational and Applied Mathematics}, 20, 53--65. \doi{10.1016/0377-0427(87)90125-7}
@@ -53,47 +82,59 @@
 #'
 #' Campello, R. J., & Hruschka, E. R. (2006). A fuzzy extension of the silhouette width criterion for cluster analysis. \emph{Fuzzy Sets and Systems}, 157(21), 2858--2875. \doi{10.1016/j.fss.2006.07.006}
 #'
-#' Bhat, K.S., Kiruthika. Some density-based silhouette diagnostics for soft clustering algorithms. \emph{Communications in Statistics: Case Studies, Data Analysis and Applications}, 10(3–4), 221–238 (2024). \doi{10.1080/23737484.2024.2408534}
+#' Bhat Kapu, S., & Kiruthika. (2024). Some density-based silhouette diagnostics for soft clustering algorithms. Communications in Statistics: Case Studies, Data Analysis and Applications, 10(3-4), 221-238. \doi{10.1080/23737484.2024.2408534}
 #'
 #' @examples
 #' # Standard silhouette with k-means on iris dataset
 #' data(iris)
-#' kmeans_result <- kmeans(iris[, 1:4], centers = 3)
-#' # Compute distance matrix
-#' dist_mat <- as.matrix(dist(rbind(kmeans_result$centers,
-#'                                 iris[, 1:4])))[-(1:3), 1:3]
-#' out <- Silhouette(prox_matrix = dist_mat)
-#' plot(out)
-#'
-#'   # Scree plot for optimal clusters (2 to 7)
+#' # Crisp Silhouette with k-means
+#' out = kmeans(iris[,-5],3)
+#' if (requireNamespace("ppclust", quietly = TRUE)) {
+#' library(proxy)
+#' dist = proxy::dist(iris[,-5],out$centers)
+#' silh_out = Silhouette(dist)
+#' plot(silh_out)
+#' } else {
+#'   message("Install 'ppclust': install.packages('ppclust')")
+#' }
+#' \donttest{
+#' # Scree plot for optimal clusters (2 to 7)
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
 #'   library(ppclust)
-#'   data(iris)
 #'   avg_sil_width <- numeric(6)
 #'   for (k in 2:7) {
-#'     avg_sil_width[k-1] <- Silhouette(
+#'     out <- Silhouette(
 #'       prox_matrix = "d",
 #'       proximity_type = "dissimilarity",
 #'       prob_matrix = "u",
 #'       clust_fun = ppclust::fcm,
 #'       x = iris[, 1:4],
 #'       centers = k,
-#'       print.summary = FALSE
-#'     )$avg.width
+#'       print.summary = FALSE,
+#'       sort = TRUE
+#'     )
+#'     # Compute average silhouette width from widths
+#'     avg_sil_width[k-1] = summary(out,print.summary = FALSE)$avg.width
 #'   }
-#'   plot(avg_sil_width, type = "o",
-#'        ylab = "Overall Silhouette Width",
-#'        xlab = "Number of Clusters",
-#'        main = "Scree Plot")
+#'   plot(avg_sil_width,
+#'     type = "o",
+#'     ylab = "Overall Silhouette Width",
+#'     xlab = "Number of Clusters",
+#'     main = "Scree Plot"
+#'   )
 #' } else {
 #'   message("Install 'ppclust': install.packages('ppclust')")
 #' }
+#' }
+#'
 #' @export
+#' @import dplyr
 Silhouette <- function(prox_matrix,
-                       proximity_type = c("dissimilarity","similarity"),
+                       proximity_type = c("dissimilarity", "similarity"),
                        method = c("medoid", "pac"),
                        prob_matrix = NULL,
                        a = 2,
+                       sort = FALSE,
                        print.summary = TRUE,
                        clust_fun = NULL, ...) {
   # Validate prox_matrix and clust_fun
@@ -104,7 +145,7 @@ Silhouette <- function(prox_matrix,
     if (ncol(prox_matrix) < 2) {
       stop("prox_matrix must have at least two columns (clusters).")
     }
-  } else {  # clust_fun is not NULL
+  } else { # clust_fun is not NULL
     if (!is.character(prox_matrix) || length(prox_matrix) != 1) {
       stop("When clust_fun is not NULL, prox_matrix must be a single string naming a matrix component.")
     }
@@ -117,7 +158,7 @@ Silhouette <- function(prox_matrix,
       clust_fun <- if (exists(clust_fun, mode = "function")) {
         get(clust_fun, mode = "function")
       } else if (isGeneric(clust_fun)) {
-        getMethod(clust_fun, "ANY")  # Adjust signature if needed
+        getMethod(clust_fun, "ANY") # Adjust signature if needed
       } else {
         stop("Function '", clust_fun, "' not found")
       }
@@ -144,8 +185,8 @@ Silhouette <- function(prox_matrix,
       }
     }
 
-    # Extract the matrix (S3 or S4)
-    if(!is.null(prob_matrix)){
+    # Extract prob_matrix (S3 or S4)
+    if (!is.null(prob_matrix)) {
       prob_matrix <- if (isS4(clust_out)) {
         if (prob_matrix %in% slotNames(clust_out)) {
           slot(clust_out, prob_matrix)
@@ -169,7 +210,7 @@ Silhouette <- function(prox_matrix,
     stop("Extracted prox_matrix must have at least two columns (clusters).")
   }
   # Ensure prob_matrix is a numeric matrix after extraction
-  if(!is.null(prob_matrix)){
+  if (!is.null(prob_matrix)) {
     if (!is.matrix(prob_matrix) || !is.numeric(prob_matrix)) {
       stop("Extracted prob_matrix must be a numeric matrix.")
     }
@@ -197,11 +238,11 @@ Silhouette <- function(prox_matrix,
 
   # Determine cluster assignments
   if (proximity_type == "similarity") {
-    cluster <- apply(prox_matrix, 1, maxn, n = 1)  # Get cluster assignment
-    neighbor <- apply(prox_matrix, 1, maxn, n = 2)  # Get second-highest assignment
-  } else {  # proximity_type == "dissimilarity"
-    cluster <- apply(prox_matrix, 1, minn, n = 1)  # Get cluster assignment
-    neighbor <- apply(prox_matrix, 1, minn, n = 2)  # Get second-lowest assignment
+    cluster <- apply(prox_matrix, 1, maxn, n = 1) # Get cluster assignment
+    neighbor <- apply(prox_matrix, 1, maxn, n = 2) # Get second-highest assignment
+  } else { # proximity_type == "dissimilarity"
+    cluster <- apply(prox_matrix, 1, minn, n = 1) # Get cluster assignment
+    neighbor <- apply(prox_matrix, 1, minn, n = 2) # Get second-lowest assignment
   }
 
   # Initialize silhouette width vector
@@ -228,57 +269,67 @@ Silhouette <- function(prox_matrix,
       }
     }
     if (!is.null(prob_matrix)) {
-      weight[i] <- (prob_matrix[i, cluster[i]] - prob_matrix[i, neighbor[i]]) ^ a  # weight
+      weight[i] <- (prob_matrix[i, cluster[i]] - prob_matrix[i, neighbor[i]])^a # weight
     }
-  }
-
-  # Calculate weighted silhouette for fuzzy average
-  if (!is.null(prob_matrix)) {
-    sil_weight <- weight * sil_width
   }
 
   # Create output data
   if (is.null(prob_matrix)) {
-    widths <- data.frame(cluster = cluster,
-                         neighbor = neighbor,
-                         sil_width = sil_width)
+    widths <- data.frame(
+      cluster = cluster,
+      neighbor = neighbor,
+      sil_width = sil_width
+    )
   } else {
-    widths <- data.frame(cluster = cluster,
-                         neighbor = neighbor,
-                         weight = weight,
-                         sil_width = sil_width)
+    widths <- data.frame(
+      cluster = cluster,
+      neighbor = neighbor,
+      weight = weight,
+      sil_width = sil_width
+    )
+  }
+  # Sort widths if sort = TRUE
+  if (sort) {
+    # Initialize variables to NULL
+    original_name <- NULL
+    widths <- widths %>% dplyr::mutate(original_name = row.names(widths)) %>%
+      dplyr::arrange(cluster, dplyr::desc(sil_width))
+    rownames(widths) = widths$original_name
+    widths <- subset(widths, select = -original_name)
   }
 
-  # Compute average silhouette widths
-  if (is.null(prob_matrix)) {
-    clus.avg.widths <- tapply(sil_width, cluster, mean, na.rm = TRUE)
-    avg.width <- mean(sil_width, na.rm = TRUE)
-  } else {
-    clus.avg.widths <- tapply(seq_along(sil_width), cluster, function(idx) {
-      sum(sil_weight[idx], na.rm = TRUE) / sum(weight[idx], na.rm = TRUE)
-    })
-    avg.width <- sum(sil_weight, na.rm = TRUE) / sum(weight, na.rm = TRUE)
-  }
+  # Add attributes to the widths data frame
+  attr(widths, "proximity_type") <- proximity_type
+  attr(widths, "method") <- method
 
-  result <- list(widths = widths,
-                 clus.avg.widths = clus.avg.widths,
-                 avg.width = avg.width)
   if (print.summary) {
-    name.proximity_type <- paste(noquote(proximity_type))
-    name.ave <- paste(noquote(round(avg.width,4)))
-    name.method  <- paste(noquote(method))
-    dash1p = "--------------------------------------------"
-    dash2p = "--------------------------------------------------"
-    dashs1p = "-----------------------------------------"
-    dashs2p = "-----------------------------------------------"
-    dash1 = "-----------------------------------------------"
-    dash2 = "-----------------------------------------------------"
-    dashs1 = "--------------------------------------------"
-    dashs2 = "--------------------------------------------------"
-    dash = if (method == "pac") {
-      ifelse(is.null(prob_matrix),ifelse(proximity_type == "dissimilarity",dash1p,dashs1p),ifelse(proximity_type == "dissimilarity",dash2p,dashs2p))
+    # Compute average silhouette widths for summary
+    if (is.null(prob_matrix)) {
+      clus.avg.widths <- tapply(widths$sil_width, widths$cluster, mean, na.rm = TRUE)
+      avg.width <- mean(widths$sil_width, na.rm = TRUE)
     } else {
-      ifelse(is.null(prob_matrix),ifelse(proximity_type == "dissimilarity",dash1,dashs1),ifelse(proximity_type == "dissimilarity",dash2,dashs2))
+      sil_weight <- widths$weight * widths$sil_width
+      clus.avg.widths <- tapply(seq_along(widths$sil_width), widths$cluster, function(idx) {
+        sum(sil_weight[idx], na.rm = TRUE) / sum(widths$weight[idx], na.rm = TRUE)
+      })
+      avg.width <- sum(sil_weight, na.rm = TRUE) / sum(widths$weight, na.rm = TRUE)
+    }
+
+    name.proximity_type <- paste(noquote(proximity_type))
+    name.ave <- paste(noquote(round(avg.width, 4)))
+    name.method <- paste(noquote(method))
+    dash1p <- "--------------------------------------------"
+    dash2p <- "--------------------------------------------------"
+    dashs1p <- "-----------------------------------------"
+    dashs2p <- "-----------------------------------------------"
+    dash1 <- "-----------------------------------------------"
+    dash2 <- "-----------------------------------------------------"
+    dashs1 <- "--------------------------------------------"
+    dashs2 <- "--------------------------------------------------"
+    dash <- if (method == "pac") {
+      ifelse(is.null(prob_matrix), ifelse(proximity_type == "dissimilarity", dash1p, dashs1p), ifelse(proximity_type == "dissimilarity", dash2p, dashs2p))
+    } else {
+      ifelse(is.null(prob_matrix), ifelse(proximity_type == "dissimilarity", dash1, dashs1), ifelse(proximity_type == "dissimilarity", dash2, dashs2))
     }
     cat(dash)
     if (is.null(prob_matrix)) {
@@ -287,19 +338,23 @@ Silhouette <- function(prox_matrix,
         name.proximity_type,
         name.method,
         "silhouette:",
-        name.ave,"\n")
-    } else {cat(
-      "\nAverage",
-      "fuzzy",
-      name.proximity_type,
-      name.method,
-      "silhouette:",
-      name.ave,"\n")}
-    cat(dash,"\n")
+        name.ave, "\n"
+      )
+    } else {
+      cat(
+        "\nAverage",
+        "fuzzy",
+        name.proximity_type,
+        name.method,
+        "silhouette:",
+        name.ave, "\n"
+      )
+    }
+    cat(dash, "\n")
     if (!is.numeric(clus.avg.widths) || is.null(names(clus.avg.widths))) {
       warning("clus.avg.widths is not a named numeric vector; summary may be incorrect.")
     }
-    n <- table(cluster)
+    n <- table(widths$cluster)
     sil.sum <- data.frame(
       cluster = names(clus.avg.widths),
       size = as.vector(n),
@@ -307,8 +362,8 @@ Silhouette <- function(prox_matrix,
     )
     print(sil.sum)
     cat("\n")
-    cat("Available components:\n")
-    print(names(result))
+    cat("Available attributes:\n")
+    print(names(attributes(widths)))
   }
-  structure(result, class = "Silhouette")
+  structure(widths, class = c("Silhouette", "data.frame"))
 }

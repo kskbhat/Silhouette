@@ -3,3 +3,4 @@
 ^\.gitignore$
 ^\.github$
 ^\.Rcheck$
+^LICENSE\.md$

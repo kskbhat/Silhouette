@@ -32,34 +32,7 @@ Each \code{Silhouette} object in \code{sil_list} must contain a non-empty \code{
 \examples{
 # Example using iris dataset with two modes
 data(iris)
-if (requireNamespace("ppclust", quietly = TRUE)) {
-  library(ppclust)
-  # Mode 1: Crisp silhouette with kmeans
-  kmeans_res <- kmeans(iris[, 1:4], centers = 3)
-  dist_mat <- as.matrix(dist(rbind(kmeans_res$centers,
-                                  iris[, 1:4])))[-(1:3), 1:3]
-  sil_mode1 <- Silhouette(
-    prox_matrix = dist_mat,
-    print.summary = FALSE
-  )
-
-  # Mode 2: Fuzzy silhouette with fcm
-  sil_mode2 <- Silhouette(
-    prox_matrix = "d",
-    proximity_type = "dissimilarity",
-    prob_matrix = "u",
-    clust_fun = ppclust::fcm,
-    x = t(iris[, 1:4]),
-    centers = 2,
-    print.summary = FALSE
-  )
-
-  # Extended silhouette
-  ext_sil <- extSilhouette(list(sil_mode1, sil_mode2))
-} else {
-  message("Install 'ppclust': install.packages('ppclust')")
-}
-
+\donttest{
 if (requireNamespace("blockcluster", quietly = TRUE)) {
   library(blockcluster)
   result <- coclusterContinuous(
@@ -82,6 +55,8 @@ if (requireNamespace("blockcluster", quietly = TRUE)) {
 } else {
   message("Install 'blockcluster': install.packages('blockcluster')")
 }
+}
+
 }
 \references{
 Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \doi{10.1007/s00357-008-9005-9}

@@ -1,0 +1,185 @@
+---
+title: "`Silhouette` Package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Silhouette Package Walkthrough }
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+```{r check-packages, echo=FALSE, message=FALSE, warning=FALSE}
+required_packages <- c("proxy", "ppclust", "blockcluster", "cluster", "factoextra", "ggplot2")
+missing_packages <- required_packages[!(required_packages %in% installed.packages()[, "Package"])]
+
+if (length(missing_packages) > 0) {
+  cat("❌ The following required packages are not installed:\n\n")
+  cat(paste0("- `", missing_packages, "`", collapse = "\n"), "\n\n")
+  cat("📦 To install them, run the following code in R:\n\n")
+  
+  # Print clean R code block
+  cat("```r\n")
+  cat(sprintf("install.packages(c(%s))\n", 
+              paste(sprintf('"%s"', missing_packages), collapse = ", ")))
+  cat("```\n")
+  
+  knitr::knit_exit()
+}
+```
+
+```{r setup,echo=FALSE, include=FALSE}
+library(Silhouette)
+library(proxy)
+library(ppclust)
+library(cluster)
+library(factoextra)
+library(blockcluster)
+library(ggplot2)
+```
+# 🧭 Introduction
+
+Silhouettes are widely used for validating clusters [@rousseeuw1987silhouettes].  
+Extensions have been proposed for soft clustering [@campello2006fuzzy; @bhatkapu2024density].  
+More recent developments also apply silhouettes to neural networks [@raymaekers2022silhouettes].  
+A new PAM algorithm was introduced by Van der Laan et al. [@vanderlaan2003pam][@schepers2008multimode].
+
+
+The `Silhouette` package provides a flexible framework for computing and visualizing silhouette widths to evaluate clustering quality in both **crisp** (hard) and **soft** (fuzzy/probabilistic) clustering scenarios. Silhouette width, introduced by Rousseeuw (1987), measures how similar an observation is to its assigned cluster compared to the nearest neighboring cluster, with values ranging from -1 (poor clustering) to 1 (well-separated clusters). The package extends traditional silhouette methods by:
+
+- Supporting **soft clustering** through membership probabilities (e.g., from fuzzy clustering algorithms like `ppclust::fcm`).
+- Implementing the **Simplified Silhouette** method (Van der Laan et al., 2003) with options for `medoid` or `pac` (Probability of Alternative Cluster) calculations.
+- Enabling **multi-way clustering** evaluation via `extSilhouette()` for biclustering or tensor clustering.
+- Offering customizable visualization with `plotSilhouette()`, including grayscale options and detailed legends. Integrating with clustering outputs from packages like `cluster` (`pam`, `clara`, `fanny`) and `factoextra` (`eclust`, `hcut`).
+
+This vignette demonstrates key functionalities using the `iris` dataset, showcasing crisp and fuzzy silhouette calculations, visualization, and extended silhouette analysis for multi-way clustering.
+
+## 📦 Available Functions
+
+- **`Silhouette()`**: Computes silhouette widths for crisp or fuzzy clustering using proximity matrices.
+- **`softSilhouette()`**: Computes silhouette widths for soft clustering using membership probabilities.
+- **`extSilhouette()`**: Calculates extended silhouette width for multi-way clustering (e.g., biclustering).
+- **`plot()` and `plotSilhouette()`**: Visualizes silhouette widths as bar plots, with options for grayscale and legend customization.
+- **`summary()`**: Summarizes average silhouette widths and cluster sizes for `Silhouette` class.
+
+# 🛠️ Use Cases
+
+## 1. 📊 Simplified Silhoutte Calculation 
+
+
+Compute silhouette widths for a k-means clustering of the `iris` dataset using a dissimilarity matrix.
+
+```{r crisp-silhouette, fig.width=6, fig.height=4}
+  library(proxy)
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_matrix <- proxy::dist(iris[, -5], km$centers)
+  sil <- Silhouette(
+    prox_matrix = dist_matrix,
+    proximity_type = "dissimilarity",
+    method = "medoid"
+  )
+  summary(sil)
+  plot(sil)
+```
+
+**Output**: The `summary()` call displays a table of cluster sizes and average silhouette widths, with the overall average silhouette width indicating clustering quality. The `plot()` creates a bar plot where each bar represents an observation’s silhouette width, colored by cluster, with a dashed line showing the average silhouette width.
+
+## 2. 🧠 Fuzzy Silhouette with FCM Clustering
+
+For soft clustering, `softSilhouette()` uses membership probabilities (e.g., from `ppclust::fcm`) to compute fuzzy silhouette widths.
+
+```{r fuzzy-silhouette, fig.width=6, fig.height=4}
+  library(ppclust)
+  data(iris)
+  fcm_result <- ppclust::fcm(iris[, 1:4], centers = 3)
+  sil_fuzzy <- softSilhouette(
+    prob_matrix = fcm_result$u,
+    prob_type = "pp",
+    method = "pac",
+    average = "fuzzy",
+    a = 2
+  )
+  plot(sil_fuzzy, grayscale = TRUE, summary.legend = FALSE)
+```
+
+**Output**: The plot shows silhouette widths for each observation, sorted by cluster and descending width, in grayscale. The legend displays cluster numbers without summary statistics (`summary.legend = FALSE`).
+
+## 3. 🧮 Scree Plot for Optimal Number of Clusters
+
+A scree plot helps identify the optimal number of clusters by plotting average silhouette widths for different `k`.
+
+```{r scree-plot, fig.width=6, fig.height=4}
+  library(ppclust)
+  library(ggplot2)
+  data(iris)
+  avg_sil_width <- numeric(6)
+  for (k in 2:7) {
+    sil <- Silhouette(
+      prox_matrix = "d",
+      proximity_type = "dissimilarity",
+      prob_matrix = "u",
+      clust_fun = fcm,
+      x = iris[, 1:4],
+      centers = k,
+      print.summary = FALSE,
+      sort = TRUE
+    )
+    avg_sil_width[k-1] <- summary(sil, print.summary = FALSE)$avg.width
+  }
+  df <- data.frame(k = 2:7, avg_sil_width = avg_sil_width)
+  df
+  ggplot(df, aes(x = k, y = avg_sil_width)) +
+    geom_line() +
+    geom_point() +
+    labs(x = "Number of Clusters", y = "Average Silhouette Width", title = "Scree Plot for FCM Clustering") +
+    theme_minimal()
+```
+
+**Output**: The scree plot shows average silhouette widths for `k = 2` to `7`, helping identify the number of clusters with the highest silhouette width.
+
+## 4. 🎛️ Silhouette for PAM Clustering
+
+The package supports clustering outputs from `cluster::pam`, `clara`, `fanny`, `factoextra::eclust`, and `hcut`.
+
+```{r pam-silhouette, fig.width=6, fig.height=4}
+  library(cluster)
+  data(iris)
+  pam_result <- pam(iris[, 1:4], k = 3)
+  plotSilhouette(pam_result, label = FALSE, grayscale = FALSE)
+```
+
+**Output**: The silhouette plot visualizes the clustering quality of `pam`, with bars colored by cluster and sorted by silhouette width.
+
+## 5. 🔬 Extended Silhouette for Multi-Way Clustering
+
+`extSilhouette()` computes an extended silhouette width for multi-way clustering (e.g., biclustering) by combining silhouette widths from multiple modes.
+
+```{r ext-silhouette}
+  library(blockcluster)
+  data(iris)
+  result <- coclusterContinuous(as.matrix(iris[, -5]), nbcocluster = c(3, 2))
+  sil_mode1 <- softSilhouette(
+    prob_matrix = result@rowposteriorprob,
+    method = "pac",
+    print.summary = FALSE
+  )
+  sil_mode2 <- softSilhouette(
+    prob_matrix = result@colposteriorprob,
+    method = "pac",
+    print.summary = FALSE
+  )
+  ext_sil <- extSilhouette(
+    sil_list = list(sil_mode1, sil_mode2),
+    dim_names = c("Rows", "Columns")
+  )
+```
+
+**Output**: The `extSilhouette()` function returns the extended silhouette width and a dimension table summarizing the number of observations and average silhouette width for each mode (rows and columns).
+
+# 📚 References
