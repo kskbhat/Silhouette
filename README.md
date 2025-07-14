@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-
-=======
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/r.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/r.yaml)
 <!-- badges: end -->
 # Silhouette: Tools for Silhouette Cluster Diagnostics
 
