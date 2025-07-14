@@ -1,47 +1,60 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-#
-# See https://github.com/r-lib/actions/tree/master/examples#readme for
-# additional example workflows available for the R community.
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 
 name: R-CMD-check
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+  release:
+    types: [published]
+  schedule:
+    - cron: '0 4 * * 2'  # Weekly Tuesday check
 
-permissions:
-  contents: read
+permissions: read-all
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.config.os }} (R ${{ matrix.config.r }})
+    runs-on: ${{ matrix.config.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        r-version: ['3.6.3', '4.1.1']
+        config:
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'oldrel-1'}
+          # macOS runners have issues with old R versions; limit to release only
+          - {os: macos-latest,   r: 'release'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      TINYTEX_INSTALLER: TinyTex
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.r-version }}
+      - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
+      - uses: r-lib/actions/setup-r@v2
         with:
-          extra-packages: any::rcmdcheck
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-tinytex@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck, local::.
           needs: check
 
-      - name: Run R CMD check
-        uses: r-lib/actions/check-r-package@v2
+      - uses: r-lib/actions/check-r-package@v2
         with:
-          args: --no-manual --as-cran
+          upload-snapshots: true
+          build_args: 'c("--no-manual", "--as-cran", "--compact-vignettes=gs+qpdf")'
