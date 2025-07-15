@@ -4,3 +4,5 @@
 ^\.github$
 ^\.Rcheck$
 ^LICENSE\.md$
+^doc$
+^Meta$
