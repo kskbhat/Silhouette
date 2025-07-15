@@ -62,6 +62,7 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
   fcm_result <- ppclust::fcm(iris[, 1:4], 3)
   out_fcm <- softSilhouette(prob_matrix = fcm_result$u)
   plot(out_fcm)
+  sfcm <- summary(out_fcm,print.summary = FALSE)
 } else {
   message("Install 'ppclust' to run this example: install.packages('ppclust')")
 }
@@ -69,8 +70,14 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
   fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
   out_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
   plot(out_fcm2)
+  sfcm2 <- summary(out_fcm2,print.summary = FALSE)
 } else {
   message("Install 'ppclust' to run this example: install.packages('ppclust')")
+}
+# Compare average silhouette widths of fcm and fcm2
+if (requireNamespace("ppclust", quietly = TRUE)) {
+  cat("FCM average silhouette width:", sfcm$avg.width, "\n")
+  cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
 }
 }
 }

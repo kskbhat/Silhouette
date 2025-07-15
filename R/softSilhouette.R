@@ -1,6 +1,7 @@
 #' Calculate Silhouette Width for Soft Clustering Algorithms
 #'
 #' Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.
+#'
 #' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}).
 #' @param prob_type Character string specifying the type transformation of membership matrix considered as proximilty matrix in \code{prob_matrix}. Options are:
 #' \describe{
@@ -44,6 +45,7 @@
 #'   fcm_result <- ppclust::fcm(iris[, 1:4], 3)
 #'   out_fcm <- softSilhouette(prob_matrix = fcm_result$u)
 #'   plot(out_fcm)
+#'   sfcm <- summary(out_fcm,print.summary = FALSE)
 #' } else {
 #'   message("Install 'ppclust' to run this example: install.packages('ppclust')")
 #' }
@@ -51,9 +53,15 @@
 #'   fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
 #'   out_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
 #'   plot(out_fcm2)
+#'   sfcm2 <- summary(out_fcm2,print.summary = FALSE)
 #' } else {
 #'   message("Install 'ppclust' to run this example: install.packages('ppclust')")
 #' }
+#' # Compare average silhouette widths of fcm and fcm2
+#' if (requireNamespace("ppclust", quietly = TRUE)) {
+#'   cat("FCM average silhouette width:", sfcm$avg.width, "\n")
+#'   cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
+#'}
 #' }
 #' @export
 softSilhouette <- function(prob_matrix,

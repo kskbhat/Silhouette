@@ -34,12 +34,7 @@ devtools::install_github("kskbhat/Silhouette")
 ```r
 library(Silhouette)
 
-# Example with synthetic probability matrix for soft clustering
-set.seed(123)
-prob_matrix <- matrix(runif(150 * 3), nrow = 150, ncol = 3)
-prob_matrix <- prob_matrix / rowSums(prob_matrix)
-out <- softSilhouette(prob_matrix = prob_matrix)
-plot(out)
+help(package = "Silhouette")
 ```
 
 ---
@@ -52,10 +47,7 @@ plot(out)
   * Multi-way clustering (`extSilhouette`)
 * Support for **crisp** and **fuzzy** clustering with methods like `pac` and `medoid`
 * Visualise cluster quality with customizable silhouette plots (`plot.Silhouette`)
-* Compatible with any clustering functions that return distance or membership matrices, such as:
-  * `ppclust::fcm`
-  * `blockcluster::coclusterContinuous`
-
+* Compatible with any clustering functions that return distance or membership matrices.
 ---
 
 ## Release Notes
