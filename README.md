@@ -1,6 +1,5 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
-# [![CRAN status](https://cranchecks.info/badges/summary/Silhouette)](https://cranchecks.info/pkgs/Silhouette)
 <!-- badges: end -->
 
 
