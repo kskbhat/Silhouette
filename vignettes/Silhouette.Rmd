@@ -1,8 +1,8 @@
 ---
-title: "`Silhouette` Package"
+title: "Silhouette Package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Silhouette Package Walkthrough }
+  %\VignetteIndexEntry{Silhouette Package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
