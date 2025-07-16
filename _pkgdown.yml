@@ -1,0 +1,60 @@
+url: https://kskbhat.github.io/Silhouette
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+    danger: "#A6081A"
+  includes:
+    in_header:
+      <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
+
+navbar:
+  structure:
+    left: [home, reference, vignette, news]
+    right: [github]
+  components:
+    vignette:
+      text: "Vignette"
+      href: articles/Silhouette.html
+    news:
+      text: "News"
+      href: news/index.html
+    github:
+      icon: fa-github
+      href: https://github.com/kskbhat/Silhouette
+      aria-label: "GitHub"
+
+home:
+  title: Silhouette Package
+  sidebar:
+    structure: [authors, license, community, citation]
+  links:
+    - text: R-CMD-check
+      href: https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml
+      badge: https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg
+
+authors:
+  sidebar:
+    - name: Shrikrishna Bhat K
+      roles: [aut, cre, cph]
+      orcid: 0009-0000-6180-5783
+      url: https://github.com/kskbhat
+
+development:
+  mode: auto
+
+reference:
+- title: Silhouette Functions
+  contents:
+    - Silhouette
+    - softSilhouette
+    - extSilhouette
+    - plotSilhouette
+
+articles:
+- title: Silhouette Package
+  contents:
+    - Silhouette
