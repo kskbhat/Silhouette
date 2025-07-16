@@ -1,0 +1,7 @@
+@Manual{,
+  title = {Silhouette: Tools for Silhouette Cluster Diagnostics},
+  author = {Shrikrishna {Bhat K} and Kiruthika C},
+  year = {2025},
+  note = {R package version 0.9.2},
+  url = {https://kskbhat.github.io/Silhouette/},
+}

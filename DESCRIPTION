@@ -1,6 +1,6 @@
 Package: Silhouette
 Type: Package
-Title: Tools for Silhouette Cluster Diagnostics
+Title: Silhouette-Based Diagnostics for Standard, Soft, and Multi-Way Clustering
 Version: 0.9.2
 Authors@R: c(person(given = "Shrikrishna",
            family = "Bhat K",
@@ -12,7 +12,7 @@ Authors@R: c(person(given = "Shrikrishna",
            role = "aut",
            comment = c(ORCID = "0000-0001-9655-702X")))
 Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
-Description: Offers tools for silhouette-based diagnostics in clustering, including standard clustering and n-way tensor clustering (e.g., biclustering, triclustering). Provides functions for computing silhouette widths, extended silhouette widths for multi-way clustering, and visualization tools to evaluate cluster quality and cohesion.
+Description: Silhouette diagnostics assess clustering quality using cohesion and separation of clusters. This package implements silhouette widths for various clustering setups, including support for soft membership probabilities and multi-way clustering structures.
 License: Apache License (>= 2) | file LICENSE 
 URL: https://kskbhat.github.io/Silhouette/, https://github.com/kskbhat/Silhouette
 Encoding: UTF-8
