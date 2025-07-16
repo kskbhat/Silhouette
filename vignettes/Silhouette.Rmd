@@ -74,7 +74,7 @@ This vignette demonstrates key functionalities using the `iris` dataset, showcas
 
 Compute silhouette widths for a k-means clustering of the `iris` dataset using a dissimilarity matrix.
 
-```{r crisp-silhouette, fig.width=6, fig.height=4}
+```{r crisp-silhouette, fig.width=6, fig.height=4, fig.alt = "fig1"}
   library(proxy)
   data(iris)
   km <- kmeans(iris[, -5], centers = 3)
@@ -94,7 +94,7 @@ Compute silhouette widths for a k-means clustering of the `iris` dataset using a
 
 For soft clustering, `softSilhouette()` uses membership probabilities (e.g., from `ppclust::fcm`) to compute fuzzy silhouette widths.
 
-```{r fuzzy-silhouette, fig.width=6, fig.height=4}
+```{r fuzzy-silhouette, fig.width=6, fig.height=4, fig.alt = "fig2"}
   library(ppclust)
   data(iris)
   fcm_result <- ppclust::fcm(iris[, 1:4], centers = 3)
@@ -114,7 +114,7 @@ For soft clustering, `softSilhouette()` uses membership probabilities (e.g., fro
 
 A scree plot helps identify the optimal number of clusters by plotting average silhouette widths for different `k`.
 
-```{r scree-plot, fig.width=6, fig.height=4}
+```{r scree-plot, fig.width=6, fig.height=4,, fig.alt = "fig3"}
   library(ppclust)
   library(ggplot2)
   data(iris)
@@ -147,7 +147,7 @@ A scree plot helps identify the optimal number of clusters by plotting average s
 
 The package supports clustering outputs from `cluster::pam`, `clara`, `fanny`, `factoextra::eclust`, and `hcut`.
 
-```{r pam-silhouette, fig.width=6, fig.height=4}
+```{r pam-silhouette, fig.width=6, fig.height=4, fig.alt = "fig4"}
   library(cluster)
   data(iris)
   pam_result <- pam(iris[, 1:4], k = 3)

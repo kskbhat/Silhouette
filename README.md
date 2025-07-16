@@ -2,8 +2,6 @@
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-
-
 # Silhouette
 
 An R package for silhouette-based diagnostics in standard, soft, and multi-way clustering.
