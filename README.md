@@ -1,7 +1,8 @@
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
+
+
 
 # Silhouette
 
@@ -23,7 +24,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 
 # Install from GitHub
 devtools::install_github("kskbhat/Silhouette")
-````
+```
 
 Once accepted on CRAN, install via:
 
@@ -49,12 +50,13 @@ For an introduction, see the function help pages:
 For an intro see the vignette A quick tour of mclust, which is available as
 
 ```r
-utils::vignette("Silhouette")
+vignette("Silhouette")
 ```
 
 The vignette is also available in the `Get started` section on the navigation bar on top of the package’s web page.
 
 Can also see stable release updates in the `Changelog` section on the navigation bar on top of the package’s web page.
+
 ---
 
 ## References
