@@ -1,7 +1,15 @@
-@Manual{,
-  title = {Silhouette: Tools for Silhouette Cluster Diagnostics},
-  author = {Shrikrishna {Bhat K} and Kiruthika C},
-  year = {2025},
-  note = {R package version 0.9.2},
-  url = {https://kskbhat.github.io/Silhouette/},
-}
+citHeader("To cite the Silhouette package in publications use:")
+
+bibentry("Manual",
+  title = "Silhouette: Tools for Silhouette Cluster Diagnostics",
+  author = c(
+    person("Shrikrishna", "Bhat", role = c("aut", "cre"),
+           email = "skbhat.in@gmail.com",
+           comment = c(ORCID = "0009-0000-6180-5783")),
+    person("Kiruthika", "C", role = "aut",
+           comment = c(ORCID = "0000-0001-9655-702X"))
+  ),
+  year = "2025",
+  note = "R package version 0.9.2",
+  url = "https://kskbhat.github.io/Silhouette/"
+)
