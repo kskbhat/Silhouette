@@ -33,6 +33,11 @@
 #'     as.matrix(iris[, -5]),
 #'     nbcocluster = c(3, 2)
 #'   )
+#' } else {
+#'   message("Install 'blockcluster': install.packages('blockcluster')")
+#' }
+#'
+#' if (requireNamespace("blockcluster", quietly = TRUE)) {
 #'   sil_mode1 <- softSilhouette(
 #'     prob_matrix = result@rowposteriorprob,
 #'     method = "pac",
@@ -46,8 +51,6 @@
 #'
 #'   # Extended silhouette
 #'   ext_sil <- extSilhouette(list(sil_mode1, sil_mode2))
-#' } else {
-#'   message("Install 'blockcluster': install.packages('blockcluster')")
 #' }
 #' }
 #'
