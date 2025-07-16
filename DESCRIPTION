@@ -14,6 +14,7 @@ Authors@R: c(person(given = "Shrikrishna",
 Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
 Description: Offers tools for silhouette-based diagnostics in clustering, including standard clustering and n-way tensor clustering (e.g., biclustering, triclustering). Provides functions for computing silhouette widths, extended silhouette widths for multi-way clustering, and visualization tools to evaluate cluster quality and cohesion.
 License: Apache License (>= 2) | file LICENSE 
+URL: https://kskbhat.github.io/Silhouette/, https://github.com/kskbhat/Silhouette
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
