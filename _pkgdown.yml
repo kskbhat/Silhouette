@@ -1,8 +1,8 @@
 url: https://kskbhat.github.io/Silhouette
 
 template:
+  logo: logo.png
   bootstrap: 5
-  light-switch: true
   bslib:
     primary: "#0054AD"
     border-radius: 0.5rem
@@ -14,25 +14,17 @@ template:
 
 navbar:
   structure:
-    left: [home, reference, vignette]
-    right: [search, theme, github]
+    left: [home, reference, vignette, news]
+    right: [github]
 
   components:
     vignette:
       text: "Vignette"
       href: articles/Silhouette.html
 
-    search:
-      icon: fa-search
-      text: "Search"
-      href: search/index.html
-      aria-label: "Search the site"
-
-    theme:
-      icon: fa-adjust
-      text: "Theme"
-      href: "#"
-      aria-label: "Toggle theme"
+    news:
+      text: "News"
+      href: news/index.html
 
     github:
       icon: fa-github
@@ -42,16 +34,7 @@ navbar:
 home:
   title: Silhouette Package
   sidebar:
-    structure: [authors, license, community, citation, news, links]
-    components:
-      news:
-        title: "News"
-        text: "Read about recent changes to the Silhouette package."
-        href: news/index.html
-  links:
-    - text: R-CMD-check
-      href: https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml
-      badge: https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg
+    structure: [authors, license, community, citation]
 
 development:
   mode: auto

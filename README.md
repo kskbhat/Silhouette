@@ -36,24 +36,15 @@ install.packages("Silhouette")
 
 Usage of the main functions is demonstrated in the package examples and documentation.
 
-For an introduction, see the function help pages:
-
-```r
-?Silhouette
-?softSilhouette
-?plotSilhouette
-?extSilhouette
-```
-
-For an intro see the vignette A quick tour of mclust, which is available as
+For an intro see the vignette A quick tour of `Silhouette`, which is available as
 
 ```r
 vignette("Silhouette")
 ```
 
-The vignette is also available in the `Get started` section on the navigation bar on top of the package’s web page.
+You can also access the vignette from the `Vignettes` tab in the top navigation bar of the package website.
 
-Can also see stable release updates in the `Changelog` section on the navigation bar on top of the package’s web page.
+For information on stable release updates, visit the `NEWS` section available in the top navigation bar.
 
 ---
 
