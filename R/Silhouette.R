@@ -1,6 +1,6 @@
-#' Calculate Silhouette Width for Clustering
+#' Calculate Silhouette Widths, Summary Statistics, and Plot for Clustering Results
 #'
-#' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearesh neighbour cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
+#' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbour cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 #'
 #' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).
 #' @param proximity_type Character string specifying the type of proximity measure in \code{prox_matrix}. Options are \code{"similarity"} (higher values indicate closer proximity) or \code{"dissimilarity"} (lower values indicate closer proximity). Defaults to \code{"dissimilarity"}.
