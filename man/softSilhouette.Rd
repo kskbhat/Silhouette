@@ -18,7 +18,7 @@ softSilhouette(
 \arguments{
 \item{prob_matrix}{A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}).}
 
-\item{prob_type}{Character string specifying the type transformation of membership matrix considered as proximilty matrix in \code{prob_matrix}. Options are:
+\item{prob_type}{Character string specifying the type transformation of membership matrix considered as proximity matrix in \code{prob_matrix}. Options are:
 \describe{
 \item{\code{"pp"}}{Posterior probabilities \eqn{[\gamma_{ik}]_{n \times K}} (non-negative, typically summing to 1 per row), treated as similarities}
 \item{\code{"nlpp"}}{Negative log of posterior probabilities \eqn{[-\ln\gamma_{ik}]_{n \times K}} (non-positive), treated as dissimilarities.}
@@ -55,7 +55,8 @@ See \doi{10.1080/23737484.2024.2408534} for more details.
 }
 \examples{
 \donttest{
-# Example with ppclust (if available)
+# Compare two soft clustering algorithms using softSilhouett
+# Example: FCM vs. FCM2 on iris data, using average silhouette width as a criterion
 data(iris)
 # install.packages("ppclust")
 if (requireNamespace("ppclust", quietly = TRUE)) {

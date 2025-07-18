@@ -5,7 +5,7 @@
 \alias{Silhouette}
 \alias{plot.Silhouette}
 \alias{summary.Silhouette}
-\title{Calculate Silhouette Width for Clustering}
+\title{Calculate Silhouette Widths, Summary, and Plot for Clustering Results}
 \usage{
 Silhouette(
   prox_matrix,
@@ -67,65 +67,61 @@ Further,  \code{summary} returns a list containing:
 }
 }
 \description{
-Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearesh neighbour cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
+Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 }
 \details{
-The \code{Silhouette} function employs the Simplified Silhouette method introduced by Van der Laan et al. (2003),
-differing from the original silhouette method proposed by Rousseeuw (1987).
+The \code{Silhouette} function implements the Simplified Silhouette method introduced by Van der Laan, Pollard, & Bryan (2003), which adapts and generalizes the classic silhouette method of Rousseeuw (1987).
 
-It evaluates clustering quality using a proximity matrix, denoted as
+Clustering quality is evaluated using a proximity matrix, denoted as
 \eqn{\Delta = [\delta_{ik}]_{n \times K}} for dissimilarity measures or
 \eqn{\Delta' = [\delta'_{ik}]_{n \times K}} for similarity measures.
-Here, \eqn{i = 1, \ldots, n} represents the number of observations, and
-\eqn{k = 1, \ldots, K} denotes the number of clusters. The elements
-\eqn{\delta_{ik}} indicate dissimilarity (e.g., distance) between observation \eqn{i} and cluster \eqn{k},
-while \eqn{\delta'_{ik}} represent similarity between observation \eqn{i} and cluster \eqn{k}.
+Here, \eqn{i = 1, \ldots, n} indexes observations, and \eqn{k = 1, \ldots, K} indexes clusters.
+\eqn{\delta_{ik}} represents the dissimilarity (e.g., distance) between observation \eqn{i} and cluster \eqn{k},
+while \eqn{\delta'_{ik}} represents similarity values.
 
-The silhouette width \eqn{S(x_i)} for observation \eqn{i} is calculated based on the proximity type.
+The silhouette width \eqn{S(x_i)} for observation \eqn{i} depends on the proximity type:
 
 For \strong{dissimilarity} measures:
 \deqn{
-  S(x_i) = \dfrac{(\min_{k' \neq k} \delta_{ik'}) - \delta_{ik}}{N(x_i)},
+  S(x_i) = \frac{ \min_{k' \neq k} \delta_{ik'} - \delta_{ik} }{ N(x_i) }
 }
-where \eqn{\min_{k' \neq k} \delta_{ik'}} is the smallest dissimilarity to any other cluster \eqn{k' \neq k}.
-
 For \strong{similarity} measures:
 \deqn{
-  S(x_i) = \dfrac{\delta'_{ik} - (\max_{k' \neq k} \delta'_{ik'})}{N(x_i)},
+  S(x_i) = \frac{ \delta'_{ik} - \max_{k' \neq k} \delta'_{ik'} }{ N(x_i) }
 }
-where \eqn{\max_{k' \neq k} \delta'_{ik'}} is the largest similarity to any other cluster, and
-\eqn{N(x_i)} is the normaliser.
+where \eqn{N(x_i)} is a normalizing factor defined by the method.
 
-The \strong{Normaliser} depends on the \code{method} argument:
+\strong{Choice of method:}
+The normalizer \eqn{N(x_i)} is selected according to the \code{method} argument. The method names reference their origins but may be used with any proximity matrix, not exclusively certain clustering algorithms:
 \itemize{
-\item For \code{medoid}:
+\item For \code{medoid} (Van der Laan et al., 2003):
 \itemize{
 \item Dissimilarity: \eqn{\max(\delta_{ik}, \min_{k' \neq k} \delta_{ik'})}
 \item Similarity:    \eqn{\max(\delta'_{ik}, \max_{k' \neq k} \delta'_{ik'})}
 }
-\item For \code{pac}:
+\item For \code{pac} (Raymaekers & Rousseeuw, 2022):
 \itemize{
 \item Dissimilarity: \eqn{\delta_{ik} + \min_{k' \neq k} \delta_{ik'}}
 \item Similarity:    \eqn{\delta'_{ik} + \max_{k' \neq k} \delta'_{ik'}}
 }
 }
 
-When \code{prob_matrix} is \code{NULL}, the function computes the \strong{crisp overall silhouette index} \eqn{CS} as:
-\deqn{
-  CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i).
-}
-This represents the average silhouette width across all observations, providing a measure of overall clustering quality.
+\strong{Note:}
+The \code{"medoid"} and \code{"pac"} options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from \strong{classification algorithms}. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.
 
-If \code{prob_matrix} is provided, it is denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
-where \eqn{\gamma_{ik}} represents the membership probability of observation \eqn{i} to cluster \eqn{k}.
-The \strong{fuzzy silhouette index} \eqn{FS} is then calculated as:
+If \code{prob_matrix} is \code{NULL}, the \strong{crisp silhouette index} (\eqn{CS}) is:
 \deqn{
-  FS = \frac{\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i)}
-            {\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}},
+  CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 }
-where \eqn{\alpha} (set by the argument \code{a}) controls the weighting based on membership differences.
-Higher \eqn{\alpha} values emphasize observations with more confident cluster assignments,
-accounting for uncertainty in fuzzy clustering.
+summarizing overall clustering quality.
+
+If \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
+the \strong{fuzzy silhouette index} (\eqn{FS}) is used:
+\deqn{
+  FS = \frac{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i) }{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} }
+}
+where \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
 }
 \examples{
 # Standard silhouette with k-means on iris dataset
