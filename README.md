@@ -4,7 +4,7 @@
 
 # Silhouette
 
-An R package for silhouette-based diagnostics in standard, soft, and multi-way clustering.
+An [R](https://www.r-project.org/) package for silhouette-based diagnostics in standard, soft, and multi-way clustering.
 
 Silhouette diagnostics assess clustering quality using cohesion and separation of clusters. This package implements silhouette widths for various clustering setups, including support for soft membership probabilities and multi-way clustering structures.
 
