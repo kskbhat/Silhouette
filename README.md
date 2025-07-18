@@ -12,7 +12,7 @@ Silhouette diagnostics assess clustering quality using cohesion and separation o
 
 ## Installation
 
-You can install the released version of **Silhouette** from GitHub using:
+You can install the released version of `Silhouette` from GitHub using:
 
 ```r
 # Install devtools if needed
@@ -42,7 +42,7 @@ For an intro, see the vignette A quick tour of `Silhouette`, which is available 
 vignette("Silhouette")
 ```
 
-You can also access the vignette from the `Vignettes` tab in the top navigation bar of the package [website](https://kskbhat.github.io/Silhouette/). For information on stable release updates, visit the `NEWS` section available in the top navigation bar  of the package [website](https://kskbhat.github.io/Silhouette/).
+You can access the vignette from the `Vignettes` tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/). For details on stable release updates, refer to the `NEWS` section, also available in the top navigation bar.
 
 ---
 
