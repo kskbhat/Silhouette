@@ -13,7 +13,7 @@ Authors@R: c(person(given = "Shrikrishna",
            comment = c(ORCID = "0000-0001-9655-702X")))
 Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
 Description: Silhouette diagnostics assess clustering quality using cohesion and separation of clusters. This package implements silhouette widths for various clustering setups, including support for soft membership probabilities and multi-way clustering structures.
-License: Apache License (>= 2) | file LICENSE 
+License: GPL-2 | file LICENSE 
 URL: https://kskbhat.github.io/Silhouette/, https://github.com/kskbhat/Silhouette
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
