@@ -1,6 +1,6 @@
-#' Calculate Silhouette Widths, Summary Statistics, and Plot for Clustering Results
+#' Calculate Silhouette Widths, Summary, and Plot for Clustering Results
 #'
-#' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbour cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
+#' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 #'
 #' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).
 #' @param proximity_type Character string specifying the type of proximity measure in \code{prox_matrix}. Options are \code{"similarity"} (higher values indicate closer proximity) or \code{"dissimilarity"} (lower values indicate closer proximity). Defaults to \code{"dissimilarity"}.
@@ -13,58 +13,52 @@
 #' @param ... Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{\link[ppclust]{fcm}}.
 #'
 #' @details
-#' The `Silhouette` function employs the Simplified Silhouette method introduced by Van der Laan et al. (2003),
-#' differing from the original silhouette method proposed by Rousseeuw (1987).
+#' The `Silhouette` function implements the Simplified Silhouette method introduced by Van der Laan, Pollard, & Bryan (2003), which adapts and generalizes the classic silhouette method of Rousseeuw (1987).
 #'
-#' It evaluates clustering quality using a proximity matrix, denoted as
+#' Clustering quality is evaluated using a proximity matrix, denoted as
 #' \eqn{\Delta = [\delta_{ik}]_{n \times K}} for dissimilarity measures or
 #' \eqn{\Delta' = [\delta'_{ik}]_{n \times K}} for similarity measures.
-#' Here, \eqn{i = 1, \ldots, n} represents the number of observations, and
-#' \eqn{k = 1, \ldots, K} denotes the number of clusters. The elements
-#' \eqn{\delta_{ik}} indicate dissimilarity (e.g., distance) between observation \eqn{i} and cluster \eqn{k},
-#' while \eqn{\delta'_{ik}} represent similarity between observation \eqn{i} and cluster \eqn{k}.
+#' Here, \eqn{i = 1, \ldots, n} indexes observations, and \eqn{k = 1, \ldots, K} indexes clusters.
+#' \eqn{\delta_{ik}} represents the dissimilarity (e.g., distance) between observation \eqn{i} and cluster \eqn{k},
+#' while \eqn{\delta'_{ik}} represents similarity values.
 #'
-#' The silhouette width \eqn{S(x_i)} for observation \eqn{i} is calculated based on the proximity type.
+#' The silhouette width \eqn{S(x_i)} for observation \eqn{i} depends on the proximity type:
 #'
 #' For **dissimilarity** measures:
 #' \deqn{
-#'   S(x_i) = \dfrac{(\min_{k' \neq k} \delta_{ik'}) - \delta_{ik}}{N(x_i)},
+#'   S(x_i) = \frac{ \min_{k' \neq k} \delta_{ik'} - \delta_{ik} }{ N(x_i) }
 #' }
-#' where \eqn{\min_{k' \neq k} \delta_{ik'}} is the smallest dissimilarity to any other cluster \eqn{k' \neq k}.
-#'
 #' For **similarity** measures:
 #' \deqn{
-#'   S(x_i) = \dfrac{\delta'_{ik} - (\max_{k' \neq k} \delta'_{ik'})}{N(x_i)},
+#'   S(x_i) = \frac{ \delta'_{ik} - \max_{k' \neq k} \delta'_{ik'} }{ N(x_i) }
 #' }
-#' where \eqn{\max_{k' \neq k} \delta'_{ik'}} is the largest similarity to any other cluster, and
-#' \eqn{N(x_i)} is the normaliser.
+#' where \eqn{N(x_i)} is a normalizing factor defined by the method.
 #'
-#' The **Normaliser** depends on the `method` argument:
-#'
-#' - For `medoid`:
+#' **Choice of method:**
+#' The normalizer \eqn{N(x_i)} is selected according to the `method` argument. The method names reference their origins but may be used with any proximity matrix, not exclusively certain clustering algorithms:
+#' - For `medoid` (Van der Laan et al., 2003):
 #'   - Dissimilarity: \eqn{\max(\delta_{ik}, \min_{k' \neq k} \delta_{ik'})}
 #'   - Similarity:    \eqn{\max(\delta'_{ik}, \max_{k' \neq k} \delta'_{ik'})}
-#'
-#' - For `pac`:
+#' - For `pac` (Raymaekers & Rousseeuw, 2022):
 #'   - Dissimilarity: \eqn{\delta_{ik} + \min_{k' \neq k} \delta_{ik'}}
 #'   - Similarity:    \eqn{\delta'_{ik} + \max_{k' \neq k} \delta'_{ik'}}
 #'
-#' When `prob_matrix` is `NULL`, the function computes the **crisp overall silhouette index** \eqn{CS} as:
-#' \deqn{
-#'   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i).
-#' }
-#' This represents the average silhouette width across all observations, providing a measure of overall clustering quality.
+#' **Note:**
+#' The `"medoid"` and `"pac"` options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from **classification algorithms**. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.
 #'
-#' If `prob_matrix` is provided, it is denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
-#' where \eqn{\gamma_{ik}} represents the membership probability of observation \eqn{i} to cluster \eqn{k}.
-#' The **fuzzy silhouette index** \eqn{FS} is then calculated as:
+#' If `prob_matrix` is `NULL`, the **crisp silhouette index** (\eqn{CS}) is:
 #' \deqn{
-#'   FS = \frac{\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i)}
-#'             {\sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}},
+#'   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 #' }
-#' where \eqn{\alpha} (set by the argument `a`) controls the weighting based on membership differences.
-#' Higher \eqn{\alpha} values emphasize observations with more confident cluster assignments,
-#' accounting for uncertainty in fuzzy clustering.
+#' summarizing overall clustering quality.
+#'
+#' If `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+#' with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
+#' the **fuzzy silhouette index** (\eqn{FS}) is used:
+#' \deqn{
+#'   FS = \frac{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i) }{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} }
+#' }
+#' where \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
 #'
 #' @return A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 #' \describe{

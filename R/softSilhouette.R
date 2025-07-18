@@ -3,7 +3,7 @@
 #' Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.
 #'
 #' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}).
-#' @param prob_type Character string specifying the type transformation of membership matrix considered as proximilty matrix in \code{prob_matrix}. Options are:
+#' @param prob_type Character string specifying the type transformation of membership matrix considered as proximity matrix in \code{prob_matrix}. Options are:
 #' \describe{
 #'   \item{\code{"pp"}}{Posterior probabilities \eqn{[\gamma_{ik}]_{n \times K}} (non-negative, typically summing to 1 per row), treated as similarities}
 #'   \item{\code{"nlpp"}}{Negative log of posterior probabilities \eqn{[-\ln\gamma_{ik}]_{n \times K}} (non-positive), treated as dissimilarities.}
@@ -38,7 +38,8 @@
 #'
 #' @examples
 #' \donttest{
-#' # Example with ppclust (if available)
+#' # Compare two soft clustering algorithms using softSilhouett
+#' # Example: FCM vs. FCM2 on iris data, using average silhouette width as a criterion
 #' data(iris)
 #' # install.packages("ppclust")
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
