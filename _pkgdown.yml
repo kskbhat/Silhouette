@@ -1,5 +1,3 @@
-url: https://kskbhat.github.io/Silhouette
-
 template:
   logo: logo.png
   bootstrap: 5
@@ -12,19 +10,27 @@ template:
   params:
     mathjax: true
 
+url: https://kskbhat.github.io/Silhouette
+
+repo:
+  github: kskbhat/Silhouette
+  branch: main
+  source: false
+
 navbar:
   structure:
-    left: [home, reference, vignette, news]
-    right: [github]
+    left: [home, vignette, reference]
+    right: [news, github]
 
   components:
     vignette:
-      text: "Vignette"
+      text: "User Guide"
       href: articles/Silhouette.html
 
     news:
-      text: "News"
+      icon: fa-newspaper
       href: news/index.html
+      aria-label: "News"
 
     github:
       icon: fa-github
@@ -40,14 +46,14 @@ development:
   mode: auto
 
 reference:
-- title: Silhouette Functions
+- title: All Functions
   contents:
     - Silhouette
     - softSilhouette
-    - extSilhouette
     - plotSilhouette
+    - extSilhouette
 
 articles:
-- title: Silhouette Package
+- title: Vignettes
   contents:
     - Silhouette
