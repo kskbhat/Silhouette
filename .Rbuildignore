@@ -3,6 +3,10 @@
 ^\.gitignore$
 ^\.github$
 ^\.Rcheck$
-^LICENSE\.md$
 ^doc$
 ^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^image\.png$
+^logo\.png$

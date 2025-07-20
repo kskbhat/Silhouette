@@ -42,7 +42,7 @@ For an intro, see the vignette A quick tour of `Silhouette`, which is available 
 vignette("Silhouette")
 ```
 
-You can access the vignette from the `Vignettes` tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/). For details on stable release updates, refer to the `NEWS` section, also available in the top navigation bar.
+You can access the vignette from the `User Guide` tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/).
 
 ---
 
