@@ -17,7 +17,7 @@ repo:
   branch: main
   source: false
 
-search: true
+#search: true
 
 navbar:
   structure:
@@ -42,7 +42,7 @@ navbar:
 home:
   title: Silhouette Package
   sidebar:
-    structure: [authors, license, community, citation, build-status, cran-status]
+    structure: [authors, license, citation, community ,build-status, cran-status]
     components:
       build-status:
         title: "Build Status"
