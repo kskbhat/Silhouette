@@ -1,12 +1,10 @@
-#Stable Releases - `Silhouette` Package 
-
-## Silhouette 0.9.2 (July 2025)
+# Silhouette 0.9.2 (July 2025)
 
 **Initial Stable Release**
 
 The first stable release of the **Silhouette** package, offering tools to compute and visualize silhouette widths for evaluating clustering quality. It supports both **crisp** and **soft** clustering outputs, along with **multi-way** clustering (e.g., biclustering).
 
-### Key Features
+## Key Features
 
 - **`Silhouette()`**  
   Computes silhouette widths using proximity matrices (dissimilarity or similarity). Supports `"medoid"` and `"pac"` normalization methods, and fuzzy silhouette calculation via membership probabilities.
@@ -23,7 +21,7 @@ The first stable release of the **Silhouette** package, offering tools to comput
 - **`summary.Silhouette()`**  
   Summarizes silhouette results, including average silhouette widths per cluster and overall summary statistics.
 
-### Dependencies
+## Dependencies
 
 - **Imports**: `dplyr`, `ggplot2`, `ggpubr`, `methods`  
 - **Suggests**: `proxy`, `ppclust`, `blockcluster`, `cluster`, `factoextra`
