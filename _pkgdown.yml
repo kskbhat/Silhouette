@@ -17,8 +17,6 @@
     branch: main
     source: false
 
-  search: true
-
   navbar:
     structure:
       left: [home, vignette, reference]
