@@ -5,6 +5,7 @@
       bootswatch: cerulean
     includes:
       in_header:
+        #<script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
     params:
       mathjax: true
@@ -15,6 +16,8 @@
     github: kskbhat/Silhouette
     branch: main
     source: false
+
+  search: true
 
   navbar:
     structure:
