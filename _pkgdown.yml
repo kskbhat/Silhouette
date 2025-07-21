@@ -1,70 +1,71 @@
-  template:
-    logo: logo.png
-    bootstrap: 5
-    bslib:
-      bootswatch: cerulean
-    includes:
-      in_header:
-        #<script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-    params:
-      mathjax: true
+template:
+  logo: logo.png
+  bootstrap: 5
+  bslib:
+    bootswatch: cerulean
+  includes:
+    in_header:
+      # <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  params:
+    mathjax: true
 
-  url: https://kskbhat.github.io/Silhouette
+url: https://kskbhat.github.io/Silhouette
 
-  repo:
-    github: kskbhat/Silhouette
-    branch: main
-    source: false
+repo:
+  github: kskbhat/Silhouette
+  branch: main
+  source: false
 
-  search: true
+search: true
 
-  navbar:
-    structure:
-      left: [home, vignette, reference]
-      right: [news, github]
+navbar:
+  structure:
+    left: [home, vignette, reference]
+    right: [news, github]
 
+  components:
+    vignette:
+      text: "User Guide"
+      href: articles/Silhouette.html
+
+    news:
+      icon: fa-newspaper
+      href: news/index.html
+      aria-label: "News"
+
+    github:
+      icon: fa-github
+      href: https://github.com/kskbhat/Silhouette
+      aria-label: "GitHub"
+
+home:
+  title: Silhouette Package
+  sidebar:
+    structure: [authors, license, community, citation, build-status, cran-status]
     components:
-      vignette:
-        text: "User Guide"
-        href: articles/Silhouette.html
+      build-status:
+        title: "Build Status"
+        text: |
+          [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
+          [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
+      cran-status:
+        title: "CRAN Status"
+        text: |
+          [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 
-      news:
-        icon: fa-newspaper
-        href: news/index.html
-        aria-label: "News"
+development:
+  mode: auto
 
-      github:
-        icon: fa-github
-        href: https://github.com/kskbhat/Silhouette
-        aria-label: "GitHub"
+reference:
+- title: All Functions
+  contents:
+    - Silhouette
+    - softSilhouette
+    - plotSilhouette
+    - extSilhouette
 
-  home:
-    title: Silhouette Package
-    sidebar:
-      structure: [authors, license, community, citation, build-status, cran-status]
-      components:
-        build-status:
-          title: "Build Status"
-          text: |
-            [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
-        cran-status:
-          title: "CRAN Status"
-          text: |
-            [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
-
-  development:
-    mode: auto
-
-  reference:
-  - title: All Functions
-    contents:
-      - Silhouette
-      - softSilhouette
-      - plotSilhouette
-      - extSilhouette
-
-  articles:
-  - title: Vignettes
-    contents:
-      - Silhouette
+articles:
+- title: Vignettes
+  contents:
+    - Silhouette
