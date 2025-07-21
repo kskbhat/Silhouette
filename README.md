@@ -1,7 +1,6 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
 [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
-[![test-coverage](https://github.com/kskbhat/Silhouette/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/test-coverage.yaml)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 <!-- badges: end -->
 
