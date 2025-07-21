@@ -14,7 +14,7 @@ Authors@R: c(person(given = "Shrikrishna",
 Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
 Description: Silhouette diagnostics assess clustering quality using cohesion and separation of clusters. This package implements silhouette widths for various clustering setups, including support for soft membership probabilities and multi-way clustering structures.
 License: GPL-2 | file LICENSE 
-URL: https://kskbhat.github.io/Silhouette/, https://github.com/kskbhat/Silhouette
+URL: https://kskbhat.github.io/Silhouette/
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
