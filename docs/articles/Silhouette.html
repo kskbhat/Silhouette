@@ -189,7 +189,7 @@ centroid using <code>proxy::dist()</code>.</li>
 <li>
 <strong>Customize Calculation</strong>:<br>
 To use the Probability of Alternative Cluster (PAC) method (which is
-more penalised variation of mediod method) and return a sorted
+more penalised variation of medoid method) and return a sorted
 output:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -575,9 +575,10 @@ widths:</li>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/screeplot2-1.png" alt="fig3.1" width="576"></p>
 <p>The optimal number of clusters is often suggested by the “elbow” or
-“reverse elbow poit”—the point after which increases in <em>k</em> lead
-to diminishing improvements in silhouette width. This visual guide is
-valuable for assessing the clustering structure in your data.</p>
+“reverse elbow”—the point after which increases in <em>k</em> lead to
+diminishing or excessive improvements in silhouette width. This visual
+guide is valuable for assessing the clustering structure in your
+data.</p>
 <p><em>Note:</em> Both the Silhouette and softSilhouette functions can
 be used to generate scree plots for optimal cluster selection. For
 theoretical background and additional diagnostic options for soft

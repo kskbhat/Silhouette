@@ -96,7 +96,7 @@ plot(sil)
 ```
 
 - **Customize Calculation**:  
-To use the Probability of Alternative Cluster (PAC) method (which is more penalised variation of mediod method) and return a sorted output:
+To use the Probability of Alternative Cluster (PAC) method (which is more penalised variation of medoid method) and return a sorted output:
 
 ```{r crisp-silhouette2, fig.width=6, fig.height=4, fig.alt = "fig1.2"}
 sil_pac <- Silhouette(dist_matrix,method = "pac", sort = TRUE)
@@ -287,7 +287,7 @@ The scree plot (also called the "elbow plot" or "reverse elbow plot") is a pract
   )
 ```
 
-  The optimal number of clusters is often suggested by the "elbow" or "reverse elbow poit"—the point after which increases in *k* lead to diminishing improvements in silhouette width. This visual guide is valuable for assessing the clustering structure in your data.
+  The optimal number of clusters is often suggested by the "elbow" or "reverse elbow"—the point after which increases  in *k* lead to diminishing or excessive improvements in silhouette width. This visual guide is valuable for assessing the clustering structure in your data.
   
 *Note:* Both the Silhouette and softSilhouette functions can be used to generate scree plots for optimal cluster selection. For theoretical background and additional diagnostic options for soft clustering, see @bhatkapu2024density.
 
