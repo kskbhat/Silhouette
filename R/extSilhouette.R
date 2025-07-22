@@ -23,6 +23,8 @@
 #' @references
 #' Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \doi{10.1007/s00357-008-9005-9}
 #'
+#' Bhat Kapu, S., & Kiruthika, C. (2025). Block Probabilistic Distance Clustering: A Unified Framework and Evaluation. PREPRINT (Version 1) available at Research Square. \doi{10.21203/rs.3.rs-6973596/v1}
+#'
 #' @examples
 #' # Example using iris dataset with two modes
 #' data(iris)

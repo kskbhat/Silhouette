@@ -421,6 +421,11 @@ The `extSilhouette()` function returns:
 - The overall extended silhouette width—a weighted average summarizing clustering quality across all modes.
 - A dimension statistics table, reporting the number of observations and average silhouette width for each mode (e.g., rows, columns).
 
+*Note:*   
+If a distance matrix is available from the output of a biclustering algorithm, you can compute individual mode silhouettes using `Silhouette()`. 
+
+The results can be combined with `extSilhouette()` to enable direct comparison of clustering solutions across multiple biclustering algorithms, facilitating objective model assessment [@bhat2025block].
+
 This methodology provides a concise and interpretable assessment for complex clustering models where conventional one-dimensional indices are insufficient.
 
 # References
