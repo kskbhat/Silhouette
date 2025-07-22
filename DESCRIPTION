@@ -12,7 +12,7 @@ Authors@R: c(person(given = "Shrikrishna",
            role = "aut",
            comment = c(ORCID = "0000-0001-9655-702X")))
 Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
-Description: Silhouette diagnostics assess clustering quality using cohesion and separation of clusters. This package implements silhouette widths for various clustering setups, including support for soft membership probabilities and multi-way clustering structures.
+Description: Silhouette diagnostics evaluate clustering quality by quantifying both cohesion within clusters and separation between clusters. This package implements advanced silhouette width computations for a variety of clustering structures, supporting: Simplified Medoid Silhouette <doi:10.1080/0094965031000136012>, PAC normalization methods <doi:10.1080/10618600.2022.2050249>, Fuzzy (soft) clustering and silhouette diagnostics using membership probabilities <doi:10.1016/j.fss.2006.07.006>, <doi:10.1080/23737484.2024.2408534>, Multi-way clustering extensions (e.g., biclustering, tensor clustering) <doi:org/10.1007/s00357-008-9005-9>. Computation and visualization <doi:10.1016/0377-0427(87)90125-7> tools are provided for robust, reproducible, and interpretable cluster diagnostics across standard, soft, and multi-way settings.
 License: GPL-2 | file LICENSE 
 URL: https://kskbhat.github.io/Silhouette/
 Encoding: UTF-8
