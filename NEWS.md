@@ -1,6 +1,6 @@
 # Silhouette 0.9.3 (July 2025)
 
-- Removed Citation file from **inst** folder and added WORDLIST in it.
+- Removed Citation file from **inst** folder and added *WORDLIST* in it.
 - Modified description and title in **DESCRIPTION** file.
 
 # Silhouette 0.9.2 (July 2025)
