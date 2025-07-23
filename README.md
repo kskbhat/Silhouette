@@ -24,7 +24,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 }
 
 # Install from GitHub
-devtools::install_github("kskbhat/Silhouette")
+devtools::install_github("kskbhat/Silhouette", build_vignettes = TRUE)
 ```
 
 Once accepted on CRAN, install via:
