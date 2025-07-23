@@ -12,8 +12,7 @@ Authors@R: c(person(given = "Shrikrishna",
            family = "C",
            role = "aut",
            comment = c(ORCID = "0000-0001-9655-702X")))
-Maintainer: Shrikrishna Bhat K <skbhat.in@gmail.com>
-Description: Quantifies clustering quality by measuring both cohesion within clusters and separation between clusters. Implements advanced silhouette width computations for diverse clustering structures, including: Simplified Medoid Silhouette <doi:10.1080/0094965031000136012>, PAC normalization methods <doi:10.1080/10618600.2022.2050249>, Fuzzy (soft) clustering and silhouette diagnostics using membership probabilities <doi:10.1016/j.fss.2006.07.006>, <doi:10.1080/23737484.2024.2408534>, Multi-way clustering extensions (e.g., biclustering, tensor clustering) <doi:10.1007/s00357-008-9005-9>, <doi:10.21203/rs.3.rs-6973596/v1>. Computation and visualization <doi:10.1016/0377-0427(87)90125-7> tools are provided for robust, reproducible, and interpretable cluster diagnostics across standard, soft, and multi-way settings.
+Description: Quantifies clustering quality by measuring both cohesion within clusters and separation between clusters. Implements advanced silhouette width computations for diverse clustering structures, including: Simplified Silhouette <doi:10.1080/0094965031000136012>, PAC normalization methods <doi:10.1080/10618600.2022.2050249>, Fuzzy (soft) clustering and silhouette diagnostics using membership probabilities <doi:10.1016/j.fss.2006.07.006>, <doi:10.1080/23737484.2024.2408534>, Multi-way clustering extensions (e.g., block clustering, tensor clustering) <doi:10.1007/s00357-008-9005-9>, <doi:10.21203/rs.3.rs-6973596/v1>. Computation and visualization <doi:10.1016/0377-0427(87)90125-7> tools are provided for robust, reproducible, and understandable cluster diagnostics across standard, soft, and multi-way settings.
 License: GPL-2 | file LICENSE 
 URL: https://kskbhat.github.io/Silhouette/
 Encoding: UTF-8
