@@ -64,7 +64,7 @@ extSilhouette <- function(sil_list, dim_names = NULL, print.summary = TRUE) {
 
   # Extract number of rows and avg.width from each object
   n_rows <- sapply(sil_list, function(x) nrow(x))
-  avg_widths <- sapply(sil_list, function(x) summary(x,print.summary = FALSE)$avg.width)
+  avg_widths <- sapply(sil_list, function(x) summary(x, print.summary = FALSE)$avg.width)
 
   # Check for valid silhouette widths
   if (any(!is.finite(avg_widths))) {

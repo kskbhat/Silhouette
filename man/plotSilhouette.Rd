@@ -42,10 +42,10 @@ For these classes (\code{"eclust"}, \code{"hcut"}, \code{"pam"}, \code{"clara"},
 data(iris)
 
 # Crisp Silhouette with k-means
-out = kmeans(iris[,-5], 3)
+out <- kmeans(iris[, -5], 3)
 if (requireNamespace("proxy", quietly = TRUE)) {
   library(proxy)
-  dist = dist(iris[,-5], out$centers)
+  dist <- dist(iris[, -5], out$centers)
   plot(Silhouette(dist))
 }
 

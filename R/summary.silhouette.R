@@ -12,15 +12,15 @@
 #'   \item \code{sil.sum}: A data frame with columns \code{cluster}, \code{size}, and \code{avg.sil.width} summarizing cluster sizes and average silhouette widths.
 #' }
 #'
-summary.Silhouette <- function(object,print.summary = TRUE,...) {
-  x = object
+summary.Silhouette <- function(object, print.summary = TRUE, ...) {
+  x <- object
   # Validate input
   if (!inherits(x, "Silhouette")) {
     stop("x must be of class 'Silhouette'.")
   }
 
-  proximity_type = attr(x, "proximity_type")
-  method = attr(x, "method")
+  proximity_type <- attr(x, "proximity_type")
+  method <- attr(x, "method")
 
   # Compute average silhouette widths
   if (is.null(x$weight)) {
@@ -90,14 +90,6 @@ summary.Silhouette <- function(object,print.summary = TRUE,...) {
   invisible(list(
     clus.avg.widths = clus.avg.widths,
     avg.width = avg.width,
-    sil.sum=sil.sum
+    sil.sum = sil.sum
   ))
 }
-
-
-
-
-
-
-
-

@@ -23,13 +23,15 @@ if (length(missing_packages) > 0) {
   cat("❌ The following required packages are not installed:\n\n")
   cat(paste0("- `", missing_packages, "`", collapse = "\n"), "\n\n")
   cat("📦 To install them, run the following code in R:\n\n")
-  
+
   # Print clean R code block
   cat("```r\n")
-  cat(sprintf("install.packages(c(%s))\n", 
-              paste(sprintf('"%s"', missing_packages), collapse = ", ")))
+  cat(sprintf(
+    "install.packages(c(%s))\n",
+    paste(sprintf('"%s"', missing_packages), collapse = ", ")
+  ))
   cat("```\n")
-  
+
   knitr::knit_exit()
 }
 ```
@@ -99,7 +101,7 @@ plot(sil)
 To use the Probability of Alternative Cluster (PAC) method (which is more penalised variation of medoid method) and return a sorted output:
 
 ```{r crisp-silhouette2, fig.width=6, fig.height=4, fig.alt = "fig1.2"}
-sil_pac <- Silhouette(dist_matrix,method = "pac", sort = TRUE)
+sil_pac <- Silhouette(dist_matrix, method = "pac", sort = TRUE)
 head(sil_pac)
 plot(sil_pac)
 ```
@@ -108,7 +110,7 @@ plot(sil_pac)
 The `Silhouette` function prints overall and cluster-wise silhouette indices to the R console by default, but these values are not directly stored in the returned object. To extract them programmatically, use the `summary()` function:
 
 ```{r crisp-silhouette3}
-s = summary(sil_pac)
+s <- summary(sil_pac)
 # summary table
 s$sil.sum
 # cluster wise silhouette widths
@@ -129,20 +131,20 @@ Apply fuzzy c-means clustering on `iris[, -5]` to create three clusters.
 ```{r fm}
 library(ppclust)
 data(iris)
-fm <- ppclust::fcm(x = iris [,-5], centers = 3)
+fm <- ppclust::fcm(x = iris[, -5], centers = 3)
 ```
 - **Step 2: Compute Silhouette Widths Using the Proximity Matrix**  
 The output object `fm` contains a distance matrix `fm$d` representing proximities between each observation and each cluster center, which can be directly fed to the `Silhouette()` function.
 
 ```{r crisp-silhouette4, fig.width=6, fig.height=4, fig.alt = "fig1.2"}
-sil_fm = Silhouette(fm$d)
+sil_fm <- Silhouette(fm$d)
 plot(sil_fm)
 ```
 - **Alternative: Directly Use the Clustering Function with `clust_fun`**  
 To streamline the workflow, you can let the `Silhouette()` function internally handle both clustering and silhouette calculation by supplying the name of the distance matrix (`"d"`) and the desired clustering function:
 
 ```{r crisp-silhouette5, fig.width=6, fig.height=4, fig.alt = "fig1.3"}
-sil_fcm = Silhouette(prox_matrix = "d",clust_fun = fcm,x = iris [,-5], centers = 3)
+sil_fcm <- Silhouette(prox_matrix = "d", clust_fun = fcm, x = iris[, -5], centers = 3)
 plot(sil_fcm)
 ```
 This approach eliminates the explicit step of extracting the proximity matrix, making analyses more concise.
@@ -162,21 +164,21 @@ This section explains how to compute the fuzzy silhouette index when both the **
 ```{r fuzzy-silhouette4.1, fig.width=6, fig.height=4}
 library(ppclust)
 data(iris)
-fm1 <- ppclust::fcm(x = iris [,-5], centers = 3)
+fm1 <- ppclust::fcm(x = iris[, -5], centers = 3)
 ```
 
 - **Step 2: Compute Fuzzy Silhouette Widths Using Proximity and Membership Matrices**  
   The clustering output `fm1` contains both the distance matrix (`fm1$d`) and the membership probability matrix (`fm1$u`). These can be directly passed to the `Silhouette()` function to compute fuzzy silhouette widths:
 
 ```{r fuzzy-silhouette4, fig.width=6, fig.height=4, fig.alt = "fig1.6"}
-sil_fm1 = Silhouette(prox_matrix = fm1$d,prob_matrix = fm1$u)
+sil_fm1 <- Silhouette(prox_matrix = fm1$d, prob_matrix = fm1$u)
 plot(sil_fm1)
 ```
 - **Alternative: Use Clustering Function Inline with `clust_fun`**  
   For an even more streamlined workflow, the `Silhouette()` function can internally manage clustering and silhouette calculations by accepting the names of the distance and probability components (`"d"` and `"u"`) along with the clustering function:
 
 ```{r fuzzy-silhouette5, fig.width=6, fig.height=4, fig.alt = "fig1.3"}
-sil_fcm1 = Silhouette(prox_matrix = "d",prob_matrix = "u",clust_fun = fcm,x = iris [,-5], centers = 3)
+sil_fcm1 <- Silhouette(prox_matrix = "d", prob_matrix = "u", clust_fun = fcm, x = iris[, -5], centers = 3)
 plot(sil_fcm1)
 ```
 
@@ -201,13 +203,13 @@ Suppose we wish to compare the performance of two fuzzy clustering algorithms—
   
 ```{r fcm}
 library(ppclust)
-  data(iris)
+data(iris)
 
-  # FCM clustering
-  fcm_result <- ppclust::fcm(iris[, 1:4], 3)
+# FCM clustering
+fcm_result <- ppclust::fcm(iris[, 1:4], 3)
 
-  # FCM2 clustering
-  fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
+# FCM2 clustering
+fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
 ```
 
 - **Step 2: Compute Soft Silhouette Index for Each Result**
@@ -215,13 +217,13 @@ library(ppclust)
   Use the membership probability matrices produced by each algorithm:
 
 ```{r softSilhouette, fig.width=6, fig.height=4, fig.alt = "fig2.1"}
-  # Soft silhouette for FCM
-  sil_fcm <- softSilhouette(prob_matrix = fcm_result$u)
-  plot(sil_fcm)
+# Soft silhouette for FCM
+sil_fcm <- softSilhouette(prob_matrix = fcm_result$u)
+plot(sil_fcm)
 
-  # Soft silhouette for FCM2
-  sil_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
-  plot(sil_fcm2)
+# Soft silhouette for FCM2
+sil_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
+plot(sil_fcm2)
 ```
 
 - **Step 3: Summarize and Compare Average Silhouette Widths**
@@ -229,11 +231,11 @@ library(ppclust)
   Extract the overall average silhouette width for each clustering result:
 
 ```{r softSilhouette1, fig.width=6, fig.height=4, fig.alt = "fig2.2"}
-  sfcm <- summary(sil_fcm, print.summary = FALSE)
-  sfcm2 <- summary(sil_fcm2, print.summary = FALSE)
+sfcm <- summary(sil_fcm, print.summary = FALSE)
+sfcm2 <- summary(sil_fcm2, print.summary = FALSE)
 
-  cat("FCM average silhouette width:", sfcm$avg.width, "\n")
-  cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
+cat("FCM average silhouette width:", sfcm$avg.width, "\n")
+cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
 ```
 
   A higher average silhouette width indicates a clustering with more compact and well-separated clusters.
@@ -257,21 +259,21 @@ The scree plot (also called the "elbow plot" or "reverse elbow plot") is a pract
   Run silhouette analysis across a range of possible cluster numbers (e.g., 2 to 7). For each *k*, use the `Silhouette()` function to calculate the silhouette widths, then extract the average silhouette width from the summary.
 
 ```{r screeplot1}
-  library(ppclust)
-  data(iris)
-  avg_sil_width <- numeric(6)
-  for (k in 2:7) {
-    sil_out <- Silhouette(
-      prox_matrix = "d",
-      proximity_type = "dissimilarity",
-      prob_matrix = "u",
-      clust_fun = ppclust::fcm,
-      x = iris[, 1:4],
-      centers = k,
-      print.summary = FALSE,
-      sort = TRUE
-    )
-    avg_sil_width[k-1] <- summary(sil_out, print.summary = FALSE)$avg.width
+library(ppclust)
+data(iris)
+avg_sil_width <- numeric(6)
+for (k in 2:7) {
+  sil_out <- Silhouette(
+    prox_matrix = "d",
+    proximity_type = "dissimilarity",
+    prob_matrix = "u",
+    clust_fun = ppclust::fcm,
+    x = iris[, 1:4],
+    centers = k,
+    print.summary = FALSE,
+    sort = TRUE
+  )
+  avg_sil_width[k - 1] <- summary(sil_out, print.summary = FALSE)$avg.width
 }
 ```
 
@@ -279,12 +281,12 @@ The scree plot (also called the "elbow plot" or "reverse elbow plot") is a pract
   Plot the number of clusters against the computed average silhouette widths:
 
 ```{r screeplot2, fig.width=6, fig.height=4, fig.alt = "fig3.1"}
-  plot(avg_sil_width,
-       type = "o",
-       ylab = "Overall Silhouette Width",
-       xlab = "Number of Clusters",
-       main = "Silhouette Scree Plot"
-  )
+plot(avg_sil_width,
+  type = "o",
+  ylab = "Overall Silhouette Width",
+  xlab = "Number of Clusters",
+  main = "Silhouette Scree Plot"
+)
 ```
 
   The optimal number of clusters is often suggested by the "elbow" or "reverse elbow"—the point after which increases  in *k* lead to diminishing or excessive improvements in silhouette width. This visual guide is valuable for assessing the clustering structure in your data.
@@ -320,52 +322,54 @@ Efficient visualization of silhouette widths is essential for interpreting and d
 - **Crisp Silhouette from Cluster Algorithms (PAM, CLARA, FANNY):**
 
 ```{r plot1, fig.width=6, fig.height=4, fig.alt = "fig4.1"}
-  library(cluster)
-  pam_result <- pam(iris[, 1:4], k = 3)
-  plotSilhouette(pam_result)      # for cluster::pam object
+library(cluster)
+pam_result <- pam(iris[, 1:4], k = 3)
+plotSilhouette(pam_result) # for cluster::pam object
 
-  clara_result <- clara(iris[, 1:4], k = 3)
-  plotSilhouette(clara_result)
+clara_result <- clara(iris[, 1:4], k = 3)
+plotSilhouette(clara_result)
 
-  fanny_result <- fanny(iris[, 1:4], k = 3)
-  plotSilhouette(fanny_result)
+fanny_result <- fanny(iris[, 1:4], k = 3)
+plotSilhouette(fanny_result)
 ```
 
 - **Base silhouette object:**
 
 ```{r plot2, fig.width=6, fig.height=4, fig.alt = "fig4.2"}  
 sil_base <- silhouette(pam_result)
-  plotSilhouette(sil_base)
+plotSilhouette(sil_base)
 ```
 
 - **factoextra & hcut/eclust clusterings:**
 
 ```{r plot3, fig.width=6, fig.height=4, fig.alt = "fig4.3"}
-  library(factoextra)
-  eclust_result <- eclust(iris[, 1:4], "kmeans", k = 3, graph = FALSE)
-  plotSilhouette(eclust_result)
+library(factoextra)
+eclust_result <- eclust(iris[, 1:4], "kmeans", k = 3, graph = FALSE)
+plotSilhouette(eclust_result)
 
-  hcut_result <- hcut(iris[, 1:4], k = 3)
-  plotSilhouette(hcut_result)
+hcut_result <- hcut(iris[, 1:4], k = 3)
+plotSilhouette(hcut_result)
 ```
 
 - **Fuzzy (Soft) Silhouette Visualization (e.g., fuzzy c-means with ppclust):**
 
 ```{r plot4, fig.width=6, fig.height=4, fig.alt = "fig4.4"}
-  library(ppclust)
-  data(iris)
-  fcm_out <- ppclust::fcm(iris[, 1:4], 3)
-  sil_fuzzy <- Silhouette(prox_matrix = "d", prob_matrix = "u", clust_fun = fcm,
-                          x = iris[, 1:4], centers = 3, sort = TRUE)
-  plot(sil_fuzzy, summary.legend = FALSE, grayscale = TRUE)
+library(ppclust)
+data(iris)
+fcm_out <- ppclust::fcm(iris[, 1:4], 3)
+sil_fuzzy <- Silhouette(
+  prox_matrix = "d", prob_matrix = "u", clust_fun = fcm,
+  x = iris[, 1:4], centers = 3, sort = TRUE
+)
+plot(sil_fuzzy, summary.legend = FALSE, grayscale = TRUE)
 ```
 
 - **Customization: Grayscale, Detailed Legends, and Observation Labels:**
 
 ```{r plot5, fig.width=6, fig.height=4, fig.alt = "fig4.5"}
-  plotSilhouette(sil_fuzzy, grayscale = TRUE)                # Use grayscale palette
-  plotSilhouette(sil_fuzzy, summary.legend = TRUE)           # Include size + avg silhouette in legend
-  plotSilhouette(sil_fuzzy, label = TRUE)                    # Label bars with row index
+plotSilhouette(sil_fuzzy, grayscale = TRUE) # Use grayscale palette
+plotSilhouette(sil_fuzzy, summary.legend = TRUE) # Include size + avg silhouette in legend
+plotSilhouette(sil_fuzzy, label = TRUE) # Label bars with row index
 ```
 
 **Practical Guidance:**
@@ -385,9 +389,9 @@ The `extSilhouette()` function enables silhouette-based evaluation for multi-way
   Fit a biclustering algorithm to your data—in this example, we use `blockcluster::coclusterContinuous()` to jointly cluster the rows and columns of the `iris` dataset.
   
 ```{r ext1}
-  library(blockcluster)
-  data(iris)
-  result <- coclusterContinuous(as.matrix(iris[, -5]), nbcocluster = c(3, 2))
+library(blockcluster)
+data(iris)
+result <- coclusterContinuous(as.matrix(iris[, -5]), nbcocluster = c(3, 2))
 ```
 
 - **Step 2: Compute Silhouette Widths for Each Mode**  
@@ -395,25 +399,25 @@ The `extSilhouette()` function enables silhouette-based evaluation for multi-way
   
 ```{r ext2}
 sil_mode1 <- softSilhouette(
-    prob_matrix = result@rowposteriorprob,
-    method = "pac",
-    print.summary = FALSE
-  )
-  sil_mode2 <- softSilhouette(
-    prob_matrix = result@colposteriorprob,
-    method = "pac",
-    print.summary = FALSE
-  )
+  prob_matrix = result@rowposteriorprob,
+  method = "pac",
+  print.summary = FALSE
+)
+sil_mode2 <- softSilhouette(
+  prob_matrix = result@colposteriorprob,
+  method = "pac",
+  print.summary = FALSE
+)
 ```
 
 - **Step 3: Aggregate Silhouette Results with `extSilhouette()`**  
   Combine the silhouette analyses from each mode by passing them as a list to `extSilhouette()`. Optionally, provide descriptive dimension names:
   
 ```{r ext3}
-  ext_sil <- extSilhouette(
-    sil_list = list(sil_mode1, sil_mode2),
-    dim_names = c("Rows", "Columns")
-  )
+ext_sil <- extSilhouette(
+  sil_list = list(sil_mode1, sil_mode2),
+  dim_names = c("Rows", "Columns")
+)
 ```
 
 **Summary:**  

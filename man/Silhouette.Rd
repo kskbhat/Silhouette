@@ -127,12 +127,12 @@ where \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident as
 # Standard silhouette with k-means on iris dataset
 data(iris)
 # Crisp Silhouette with k-means
-out = kmeans(iris[,-5],3)
+out <- kmeans(iris[, -5], 3)
 if (requireNamespace("ppclust", quietly = TRUE)) {
-library(proxy)
-dist = proxy::dist(iris[,-5],out$centers)
-silh_out = Silhouette(dist)
-plot(silh_out)
+  library(proxy)
+  dist <- proxy::dist(iris[, -5], out$centers)
+  silh_out <- Silhouette(dist)
+  plot(silh_out)
 } else {
   message("Install 'ppclust': install.packages('ppclust')")
 }
@@ -153,7 +153,7 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
       sort = TRUE
     )
     # Compute average silhouette width from widths
-    avg_sil_width[k-1] = summary(out,print.summary = FALSE)$avg.width
+    avg_sil_width[k - 1] <- summary(out, print.summary = FALSE)$avg.width
   }
   plot(avg_sil_width,
     type = "o",

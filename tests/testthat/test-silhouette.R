@@ -106,9 +106,9 @@ test_that("summary.Silhouette() returns named elements and data frame", {
 ## 7. Robust error handling: Invalid and edge-case inputs
 test_that("Functions error appropriately on bad input", {
   expect_error(Silhouette("not a matrix"), "numeric matrix")
-  expect_error(Silhouette(matrix(1:5, ncol=1)), "at least two columns")
+  expect_error(Silhouette(matrix(1:5, ncol = 1)), "at least two columns")
   expect_error(softSilhouette("not a matrix"), "numeric matrix")
-  expect_error(softSilhouette(matrix(1:3, ncol=1)), "at least two columns")
+  expect_error(softSilhouette(matrix(1:3, ncol = 1)), "at least two columns")
   expect_error(extSilhouette(list(1:3, mtcars)), "class 'Silhouette'")
   expect_error(plotSilhouette(mtcars), "Don't support an object of class")
 })

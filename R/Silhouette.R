@@ -82,12 +82,12 @@
 #' # Standard silhouette with k-means on iris dataset
 #' data(iris)
 #' # Crisp Silhouette with k-means
-#' out = kmeans(iris[,-5],3)
+#' out <- kmeans(iris[, -5], 3)
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
-#' library(proxy)
-#' dist = proxy::dist(iris[,-5],out$centers)
-#' silh_out = Silhouette(dist)
-#' plot(silh_out)
+#'   library(proxy)
+#'   dist <- proxy::dist(iris[, -5], out$centers)
+#'   silh_out <- Silhouette(dist)
+#'   plot(silh_out)
 #' } else {
 #'   message("Install 'ppclust': install.packages('ppclust')")
 #' }
@@ -108,7 +108,7 @@
 #'       sort = TRUE
 #'     )
 #'     # Compute average silhouette width from widths
-#'     avg_sil_width[k-1] = summary(out,print.summary = FALSE)$avg.width
+#'     avg_sil_width[k - 1] <- summary(out, print.summary = FALSE)$avg.width
 #'   }
 #'   plot(avg_sil_width,
 #'     type = "o",
@@ -286,9 +286,10 @@ Silhouette <- function(prox_matrix,
   if (sort) {
     # Initialize variables to NULL
     original_name <- NULL
-    widths <- widths %>% dplyr::mutate(original_name = row.names(widths)) %>%
+    widths <- widths %>%
+      dplyr::mutate(original_name = row.names(widths)) %>%
       dplyr::arrange(cluster, dplyr::desc(sil_width))
-    rownames(widths) = widths$original_name
+    rownames(widths) <- widths$original_name
     widths <- subset(widths, select = -original_name)
   }
 

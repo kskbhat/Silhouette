@@ -34,10 +34,10 @@
 #' data(iris)
 #'
 #' # Crisp Silhouette with k-means
-#' out = kmeans(iris[,-5], 3)
+#' out <- kmeans(iris[, -5], 3)
 #' if (requireNamespace("proxy", quietly = TRUE)) {
 #'   library(proxy)
-#'   dist = dist(iris[,-5], out$centers)
+#'   dist <- dist(iris[, -5], out$centers)
 #'   plot(Silhouette(dist))
 #' }
 #'
@@ -99,23 +99,23 @@
 #' @export
 #' @import dplyr ggplot2 ggpubr methods
 plotSilhouette <- function(x,
-                            label = FALSE,
-                            summary.legend = TRUE,
-                            grayscale = FALSE,
-                            ...) {
+                           label = FALSE,
+                           summary.legend = TRUE,
+                           grayscale = FALSE,
+                           ...) {
   # Initialize variables to NULL
   cluster <- sil_width <- original_name <- name <- NULL
 
-  if(inherits(x, "Silhouette")) {
+  if (inherits(x, "Silhouette")) {
     df <- x
-    summary_stats <- summary(df,print.summary = FALSE)
+    summary_stats <- summary(df, print.summary = FALSE)
     clus.avg.widths <- summary_stats$clus.avg.widths
     avg.width <- summary_stats$avg.width
-  } else if(inherits(x, c("eclust", "hcut", "pam", "clara", "fanny"))){
+  } else if (inherits(x, c("eclust", "hcut", "pam", "clara", "fanny"))) {
     df <- as.data.frame(x$silinfo$widths, stringsAsFactors = TRUE)
     clus.avg.widths <- x$silinfo$clus.avg.widths
     avg.width <- x$silinfo$avg.width
-  }  else if(inherits(x, "silhouette")){
+  } else if (inherits(x, "silhouette")) {
     df <- as.data.frame(x[, 1:3], stringsAsFactors = TRUE)
     clus.avg.widths <- tapply(df$sil_width, df$cluster, mean, na.rm = TRUE)
     avg.width <- mean(df$sil_width, na.rm = TRUE)
@@ -124,10 +124,13 @@ plotSilhouette <- function(x,
   }
 
   # Preserve original row names before arranging
-  df <- df %>% dplyr::mutate(original_name = row.names(df)) %>%
+  df <- df %>%
+    dplyr::mutate(original_name = row.names(df)) %>%
     dplyr::arrange(cluster, dplyr::desc(sil_width)) %>%
-    dplyr::mutate(name = factor(original_name, levels = original_name),
-                  cluster = factor(cluster))
+    dplyr::mutate(
+      name = factor(original_name, levels = original_name),
+      cluster = factor(cluster)
+    )
 
   # Create custom legend labels
   cluster_levels <- as.integer(levels(df$cluster))
@@ -153,13 +156,15 @@ plotSilhouette <- function(x,
   # Set x-axis label based on label parameter
   x_label <- if (label) "Row Index" else ""
 
-  p <- ggplot2::ggplot(df,
-                       ggplot2::aes(
-                         x = name,
-                         y = sil_width,
-                         color = cluster,
-                         fill = cluster
-                       )) +
+  p <- ggplot2::ggplot(
+    df,
+    ggplot2::aes(
+      x = name,
+      y = sil_width,
+      color = cluster,
+      fill = cluster
+    )
+  ) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::labs(
       y = "Silhouette Width",
