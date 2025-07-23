@@ -1,3 +1,8 @@
+# Silhouette 0.9.3 (July 2025)
+
+- Removed Citation file from inst/ and added WORDLIST
+- Modified description and title in DESCRIPTION file.
+
 # Silhouette 0.9.2 (July 2025)
 
 **Initial Stable Release**
