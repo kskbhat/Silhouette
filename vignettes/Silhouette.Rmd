@@ -81,7 +81,6 @@ This example demonstrates how to compute silhouette widths for a clustering resu
 - **Clustering**: Perform k-means clustering on `iris[, -5]` with 3 clusters.
 
 ```{r kmeans}
-library(proxy)
 data(iris)
 km <- kmeans(iris[, -5], centers = 3)
 ```
@@ -91,6 +90,7 @@ km <- kmeans(iris[, -5], centers = 3)
 Create a matrix of distances between each observation and cluster centroid using `proxy::dist()`.
 
 ```{r crisp-silhouette1, fig.width=6, fig.height=4, fig.alt = "fig1.1"}
+library(proxy)
 dist_matrix <- proxy::dist(iris[, -5], km$centers)
 sil <- Silhouette(dist_matrix)
 head(sil)
@@ -162,7 +162,6 @@ This section explains how to compute the fuzzy silhouette index when both the **
   Apply fuzzy c-means clustering to the feature columns of the `iris` dataset, specifying three clusters:
 
 ```{r fuzzy-silhouette4.1, fig.width=6, fig.height=4}
-library(ppclust)
 data(iris)
 fm1 <- ppclust::fcm(x = iris[, -5], centers = 3)
 ```
@@ -202,7 +201,6 @@ Suppose we wish to compare the performance of two fuzzy clustering algorithms—
   Fit each soft clustering algorithm on your dataset (e.g., `iris[, 1:4]`):
   
 ```{r fcm}
-library(ppclust)
 data(iris)
 
 # FCM clustering
@@ -259,7 +257,6 @@ The scree plot (also called the "elbow plot" or "reverse elbow plot") is a pract
   Run silhouette analysis across a range of possible cluster numbers (e.g., 2 to 7). For each *k*, use the `Silhouette()` function to calculate the silhouette widths, then extract the average silhouette width from the summary.
 
 ```{r screeplot1}
-library(ppclust)
 data(iris)
 avg_sil_width <- numeric(6)
 for (k in 2:7) {
@@ -309,15 +306,14 @@ Efficient visualization of silhouette widths is essential for interpreting and d
 
 - **Crisp Silhouette Visualization (e.g., k-means clustering):**
 
-  ```r
-  library(proxy)
-  data(iris)
+```{r plot0, fig.width=6, fig.height=4, fig.alt = "fig4.0"}
+data(iris)
   km_out <- kmeans(iris[, -5], 3)
   dist_mat <- proxy::dist(iris[, -5], km_out$centers)
   sil_obj <- Silhouette(dist_mat)
   plot(sil_obj)                   # S3 method auto-dispatch
   plotSilhouette(sil_obj)         # explicit call (identical output)
-  ```
+```
 
 - **Crisp Silhouette from Cluster Algorithms (PAM, CLARA, FANNY):**
 
@@ -354,7 +350,6 @@ plotSilhouette(hcut_result)
 - **Fuzzy (Soft) Silhouette Visualization (e.g., fuzzy c-means with ppclust):**
 
 ```{r plot4, fig.width=6, fig.height=4, fig.alt = "fig4.4"}
-library(ppclust)
 data(iris)
 fcm_out <- ppclust::fcm(iris[, 1:4], 3)
 sil_fuzzy <- Silhouette(
