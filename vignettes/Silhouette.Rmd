@@ -1,6 +1,8 @@
 ---
 title: "Silhouette Package"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Silhouette Package}
   %\VignetteEngine{knitr::rmarkdown}
