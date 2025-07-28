@@ -14,7 +14,7 @@ Silhouette(
   prob_matrix = NULL,
   a = 2,
   sort = FALSE,
-  print.summary = TRUE,
+  print.summary = FALSE,
   clust_fun = NULL,
   ...
 )
@@ -131,7 +131,7 @@ out <- kmeans(iris[, -5], 3)
 if (requireNamespace("ppclust", quietly = TRUE)) {
   library(proxy)
   dist <- proxy::dist(iris[, -5], out$centers)
-  silh_out <- Silhouette(dist)
+  silh_out <- Silhouette(dist,print.summary = TRUE)
   plot(silh_out)
 } else {
   message("Install 'ppclust': install.packages('ppclust')")
@@ -149,7 +149,6 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
       clust_fun = ppclust::fcm,
       x = iris[, 1:4],
       centers = k,
-      print.summary = FALSE,
       sort = TRUE
     )
     # Compute average silhouette width from widths

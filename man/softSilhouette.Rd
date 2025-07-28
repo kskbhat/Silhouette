@@ -10,7 +10,7 @@ softSilhouette(
   method = c("pac", "medoid"),
   average = c("crisp", "fuzzy"),
   a = 2,
-  print.summary = TRUE,
+  print.summary = FALSE,
   clust_fun = NULL,
   ...
 )
@@ -32,7 +32,7 @@ Defaults to \code{"pp"}.}
 
 \item{a}{Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.}
 
-\item{print.summary}{Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.}
+\item{print.summary}{Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{FALSE}.}
 
 \item{clust_fun}{Optional S3 or S4 function object or function as character string specifying a clustering function that produces the proximity measure matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"d"} for \code{\link[ppclust]{fcm}} when \code{proximity_type = "dissimilarity"}). Defaults to \code{NULL}.}
 
@@ -58,10 +58,9 @@ See \doi{10.1080/23737484.2024.2408534} for more details.
 # Compare two soft clustering algorithms using softSilhouett
 # Example: FCM vs. FCM2 on iris data, using average silhouette width as a criterion
 data(iris)
-# install.packages("ppclust")
 if (requireNamespace("ppclust", quietly = TRUE)) {
   fcm_result <- ppclust::fcm(iris[, 1:4], 3)
-  out_fcm <- softSilhouette(prob_matrix = fcm_result$u)
+  out_fcm <- softSilhouette(prob_matrix = fcm_result$u,print.summary = TRUE)
   plot(out_fcm)
   sfcm <- summary(out_fcm, print.summary = FALSE)
 } else {
@@ -69,7 +68,7 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
 }
 if (requireNamespace("ppclust", quietly = TRUE)) {
   fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
-  out_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
+  out_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u,print.summary = TRUE)
   plot(out_fcm2)
   sfcm2 <- summary(out_fcm2, print.summary = FALSE)
 } else {

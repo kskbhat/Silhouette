@@ -8,7 +8,7 @@
 #' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}). When not \code{NULL}, fuzzy silhouette width is calculated. Defaults to \code{NULL} for crisp silhouette.
 #' @param a Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.
 #' @param sort Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.
-#' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.
+#' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{FALSE}.
 #' @param clust_fun Optional S3 or S4 function object or function as character string specifying a clustering function that produces the proximity measure matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"d"} for \code{\link[ppclust]{fcm}} when \code{proximity_type = "dissimilarity"}). Defaults to \code{NULL}.
 #' @param ... Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{\link[ppclust]{fcm}}.
 #'
@@ -86,7 +86,7 @@
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
 #'   library(proxy)
 #'   dist <- proxy::dist(iris[, -5], out$centers)
-#'   silh_out <- Silhouette(dist)
+#'   silh_out <- Silhouette(dist,print.summary = TRUE)
 #'   plot(silh_out)
 #' } else {
 #'   message("Install 'ppclust': install.packages('ppclust')")
@@ -104,7 +104,6 @@
 #'       clust_fun = ppclust::fcm,
 #'       x = iris[, 1:4],
 #'       centers = k,
-#'       print.summary = FALSE,
 #'       sort = TRUE
 #'     )
 #'     # Compute average silhouette width from widths
@@ -129,7 +128,7 @@ Silhouette <- function(prox_matrix,
                        prob_matrix = NULL,
                        a = 2,
                        sort = FALSE,
-                       print.summary = TRUE,
+                       print.summary = FALSE,
                        clust_fun = NULL, ...) {
   # Validate prox_matrix and clust_fun
   if (is.null(clust_fun)) {
@@ -310,55 +309,29 @@ Silhouette <- function(prox_matrix,
       avg.width <- sum(sil_weight, na.rm = TRUE) / sum(widths$weight, na.rm = TRUE)
     }
 
-    name.proximity_type <- paste(noquote(proximity_type))
-    name.ave <- paste(noquote(round(avg.width, 4)))
-    name.method <- paste(noquote(method))
-    dash1p <- "--------------------------------------------"
-    dash2p <- "--------------------------------------------------"
-    dashs1p <- "-----------------------------------------"
-    dashs2p <- "-----------------------------------------------"
-    dash1 <- "-----------------------------------------------"
-    dash2 <- "-----------------------------------------------------"
-    dashs1 <- "--------------------------------------------"
-    dashs2 <- "--------------------------------------------------"
-    dash <- if (method == "pac") {
-      ifelse(is.null(prob_matrix), ifelse(proximity_type == "dissimilarity", dash1p, dashs1p), ifelse(proximity_type == "dissimilarity", dash2p, dashs2p))
-    } else {
-      ifelse(is.null(prob_matrix), ifelse(proximity_type == "dissimilarity", dash1, dashs1), ifelse(proximity_type == "dissimilarity", dash2, dashs2))
-    }
-    cat(dash)
-    if (is.null(prob_matrix)) {
-      cat(
-        "\nAverage",
-        name.proximity_type,
-        name.method,
-        "silhouette:",
-        name.ave, "\n"
-      )
-    } else {
-      cat(
-        "\nAverage",
-        "fuzzy",
-        name.proximity_type,
-        name.method,
-        "silhouette:",
-        name.ave, "\n"
-      )
-    }
-    cat(dash, "\n")
-    if (!is.numeric(clus.avg.widths) || is.null(names(clus.avg.widths))) {
-      warning("clus.avg.widths is not a named numeric vector; summary may be incorrect.")
-    }
+    # Summary data
     n <- table(widths$cluster)
     sil.sum <- data.frame(
       cluster = names(clus.avg.widths),
       size = as.vector(n),
       avg.sil.width = round(clus.avg.widths, 4)
     )
+
+    # Construct summary output string
+    header <- if (is.null(prob_matrix)) {
+      sprintf("Average %s %s silhouette: %.4f", proximity_type, method, avg.width)
+    } else {
+      sprintf("Average fuzzy %s %s silhouette: %.4f", proximity_type, method, avg.width)
+    }
+
+    message(strrep("-", nchar(header)))
+    message(header)
+    message(strrep("-", nchar(header)))
+    cat("\n")
     print(sil.sum)
     cat("\n")
-    cat("Available attributes:\n")
-    print(names(attributes(widths)))
+    message("Available attributes: ", paste(names(attributes(widths)), collapse = ", "))
   }
+
   structure(widths, class = c("Silhouette", "data.frame"))
 }

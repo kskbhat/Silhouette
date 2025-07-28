@@ -11,3 +11,4 @@
 ^image\.png$
 ^logo\.png$
 ^CRAN-SUBMISSION$
+^LICENSE$

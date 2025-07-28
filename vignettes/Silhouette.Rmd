@@ -19,21 +19,17 @@ knitr::opts_chunk$set(
 
 ```{r check-packages, echo=FALSE, message=FALSE, warning=FALSE}
 required_packages <- c("proxy", "ppclust", "blockcluster", "cluster", "factoextra", "ggplot2")
-missing_packages <- required_packages[!(required_packages %in% installed.packages()[, "Package"])]
+
+missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
 
 if (length(missing_packages) > 0) {
-  cat("❌ The following required packages are not installed:\n\n")
-  cat(paste0("- `", missing_packages, "`", collapse = "\n"), "\n\n")
-  cat("📦 To install them, run the following code in R:\n\n")
-
-  # Print clean R code block
-  cat("```r\n")
-  cat(sprintf(
-    "install.packages(c(%s))\n",
-    paste(sprintf('"%s"', missing_packages), collapse = ", ")
-  ))
-  cat("```\n")
-
+  message("❌ The following required packages are not installed:\n")
+  message(paste0("- ", missing_packages, collapse = "\n"), "\n")
+  message("📦 To install them, run the following in R:\n")
+  message("```r")
+  message(sprintf("install.packages(c(%s))", paste(sprintf('\"%s\"', missing_packages), collapse = ", ")))
+  message("```")
+  
   knitr::knit_exit()
 }
 ```
@@ -96,6 +92,7 @@ library(proxy)
 dist_matrix <- proxy::dist(iris[, -5], km$centers)
 sil <- Silhouette(dist_matrix)
 head(sil)
+summary(sil)
 plot(sil)
 ```
 
@@ -105,14 +102,15 @@ To use the Probability of Alternative Cluster (PAC) method (which is more penali
 ```{r crisp-silhouette2, fig.width=6, fig.height=4, fig.alt = "fig1.2"}
 sil_pac <- Silhouette(dist_matrix, method = "pac", sort = TRUE)
 head(sil_pac)
+summary(sil_pac)
 plot(sil_pac)
 ```
 
 - **Accessing Silhouette Summaries**:  
-The `Silhouette` function prints overall and cluster-wise silhouette indices to the R console by default, but these values are not directly stored in the returned object. To extract them programmatically, use the `summary()` function:
+The `Silhouette` function prints overall and cluster-wise silhouette indices to the R console if `print.summary = TRUE`, but these values are not directly stored in the returned object. To extract them programmatically, use the `summary()` function:
 
 ```{r crisp-silhouette3}
-s <- summary(sil_pac)
+s <- summary(sil_pac,print.summary = TRUE)
 # summary table
 s$sil.sum
 # cluster wise silhouette widths
@@ -338,7 +336,7 @@ sil_base <- silhouette(pam_result)
 plotSilhouette(sil_base)
 ```
 
-- **factoextra & hcut/eclust clusterings:**
+- **factoextra::hcut/eclust clusterings:**
 
 ```{r plot3, fig.width=6, fig.height=4, fig.alt = "fig4.3"}
 library(factoextra)
@@ -413,7 +411,8 @@ sil_mode2 <- softSilhouette(
 ```{r ext3}
 ext_sil <- extSilhouette(
   sil_list = list(sil_mode1, sil_mode2),
-  dim_names = c("Rows", "Columns")
+  dim_names = c("Rows", "Columns"),
+  print.summary = TRUE
 )
 ```
 

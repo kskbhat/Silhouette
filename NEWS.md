@@ -1,3 +1,15 @@
+# Silhouette 0.9.4 (July 2025)
+
+- Clarified the description of the **PAC (Proportion of Ambiguous Clustering)** method in the documentation by citing the original authors (Author, Year).
+
+- Removed usage of `installed.packages()` from the package code and replaced it with a more robust and CRAN-compliant approach, following suggested practices.
+
+- All user-facing functions now include the argument `print.summary`, which controls whether summary details are printed. This argument behaves similarly to `if (verbose) cat(...)` and now defaults to `FALSE`.
+
+- Messages using `message()` are included in example sections to **suggest installation of optional packages** (e.g., `ppclust`, `blockcluster`). These packages are **not called directly**, but their outputs are used in examples. This is done to guide users without violating CRAN's policy on requiring packages in examples.
+
+- Removed the license file as suggested.
+
 # Silhouette 0.9.3 (July 2025)
 
 - Removed *Citation* file from **inst** folder and added *WORDLIST* in it.

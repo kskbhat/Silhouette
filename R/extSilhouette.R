@@ -4,7 +4,7 @@
 #'
 #' @param sil_list A list of objects of class \code{"Silhouette"}, typically the output of \code{\link{Silhouette}} or \code{\link{softSilhouette}}, where each object represents the silhouette analysis for one mode of multi-way clustering (e.g., rows, columns, or other dimensions in biclustering or tensor clustering).
 #' @param dim_names An optional character vector of dimension names (e.g., \code{c("Rows", "Columns")}). If \code{NULL}, defaults to \code{"Mode 1"}, \code{"Mode 2"}, etc.
-#' @param print.summary Logical; if \code{TRUE}, prints a summary of the extended silhouette width and dimension table. Default is \code{TRUE}.
+#' @param print.summary Logical; if \code{TRUE}, prints a summary of the extended silhouette width and dimension table. Default is \code{FALSE}.
 #'
 #' @return A list of class \code{"extSilhouette"} with the following components:
 #' \describe{
@@ -42,22 +42,19 @@
 #' if (requireNamespace("blockcluster", quietly = TRUE)) {
 #'   sil_mode1 <- softSilhouette(
 #'     prob_matrix = result@rowposteriorprob,
-#'     method = "pac",
-#'     print.summary = FALSE
-#'   )
+#'     method = "pac")
 #'   sil_mode2 <- softSilhouette(
 #'     prob_matrix = result@colposteriorprob,
-#'     method = "pac",
-#'     print.summary = FALSE
-#'   )
+#'     method = "pac"
+#'     )
 #'
 #'   # Extended silhouette
-#'   ext_sil <- extSilhouette(list(sil_mode1, sil_mode2))
+#'   ext_sil <- extSilhouette(list(sil_mode1, sil_mode2),print.summary = TRUE)
 #' }
 #' }
 #'
 #' @export
-extSilhouette <- function(sil_list, dim_names = NULL, print.summary = TRUE) {
+extSilhouette <- function(sil_list, dim_names = NULL, print.summary = FALSE) {
   if (!all(sapply(sil_list, inherits, "Silhouette"))) {
     stop("All elements in sil_list must be of class 'Silhouette'.")
   }
