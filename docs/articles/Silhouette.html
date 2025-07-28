@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,17 +164,6 @@ centroid using <code>proxy::dist()</code>.</li>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">proxy</span><span class="op">)</span></span>
 <span><span class="va">dist_matrix</span> <span class="op">&lt;-</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">km</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span>
 <span><span class="va">sil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------</span></span>
-<span><span class="co">#&gt; Average dissimilarity medoid silhouette: 0.6664 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   50        0.8592</span></span>
-<span><span class="co">#&gt; 2       2   62        0.5546</span></span>
-<span><span class="co">#&gt; 3       3   38        0.5950</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sil</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   cluster neighbor sil_width</span></span>
 <span><span class="co">#&gt; 1       1        2 0.9586603</span></span>
@@ -183,6 +172,14 @@ centroid using <code>proxy::dist()</code>.</li>
 <span><span class="co">#&gt; 4       1        2 0.8465006</span></span>
 <span><span class="co">#&gt; 5       1        2 0.9455979</span></span>
 <span><span class="co">#&gt; 6       1        2 0.7848442</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil</span><span class="op">)</span></span>
+<span><span class="co">#&gt; -----------------------------------------------</span></span>
+<span><span class="co">#&gt; Average dissimilarity medoid silhouette: 0.6664 </span></span>
+<span><span class="co">#&gt; ----------------------------------------------- </span></span>
+<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
+<span><span class="co">#&gt; 1       1   50        0.8592</span></span>
+<span><span class="co">#&gt; 2       2   62        0.5546</span></span>
+<span><span class="co">#&gt; 3       3   38        0.5950</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/crisp-silhouette1-1.png" alt="fig1.1" width="576"></p>
 <ul>
@@ -194,17 +191,6 @@ output:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_pac</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist_matrix</span>, method <span class="op">=</span> <span class="st">"pac"</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; --------------------------------------------</span></span>
-<span><span class="co">#&gt; Average dissimilarity pac silhouette: 0.5376 </span></span>
-<span><span class="co">#&gt; -------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   50        0.7603</span></span>
-<span><span class="co">#&gt; 2       2   62        0.4136</span></span>
-<span><span class="co">#&gt; 3       3   38        0.4468</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "row.names"      "class"          "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sil_pac</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    cluster neighbor sil_width</span></span>
 <span><span class="co">#&gt; 8        1        2 0.9611009</span></span>
@@ -213,18 +199,27 @@ output:</li>
 <span><span class="co">#&gt; 18       1        2 0.9182947</span></span>
 <span><span class="co">#&gt; 50       1        2 0.9158517</span></span>
 <span><span class="co">#&gt; 41       1        2 0.8993130</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil_pac</span><span class="op">)</span></span>
+<span><span class="co">#&gt; --------------------------------------------</span></span>
+<span><span class="co">#&gt; Average dissimilarity pac silhouette: 0.5376 </span></span>
+<span><span class="co">#&gt; -------------------------------------------- </span></span>
+<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
+<span><span class="co">#&gt; 1       1   50        0.7603</span></span>
+<span><span class="co">#&gt; 2       2   62        0.4136</span></span>
+<span><span class="co">#&gt; 3       3   38        0.4468</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_pac</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/crisp-silhouette2-1.png" alt="fig1.2" width="576"></p>
 <ul>
 <li>
 <strong>Accessing Silhouette Summaries</strong>:<br>
 The <code>Silhouette</code> function prints overall and cluster-wise
-silhouette indices to the R console by default, but these values are not
-directly stored in the returned object. To extract them
-programmatically, use the <code><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary()</a></code> function:</li>
+silhouette indices to the R console if
+<code>print.summary = TRUE</code>, but these values are not directly
+stored in the returned object. To extract them programmatically, use the
+<code><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary()</a></code> function:</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil_pac</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil_pac</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; --------------------------------------------</span></span>
 <span><span class="co">#&gt; Average dissimilarity pac silhouette: 0.5376 </span></span>
 <span><span class="co">#&gt; -------------------------------------------- </span></span>
@@ -277,17 +272,6 @@ each cluster center, which can be directly fed to the
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">fm</span><span class="op">$</span><span class="va">d</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------</span></span>
-<span><span class="co">#&gt; Average dissimilarity medoid silhouette: 0.8288 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   60        0.7304</span></span>
-<span><span class="co">#&gt; 2       2   50        0.9740</span></span>
-<span><span class="co">#&gt; 3       3   40        0.7950</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/crisp-silhouette4-1.png" alt="fig1.2" width="576">
 - <strong>Alternative: Directly Use the Clustering Function with
@@ -298,17 +282,6 @@ supplying the name of the distance matrix (<code>"d"</code>) and the
 desired clustering function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="st">"d"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------</span></span>
-<span><span class="co">#&gt; Average dissimilarity medoid silhouette: 0.8288 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   60        0.7304</span></span>
-<span><span class="co">#&gt; 2       2   40        0.7950</span></span>
-<span><span class="co">#&gt; 3       3   50        0.9740</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/crisp-silhouette5-1.png" alt="fig1.3" width="576">
 This approach eliminates the explicit step of extracting the proximity
@@ -355,17 +328,6 @@ widths:</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="va">fm1</span><span class="op">$</span><span class="va">d</span>, prob_matrix <span class="op">=</span> <span class="va">fm1</span><span class="op">$</span><span class="va">u</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------------</span></span>
-<span><span class="co">#&gt; Average fuzzy dissimilarity medoid silhouette: 0.9298 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   60        0.8829</span></span>
-<span><span class="co">#&gt; 2       2   50        0.9772</span></span>
-<span><span class="co">#&gt; 3       3   40        0.8882</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fm1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/fuzzy-silhouette4-1.png" alt="fig1.6" width="576">
 - <strong>Alternative: Use Clustering Function Inline with
@@ -377,17 +339,6 @@ accepting the names of the distance and probability components
 function:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fcm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="st">"d"</span>, prob_matrix <span class="op">=</span> <span class="st">"u"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------------</span></span>
-<span><span class="co">#&gt; Average fuzzy dissimilarity medoid silhouette: 0.9298 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   40        0.8882</span></span>
-<span><span class="co">#&gt; 2       2   50        0.9772</span></span>
-<span><span class="co">#&gt; 3       3   60        0.8829</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/fuzzy-silhouette5-1.png" alt="fig1.3" width="576"></p>
 <p>This approach removes the need to manually extract matrices from the
@@ -446,34 +397,12 @@ algorithm:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Soft silhouette for FCM</span></span>
 <span><span class="va">sil_fcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/softSilhouette.html">softSilhouette</a></span><span class="op">(</span>prob_matrix <span class="op">=</span> <span class="va">fcm_result</span><span class="op">$</span><span class="va">u</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------</span></span>
-<span><span class="co">#&gt; Average similarity pac silhouette: 0.7541 </span></span>
-<span><span class="co">#&gt; ----------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   60        0.6261</span></span>
-<span><span class="co">#&gt; 2       2   40        0.7005</span></span>
-<span><span class="co">#&gt; 3       3   50        0.9507</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/softSilhouette-1.png" alt="fig2.1" width="576"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Soft silhouette for FCM2</span></span>
 <span><span class="va">sil_fcm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/softSilhouette.html">softSilhouette</a></span><span class="op">(</span>prob_matrix <span class="op">=</span> <span class="va">fcm2_result</span><span class="op">$</span><span class="va">u</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------</span></span>
-<span><span class="co">#&gt; Average similarity pac silhouette: 0.4113 </span></span>
-<span><span class="co">#&gt; ----------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   25        0.3623</span></span>
-<span><span class="co">#&gt; 2       2   65        0.5636</span></span>
-<span><span class="co">#&gt; 3       3   60        0.2666</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/softSilhouette-2.png" alt="fig2.1" width="576"></p>
 <ul>
@@ -620,17 +549,6 @@ clustering):</strong></li>
 <span>  <span class="va">km_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span>  <span class="va">dist_mat</span> <span class="op">&lt;-</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">km_out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span>
 <span>  <span class="va">sil_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist_mat</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------</span></span>
-<span><span class="co">#&gt; Average dissimilarity medoid silhouette: 0.6664 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   50        0.8592</span></span>
-<span><span class="co">#&gt; 2       2   62        0.5546</span></span>
-<span><span class="co">#&gt; 3       3   38        0.5950</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "class"          "row.names"      "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_obj</span><span class="op">)</span>                   <span class="co"># S3 method auto-dispatch</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/plot0-1.png" alt="fig4.0" width="576"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
@@ -663,7 +581,7 @@ FANNY):</strong></li>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">sil_base</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/plot2-1.png" alt="fig4.2" width="576"></p>
 <ul>
-<li><strong>factoextra &amp; hcut/eclust clusterings:</strong></li>
+<li><strong>factoextra::hcut/eclust clusterings:</strong></li>
 </ul>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.sthda.com/english/rpkgs/factoextra" class="external-link">factoextra</a></span><span class="op">)</span></span>
@@ -686,17 +604,6 @@ with ppclust):</strong></li>
 <span>  prox_matrix <span class="op">=</span> <span class="st">"d"</span>, prob_matrix <span class="op">=</span> <span class="st">"u"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>,</span>
 <span>  x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span>, sort <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------------</span></span>
-<span><span class="co">#&gt; Average fuzzy dissimilarity medoid silhouette: 0.9298 </span></span>
-<span><span class="co">#&gt; ----------------------------------------------------- </span></span>
-<span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
-<span><span class="co">#&gt; 1       1   60        0.8829</span></span>
-<span><span class="co">#&gt; 2       2   40        0.8882</span></span>
-<span><span class="co">#&gt; 3       3   50        0.9772</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Available attributes:</span></span>
-<span><span class="co">#&gt; [1] "names"          "row.names"      "class"          "proximity_type"</span></span>
-<span><span class="co">#&gt; [5] "method"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fuzzy</span>, summary.legend <span class="op">=</span> <span class="cn">FALSE</span>, grayscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/plot4-1.png" alt="fig4.4" width="576"></p>
 <ul>
@@ -755,7 +662,10 @@ For each dimension (e.g., rows and columns), calculate silhouette widths
 using the membership probability matrices
 (<code>result@rowposteriorprob</code> for rows,
 <code>result@colposteriorprob</code> for columns) via the
-<code><a href="../reference/softSilhouette.html">softSilhouette()</a></code> function:</li>
+<code><a href="../reference/softSilhouette.html">softSilhouette()</a></code> function: (One can use
+<code><a href="../reference/Silhouette.html">Silhouette()</a></code> also to calculate when relevent proximity
+measure available, For consistency make sure all objects in list derived
+from same <code>method</code> and arguments.)</li>
 </ul>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_mode1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/softSilhouette.html">softSilhouette</a></span><span class="op">(</span></span>
@@ -779,7 +689,8 @@ dimension names:</li>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ext_sil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extSilhouette.html">extSilhouette</a></span><span class="op">(</span></span>
 <span>  sil_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">sil_mode1</span>, <span class="va">sil_mode2</span><span class="op">)</span>,</span>
-<span>  dim_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Rows"</span>, <span class="st">"Columns"</span><span class="op">)</span></span>
+<span>  dim_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Rows"</span>, <span class="st">"Columns"</span><span class="op">)</span>,</span>
+<span>  print.summary <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt; Extended silhouette: 0.6273 </span></span>

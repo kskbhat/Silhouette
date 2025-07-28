@@ -16,8 +16,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Silhouette Package">
-<meta name="description" content="Quantifies clustering quality by measuring both cohesion within clusters and separation between clusters. Implements advanced silhouette width computations for diverse clustering structures, including: Simplified Silhouette &lt;doi:10.1080/0094965031000136012&gt;, PAC normalization methods &lt;doi:10.1080/10618600.2022.2050249&gt;, Fuzzy (soft) clustering and silhouette diagnostics using membership probabilities &lt;doi:10.1016/j.fss.2006.07.006&gt;, &lt;doi:10.1080/23737484.2024.2408534&gt;, Multi-way clustering extensions (e.g., block clustering, tensor clustering) &lt;doi:10.1007/s00357-008-9005-9&gt;, &lt;doi:10.21203/rs.3.rs-6973596/v1&gt;. Computation and visualization &lt;doi:10.1016/0377-0427(87)90125-7&gt; tools are provided for robust, reproducible, and understandable cluster diagnostics across standard, soft, and multi-way settings.">
-<meta property="og:description" content="Quantifies clustering quality by measuring both cohesion within clusters and separation between clusters. Implements advanced silhouette width computations for diverse clustering structures, including: Simplified Silhouette &lt;doi:10.1080/0094965031000136012&gt;, PAC normalization methods &lt;doi:10.1080/10618600.2022.2050249&gt;, Fuzzy (soft) clustering and silhouette diagnostics using membership probabilities &lt;doi:10.1016/j.fss.2006.07.006&gt;, &lt;doi:10.1080/23737484.2024.2408534&gt;, Multi-way clustering extensions (e.g., block clustering, tensor clustering) &lt;doi:10.1007/s00357-008-9005-9&gt;, &lt;doi:10.21203/rs.3.rs-6973596/v1&gt;. Computation and visualization &lt;doi:10.1016/0377-0427(87)90125-7&gt; tools are provided for robust, reproducible, and understandable cluster diagnostics across standard, soft, and multi-way settings.">
+<meta name="description" content="Quantifies clustering quality by measuring both cohesion within clusters and separation between clusters. Implements advanced silhouette width computations for diverse clustering structures, including: simplified silhouette (Van der Laan et al., 2003) &lt;doi:10.1080/0094965031000136012&gt;, Probability of Alternative Cluster normalization methods (Raymaekers &amp; Rousseeuw, 2022) &lt;doi:10.1080/10618600.2022.2050249&gt;, fuzzy clustering and silhouette diagnostics using membership probabilities (Campello &amp; Hruschka, 2006; Bhat &amp; Kiruthika, 2024) &lt;doi:10.1016/j.fss.2006.07.006&gt;, &lt;doi:10.1080/23737484.2024.2408534&gt;, and multi-way clustering extensions such as block and tensor clustering (Schepers et al., 2008; Bhat &amp; Kiruthika, 2025) &lt;doi:10.1007/s00357-008-9005-9&gt;, &lt;doi:10.21203/rs.3.rs-6973596/v1&gt;. Provides tools for computation and visualization (Rousseeuw, 1987) &lt;doi:10.1016/0377-0427(87)90125-7&gt; to support robust and reproducible cluster diagnostics across standard, soft, and multi-way clustering settings.">
+<meta property="og:description" content="Quantifies clustering quality by measuring both cohesion within clusters and separation between clusters. Implements advanced silhouette width computations for diverse clustering structures, including: simplified silhouette (Van der Laan et al., 2003) &lt;doi:10.1080/0094965031000136012&gt;, Probability of Alternative Cluster normalization methods (Raymaekers &amp; Rousseeuw, 2022) &lt;doi:10.1080/10618600.2022.2050249&gt;, fuzzy clustering and silhouette diagnostics using membership probabilities (Campello &amp; Hruschka, 2006; Bhat &amp; Kiruthika, 2024) &lt;doi:10.1016/j.fss.2006.07.006&gt;, &lt;doi:10.1080/23737484.2024.2408534&gt;, and multi-way clustering extensions such as block and tensor clustering (Schepers et al., 2008; Bhat &amp; Kiruthika, 2025) &lt;doi:10.1007/s00357-008-9005-9&gt;, &lt;doi:10.21203/rs.3.rs-6973596/v1&gt;. Provides tools for computation and visualization (Rousseeuw, 1987) &lt;doi:10.1016/0377-0427(87)90125-7&gt; to support robust and reproducible cluster diagnostics across standard, soft, and multi-way clustering settings.">
 <meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png">
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 </head>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,9 +113,7 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://www.r-project.org/Licenses/GPL-2" class="external-link">GPL-2</a> | file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="https://www.r-project.org/Licenses/GPL-2" class="external-link">GPL-2</a></li>
 </ul>
 </div>
 

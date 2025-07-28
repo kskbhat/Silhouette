@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@
 <span>  prob_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  a <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  print.summary <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  print.summary <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clust_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -192,22 +192,21 @@ where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confiden
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">proxy</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">silh_out</span> <span class="op">&lt;-</span> <span class="fu">Silhouette</span><span class="op">(</span><span class="va">dist</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">silh_out</span> <span class="op">&lt;-</span> <span class="fu">Silhouette</span><span class="op">(</span><span class="va">dist</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">silh_out</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Install 'ppclust': install.packages('ppclust')"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Average dissimilarity medoid silhouette: 0.6664 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ----------------------------------------------- </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Average dissimilarity medoid silhouette: 0.6664</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   50        0.8592</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   38        0.5950</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   62        0.5546</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Available attributes:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "names"          "class"          "row.names"      "proximity_type"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "method"        </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method</span>
 <span class="r-plt img"><img src="Silhouette-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Scree plot for optimal clusters (2 to 7)</span></span></span>
@@ -222,7 +221,6 @@ where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confiden
 <span class="r-in"><span>      clust_fun <span class="op">=</span> <span class="fu">ppclust</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ppclust/man/fcm.html" class="external-link">fcm</a></span>,</span></span>
 <span class="r-in"><span>      x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>      centers <span class="op">=</span> <span class="va">k</span>,</span></span>
-<span class="r-in"><span>      print.summary <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>      sort <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="co"># Compute average silhouette width from widths</span></span></span>

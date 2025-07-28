@@ -27,7 +27,7 @@ Computes an extended silhouette width for multi-way clustering (e.g., biclusteri
 The extended silhouette width is computed as:
 \deqn{ ExS = \frac{ \sum (n_i \cdot w_i) }{ \sum n_i } }
 where \eqn{n_i} is the number of observations in mode \eqn{i} (derived from \code{nrow(x$widths)}), and \eqn{w_i} is the average silhouette width for that mode (from \code{x$avg.width}).
-Each \code{Silhouette} object in \code{sil_list} must contain a non-empty \code{widths} data frame and a numeric \code{avg.width} value. Modes with zero observations (\eqn{n_i = 0}) are not allowed, as they would result in an undefined weighted average.
+Each \code{Silhouette} object in \code{sil_list} must contain a non-empty \code{widths} data frame and a numeric \code{avg.width} value. Modes with zero observations (\eqn{n_i = 0}) are not allowed, as they would result in an undefined weighted average. For consistency make sure all \code{Silhouette} objects derived from same \code{method} and arguments.
 }
 \examples{
 # Example using iris dataset with two modes
