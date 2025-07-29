@@ -4,9 +4,7 @@
 [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 <!-- badges: end -->
-# mypkg <img src="logo.png" align="right" height="139" />
-
-# Silhouette
+# Silhouette <img src="logo.png" align="right" height="139" />
 
 An [R](https://www.r-project.org/) package for silhouette-based diagnostics in standard, soft, and multi-way clustering.
 
