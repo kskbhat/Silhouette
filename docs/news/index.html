@@ -32,7 +32,7 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.4" id="silhouette-094-july-2025">Silhouette 0.9.4 (July 2025)<a class="anchor" aria-label="anchor" href="#silhouette-094-july-2025"></a></h2>
-<ul><li><p>Clarified the description of the <strong>PAC (Proportion of Ambiguous Clustering)</strong> method in the documentation by citing the original authors (Author, Year).</p></li>
+<ul><li><p>Clarified the description of the <strong>PAC (Probability of Alternative Cluster)</strong> method in the documentation by citing the original authors (Author, Year).</p></li>
 <li><p>Removed usage of <code><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages()</a></code> from the package code and replaced it with a more robust and CRAN-compliant approach, following suggested practices.</p></li>
 <li><p>All user-facing functions now include the argument <code>print.summary</code>, which controls whether summary details are printed. This argument behaves similarly to <code>if (verbose) cat(...)</code> and now defaults to <code>FALSE</code>.</p></li>
 <li><p>Messages using <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code> are included in example sections to <strong>suggest installation of optional packages</strong> (e.g., <code>ppclust</code>, <code>blockcluster</code>). These packages are <strong>not called directly</strong>, but their outputs are used in examples. This is done to guide users without violating CRAN’s policy on requiring packages in examples.</p></li>
