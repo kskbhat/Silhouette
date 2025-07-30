@@ -1,5 +1,5 @@
 template:
-  logo: logo.png
+  logo: man/figures/logo.png
   bootstrap: 5
   bslib:
     bootswatch: cerulean
