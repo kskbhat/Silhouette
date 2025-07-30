@@ -1,10 +1,14 @@
+# Silhouette <a href="https://kskbhat.github.io/Silhouette"><img src="man/figures/logo.png" align="right" height="139" alt="Silhouette website" /></a>
+
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
 [![R-hub](https://github.com/kskbhat/Silhouette/actions/workflows/rhub.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/rhub.yaml)
 [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
+[![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)](https://cran.r-project.org/package=Silhouette)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL--3-blue.svg)](LICENSE)
 <!-- badges: end -->
-# Silhouette <a href="https://kskbhat.github.io/Silhouette"><img src="man/figures/logo.png" align="right" height="139" alt="Silhouette website" /></a>
 
 
 An [R](https://www.r-project.org/) package for silhouette-based diagnostics in standard, soft, and multi-way clustering.
