@@ -30,7 +30,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("kskbhat/Silhouette")
 ```
 
-Once accepted on CRAN, install via:
+From CRAN, install via:
 
 ```r
 install.packages("Silhouette")
