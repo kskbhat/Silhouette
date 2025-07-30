@@ -12,3 +12,4 @@
 ^logo\.png$
 ^CRAN-SUBMISSION$
 ^LICENSE$
+^inst/CITATION$

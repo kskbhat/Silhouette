@@ -1,0 +1,19 @@
+citHeader("To cite the Silhouette package in publications use:")
+
+citEntry(
+  entry = "Manual",
+  title = "Silhouette: Proximity Measure Based Diagnostics for Standard, Soft, and Multi-Way Clustering",
+  author = c(
+    person(given = "Shrikrishna", family = "Bhat K",
+           email = "skbhat.in@gmail.com",
+           role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0009-0000-6180-5783")),
+    person(given = "Kiruthika", family = "C",
+           role = "aut",
+           comment = c(ORCID = "0000-0001-9655-702X"))
+  ),
+  year = 2025,
+  note = "R package version 0.9.4",
+  doi = "10.32614/CRAN.package.Silhouette",
+  url = "https://CRAN.R-project.org/package=Silhouette"
+)
