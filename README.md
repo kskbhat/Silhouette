@@ -1,4 +1,4 @@
-# Silhouette <a href="https://kskbhat.github.io/Silhouette"><img src="man/figures/logo.png" align="right" height="139" alt="Silhouette website" /></a>
+# Silhouette <a href="https://kskbhat.github.io/Silhouette/"><img src="man/figures/logo.png" align="right" height="139" alt="Silhouette website" /></a>
 
 <!-- badges: start -->
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
