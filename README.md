@@ -1,13 +1,15 @@
 # Silhouette <a href="https://kskbhat.github.io/Silhouette/"><img src="man/figures/logo.png" align="right" height="139" alt="Silhouette website" /></a>
 
-<!-- badges: start -->
+<!-- badges: start --> 
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)](https://cran.r-project.org/package=Silhouette)
-[![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+<!--
+[![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
 [![R-hub](https://github.com/kskbhat/Silhouette/actions/workflows/rhub.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/rhub.yaml)
 [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
+-->
 <!-- badges: end -->
 
 
