@@ -16,7 +16,7 @@ An [R](https://www.r-project.org/) package for silhouette-based diagnostics in s
 
 Quantifies clustering quality by measuring both **cohesion within clusters** and **separation between clusters**. Implements advanced silhouette width computations for diverse clustering structures, including: simplified silhouette by [Van der Laan et al. (2003)](https://doi.org/10.1080/0094965031000136012), Probability of Alternative Cluster normalization methods by [Raymaekers & Rousseeuw (2022)](https://doi.org/10.1080/10618600.2022.2050249), fuzzy clustering and silhouette diagnostics using membership probabilities by [Campello & Hruschka (2006)](https://doi.org/10.1016/j.fss.2006.07.006) and [Bhat & Kiruthika (2024)](https://doi.org/10.1080/23737484.2024.2408534), and multi-way clustering extensions such as block and tensor clustering by [Schepers et al. (2008)](https://doi.org/10.1007/s00357-008-9005-9) and [Bhat & Kiruthika (2025)](https://doi.org/10.21203/rs.3.rs-6973596/v1). Provides tools for computation and visualization based on [Rousseeuw (1987)](https://doi.org/10.1016/0377-0427(87)90125-7) to support robust and reproducible cluster diagnostics across standard, soft, and multi-way clustering settings.
 
-*Note:* This package does not use the classical [Rousseeuw (1987)](https://doi.org/10.1016/0377-0427(87)90125-7) calculation directly.
+**Note:** This package does not use the classical [Rousseeuw (1987)](https://doi.org/10.1016/0377-0427(87)90125-7) calculation directly.
 
 ---
 
