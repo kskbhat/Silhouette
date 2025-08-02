@@ -1,6 +1,6 @@
-# Silhouette 0.9.5 (July 2025)
+# Silhouette 0.9.5 (August 2025)
 
-- Updated README, typo in NEWS, Updated DESCRIPTION.
+- Updated README, DESCRIPTION.
 
 # Silhouette 0.9.4 (July 2025)
 
