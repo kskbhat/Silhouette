@@ -15,9 +15,9 @@ url: https://kskbhat.github.io/Silhouette
 repo:
   github: kskbhat/Silhouette
   branch: main
-  source: false
+  source: true
 
-#search: true
+search: true
 
 navbar:
   structure:
@@ -42,15 +42,14 @@ navbar:
 home:
   title: Silhouette Package
   sidebar:
-    structure: [authors, license, citation, community, cran-status]
+    structure: [authors, license, citation, community, build-status, cran-status]
     components:
-#      build-status:
-#        title: "Build Status"
-#        text: |
-#          [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
-#          [![R-hub](https://github.com/kskbhat/Silhouette/actions/workflows/rhub.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/rhub.yaml)
-#          [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
-#          [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+      build-status:
+        title: "Build Status"
+        text: |
+          [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
+          [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
+          [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
       cran-status:
         title: "CRAN Status"
         text: |

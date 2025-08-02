@@ -390,7 +390,7 @@ result <- coclusterContinuous(as.matrix(iris[, -5]), nbcocluster = c(3, 2))
 ```
 
 - **Step 2: Compute Silhouette Widths for Each Mode**  
-  For each dimension (e.g., rows and columns), calculate silhouette widths using the membership probability matrices (`result@rowposteriorprob` for rows, `result@colposteriorprob` for columns) via the `softSilhouette()` function: (One can use `Silhouette()` also to calculate when relevent proximity measure available, For consistency make sure all \code{Silhouette} objects in list derived from same `method` and arguments.)
+  For each dimension (e.g., rows and columns), calculate silhouette widths using the membership probability matrices (`result@rowposteriorprob` for rows, `result@colposteriorprob` for columns) via the `softSilhouette()` function: (One can use `Silhouette()` also to calculate when relevant proximity measure available, For consistency make sure all \code{Silhouette} objects in list derived from same `method` and arguments.)
   
 ```{r ext2}
 sil_mode1 <- softSilhouette(
