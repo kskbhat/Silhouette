@@ -83,8 +83,10 @@
 <li>
 <strong>Comparability</strong>: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.<br>
 </li>
+<li><ul>
 <li>
-<strong>Interoperable</strong>: Can incorporate output from <em>any clustering algorithm</em>—including user-defined ones—as long as it provides either a <em>proximity (distance/dissimilarity or similarity) matrix</em> or a <em>membership probability matrix</em> between clusters and observations. Compatible with base objects or results returned via <em>S3/S4 class functions</em>, enabling seamless integration with a wide range of clustering frameworks.</li>
+<strong>Interoperable</strong>: <code><a href="reference/Silhouette.html">Silhouette()</a></code> and <code><a href="reference/softSilhouette.html">softSilhouette()</a></code> works with any clustering output that provides a proximity or membership probability matrix. Users can also supply a proximity matrix and a clustering function—<em>including S3 or S4 methods</em>—to let <code><a href="reference/Silhouette.html">Silhouette()</a></code> or <code><a href="reference/softSilhouette.html">softSilhouette()</a></code> perform clustering and compute silhouettes internally in one step.</li>
+</ul></li>
 </ul>
 <hr>
 </div>

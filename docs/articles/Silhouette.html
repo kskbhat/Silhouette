@@ -181,7 +181,7 @@ centroid using <code>proxy::dist()</code>.</li>
 <span><span class="co">#&gt; 2       2   62        0.5546</span></span>
 <span><span class="co">#&gt; 3       3   38        0.5950</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/crisp-silhouette1-1.png" alt="fig1.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/crisp-silhouette1-1.png" alt="fig1.1" width="672"></p>
 <ul>
 <li>
 <strong>Customize Calculation</strong>:<br>
@@ -208,7 +208,7 @@ output:</li>
 <span><span class="co">#&gt; 2       2   62        0.4136</span></span>
 <span><span class="co">#&gt; 3       3   38        0.4468</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_pac</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/crisp-silhouette2-1.png" alt="fig1.2" width="576"></p>
+<p><img src="Silhouette_files/figure-html/crisp-silhouette2-1.png" alt="fig1.2" width="672"></p>
 <ul>
 <li>
 <strong>Accessing Silhouette Summaries</strong>:<br>
@@ -273,19 +273,22 @@ each cluster center, which can be directly fed to the
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">fm</span><span class="op">$</span><span class="va">d</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/crisp-silhouette4-1.png" alt="fig1.2" width="576">
-- <strong>Alternative: Directly Use the Clustering Function with
+<p><img src="Silhouette_files/figure-html/crisp-silhouette4-1.png" alt="fig1.2" width="672"></p>
+<ul>
+<li>
+<strong>Alternative: Directly Use the Clustering Function with
 <code>clust_fun</code></strong><br>
 To streamline the workflow, you can let the <code><a href="../reference/Silhouette.html">Silhouette()</a></code>
 function internally handle both clustering and silhouette calculation by
 supplying the name of the distance matrix (<code>"d"</code>) and the
-desired clustering function:</p>
+desired clustering function:</li>
+</ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="st">"d"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/crisp-silhouette5-1.png" alt="fig1.3" width="576">
-This approach eliminates the explicit step of extracting the proximity
-matrix, making analyses more concise.</p>
+<p><img src="Silhouette_files/figure-html/crisp-silhouette5-1.png" alt="fig1.3" width="672"></p>
+<p>This approach eliminates the explicit step of extracting the
+proximity matrix, making analyses more concise.</p>
 <p><strong>Summary:</strong><br>
 When the proximity matrix is provided directly by a clustering algorithm
 (as with fuzzy c-means), silhouette widths can be calculated in one
@@ -329,18 +332,21 @@ widths:</li>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="va">fm1</span><span class="op">$</span><span class="va">d</span>, prob_matrix <span class="op">=</span> <span class="va">fm1</span><span class="op">$</span><span class="va">u</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fm1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/fuzzy-silhouette4-1.png" alt="fig1.6" width="576">
-- <strong>Alternative: Use Clustering Function Inline with
+<p><img src="Silhouette_files/figure-html/fuzzy-silhouette4-1.png" alt="fig1.6" width="672"></p>
+<ul>
+<li>
+<strong>Alternative: Use Clustering Function Inline with
 <code>clust_fun</code></strong><br>
 For an even more streamlined workflow, the <code><a href="../reference/Silhouette.html">Silhouette()</a></code>
 function can internally manage clustering and silhouette calculations by
 accepting the names of the distance and probability components
 (<code>"d"</code> and <code>"u"</code>) along with the clustering
-function:</p>
+function:</li>
+</ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_fcm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="st">"d"</span>, prob_matrix <span class="op">=</span> <span class="st">"u"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/fuzzy-silhouette5-1.png" alt="fig1.3" width="576"></p>
+<p><img src="Silhouette_files/figure-html/fuzzy-silhouette5-1.png" alt="fig1.3" width="672"></p>
 <p>This approach removes the need to manually extract matrices from the
 clustering result, improving code efficiency and reproducibility.</p>
 <p><strong>Summary:</strong><br>
@@ -398,13 +404,13 @@ algorithm:</p>
 <code class="sourceCode R"><span><span class="co"># Soft silhouette for FCM</span></span>
 <span><span class="va">sil_fcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/softSilhouette.html">softSilhouette</a></span><span class="op">(</span>prob_matrix <span class="op">=</span> <span class="va">fcm_result</span><span class="op">$</span><span class="va">u</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/softSilhouette-1.png" alt="fig2.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/softSilhouette-1.png" alt="fig2.1" width="672"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Soft silhouette for FCM2</span></span>
 <span><span class="va">sil_fcm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/softSilhouette.html">softSilhouette</a></span><span class="op">(</span>prob_matrix <span class="op">=</span> <span class="va">fcm2_result</span><span class="op">$</span><span class="va">u</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/softSilhouette-2.png" alt="fig2.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/softSilhouette-2.png" alt="fig2.1" width="672"></p>
 <ul>
 <li>
 <p><strong>Step 3: Summarize and Compare Average Silhouette
@@ -499,7 +505,7 @@ widths:</li>
 <span>  xlab <span class="op">=</span> <span class="st">"Number of Clusters"</span>,</span>
 <span>  main <span class="op">=</span> <span class="st">"Silhouette Scree Plot"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/screeplot2-1.png" alt="fig3.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/screeplot2-1.png" alt="fig3.1" width="672"></p>
 <p>The optimal number of clusters is often suggested by the “elbow” or
 “reverse elbow”—the point after which increases in <em>k</em> lead to
 diminishing or excessive improvements in silhouette width. This visual
@@ -550,10 +556,10 @@ clustering):</strong></li>
 <span>  <span class="va">dist_mat</span> <span class="op">&lt;-</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">km_out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span>
 <span>  <span class="va">sil_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist_mat</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_obj</span><span class="op">)</span>                   <span class="co"># S3 method auto-dispatch</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot0-1.png" alt="fig4.0" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot0-1.png" alt="fig4.0" width="672"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">sil_obj</span><span class="op">)</span>         <span class="co"># explicit call (identical output)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot0-2.png" alt="fig4.0" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot0-2.png" alt="fig4.0" width="672"></p>
 <ul>
 <li><strong>Crisp Silhouette from Cluster Algorithms (PAM, CLARA,
 FANNY):</strong></li>
@@ -562,24 +568,24 @@ FANNY):</strong></li>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/cluster/" class="external-link">cluster</a></span><span class="op">)</span></span>
 <span><span class="va">pam_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">pam_result</span><span class="op">)</span> <span class="co"># for cluster::pam object</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot1-1.png" alt="fig4.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot1-1.png" alt="fig4.1" width="672"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">clara_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">clara_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot1-2.png" alt="fig4.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot1-2.png" alt="fig4.1" width="672"></p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">fanny_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">fanny_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot1-3.png" alt="fig4.1" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot1-3.png" alt="fig4.1" width="672"></p>
 <ul>
 <li><strong>Base silhouette object:</strong></li>
 </ul>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sil_base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></span><span class="op">(</span><span class="va">pam_result</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">sil_base</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot2-1.png" alt="fig4.2" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot2-1.png" alt="fig4.2" width="672"></p>
 <ul>
 <li><strong>factoextra::hcut/eclust clusterings:</strong></li>
 </ul>
@@ -587,12 +593,12 @@ FANNY):</strong></li>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.sthda.com/english/rpkgs/factoextra" class="external-link">factoextra</a></span><span class="op">)</span></span>
 <span><span class="va">eclust_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="st">"kmeans"</span>, k <span class="op">=</span> <span class="fl">3</span>, graph <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">eclust_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot3-1.png" alt="fig4.3" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot3-1.png" alt="fig4.3" width="672"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">hcut_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">hcut_result</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot3-2.png" alt="fig4.3" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot3-2.png" alt="fig4.3" width="672"></p>
 <ul>
 <li><strong>Fuzzy (Soft) Silhouette Visualization (e.g., fuzzy c-means
 with ppclust):</strong></li>
@@ -605,20 +611,20 @@ with ppclust):</strong></li>
 <span>  x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span>, sort <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fuzzy</span>, summary.legend <span class="op">=</span> <span class="cn">FALSE</span>, grayscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot4-1.png" alt="fig4.4" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot4-1.png" alt="fig4.4" width="672"></p>
 <ul>
 <li><strong>Customization: Grayscale, Detailed Legends, and Observation
 Labels:</strong></li>
 </ul>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">sil_fuzzy</span>, grayscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Use grayscale palette</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot5-1.png" alt="fig4.5" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot5-1.png" alt="fig4.5" width="672"></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">sil_fuzzy</span>, summary.legend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Include size + avg silhouette in legend</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot5-2.png" alt="fig4.5" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot5-2.png" alt="fig4.5" width="672"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">sil_fuzzy</span>, label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Label bars with row index</span></span></code></pre></div>
-<p><img src="Silhouette_files/figure-html/plot5-3.png" alt="fig4.5" width="576"></p>
+<p><img src="Silhouette_files/figure-html/plot5-3.png" alt="fig4.5" width="672"></p>
 <p><strong>Practical Guidance:</strong> - For clustering output classes
 not supported by the generic <code><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot()</a></code> function, always use
 <code><a href="../reference/plotSilhouette.html">plotSilhouette()</a></code> explicitly to ensure correct and

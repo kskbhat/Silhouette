@@ -34,7 +34,7 @@ set.seed(123)
 data(iris)
 km <- kmeans(iris[, -5], centers = 3)
 
-## ----crisp-silhouette1, fig.width=6, fig.height=4, fig.alt = "fig1.1"---------
+## ----crisp-silhouette1, fig.width=7, fig.height=4, fig.alt = "fig1.1"---------
 library(proxy)
 dist_matrix <- proxy::dist(iris[, -5], km$centers)
 sil <- Silhouette(dist_matrix)
@@ -42,7 +42,7 @@ head(sil)
 summary(sil)
 plot(sil)
 
-## ----crisp-silhouette2, fig.width=6, fig.height=4, fig.alt = "fig1.2"---------
+## ----crisp-silhouette2, fig.width=7, fig.height=4, fig.alt = "fig1.2"---------
 sil_pac <- Silhouette(dist_matrix, method = "pac", sort = TRUE)
 head(sil_pac)
 summary(sil_pac)
@@ -62,23 +62,23 @@ library(ppclust)
 data(iris)
 fm <- ppclust::fcm(x = iris[, -5], centers = 3)
 
-## ----crisp-silhouette4, fig.width=6, fig.height=4, fig.alt = "fig1.2"---------
+## ----crisp-silhouette4, fig.width=7, fig.height=4, fig.alt = "fig1.2"---------
 sil_fm <- Silhouette(fm$d)
 plot(sil_fm)
 
-## ----crisp-silhouette5, fig.width=6, fig.height=4, fig.alt = "fig1.3"---------
+## ----crisp-silhouette5, fig.width=7, fig.height=4, fig.alt = "fig1.3"---------
 sil_fcm <- Silhouette(prox_matrix = "d", clust_fun = fcm, x = iris[, -5], centers = 3)
 plot(sil_fcm)
 
-## ----fuzzy-silhouette4.1, fig.width=6, fig.height=4---------------------------
+## ----fuzzy-silhouette4.1, fig.width=7, fig.height=4---------------------------
 data(iris)
 fm1 <- ppclust::fcm(x = iris[, -5], centers = 3)
 
-## ----fuzzy-silhouette4, fig.width=6, fig.height=4, fig.alt = "fig1.6"---------
+## ----fuzzy-silhouette4, fig.width=7, fig.height=4, fig.alt = "fig1.6"---------
 sil_fm1 <- Silhouette(prox_matrix = fm1$d, prob_matrix = fm1$u)
 plot(sil_fm1)
 
-## ----fuzzy-silhouette5, fig.width=6, fig.height=4, fig.alt = "fig1.3"---------
+## ----fuzzy-silhouette5, fig.width=7, fig.height=4, fig.alt = "fig1.3"---------
 sil_fcm1 <- Silhouette(prox_matrix = "d", prob_matrix = "u", clust_fun = fcm, x = iris[, -5], centers = 3)
 plot(sil_fcm1)
 
@@ -91,7 +91,7 @@ fcm_result <- ppclust::fcm(iris[, 1:4], 3)
 # FCM2 clustering
 fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
 
-## ----softSilhouette, fig.width=6, fig.height=4, fig.alt = "fig2.1"------------
+## ----softSilhouette, fig.width=7, fig.height=4, fig.alt = "fig2.1"------------
 # Soft silhouette for FCM
 sil_fcm <- softSilhouette(prob_matrix = fcm_result$u)
 plot(sil_fcm)
@@ -100,7 +100,7 @@ plot(sil_fcm)
 sil_fcm2 <- softSilhouette(prob_matrix = fcm2_result$u)
 plot(sil_fcm2)
 
-## ----softSilhouette1, fig.width=6, fig.height=4, fig.alt = "fig2.2"-----------
+## ----softSilhouette1, fig.width=7, fig.height=4, fig.alt = "fig2.2"-----------
 sfcm <- summary(sil_fcm, print.summary = FALSE)
 sfcm2 <- summary(sil_fcm2, print.summary = FALSE)
 
@@ -124,7 +124,7 @@ for (k in 2:7) {
   avg_sil_width[k - 1] <- summary(sil_out, print.summary = FALSE)$avg.width
 }
 
-## ----screeplot2, fig.width=6, fig.height=4, fig.alt = "fig3.1"----------------
+## ----screeplot2, fig.width=7, fig.height=4, fig.alt = "fig3.1"----------------
 plot(avg_sil_width,
   type = "o",
   ylab = "Overall Silhouette Width",
@@ -132,7 +132,7 @@ plot(avg_sil_width,
   main = "Silhouette Scree Plot"
 )
 
-## ----plot0, fig.width=6, fig.height=4, fig.alt = "fig4.0"---------------------
+## ----plot0, fig.width=7, fig.height=4, fig.alt = "fig4.0"---------------------
 data(iris)
   km_out <- kmeans(iris[, -5], 3)
   dist_mat <- proxy::dist(iris[, -5], km_out$centers)
@@ -140,7 +140,7 @@ data(iris)
   plot(sil_obj)                   # S3 method auto-dispatch
   plotSilhouette(sil_obj)         # explicit call (identical output)
 
-## ----plot1, fig.width=6, fig.height=4, fig.alt = "fig4.1"---------------------
+## ----plot1, fig.width=7, fig.height=4, fig.alt = "fig4.1"---------------------
 library(cluster)
 pam_result <- pam(iris[, 1:4], k = 3)
 plotSilhouette(pam_result) # for cluster::pam object
@@ -151,11 +151,11 @@ plotSilhouette(clara_result)
 fanny_result <- fanny(iris[, 1:4], k = 3)
 plotSilhouette(fanny_result)
 
-## ----plot2, fig.width=6, fig.height=4, fig.alt = "fig4.2"---------------------
+## ----plot2, fig.width=7, fig.height=4, fig.alt = "fig4.2"---------------------
 sil_base <- silhouette(pam_result)
 plotSilhouette(sil_base)
 
-## ----plot3, fig.width=6, fig.height=4, fig.alt = "fig4.3"---------------------
+## ----plot3, fig.width=7, fig.height=4, fig.alt = "fig4.3"---------------------
 library(factoextra)
 eclust_result <- eclust(iris[, 1:4], "kmeans", k = 3, graph = FALSE)
 plotSilhouette(eclust_result)
@@ -163,7 +163,7 @@ plotSilhouette(eclust_result)
 hcut_result <- hcut(iris[, 1:4], k = 3)
 plotSilhouette(hcut_result)
 
-## ----plot4, fig.width=6, fig.height=4, fig.alt = "fig4.4"---------------------
+## ----plot4, fig.width=7, fig.height=4, fig.alt = "fig4.4"---------------------
 data(iris)
 fcm_out <- ppclust::fcm(iris[, 1:4], 3)
 sil_fuzzy <- Silhouette(
@@ -172,7 +172,7 @@ sil_fuzzy <- Silhouette(
 )
 plot(sil_fuzzy, summary.legend = FALSE, grayscale = TRUE)
 
-## ----plot5, fig.width=6, fig.height=4, fig.alt = "fig4.5"---------------------
+## ----plot5, fig.width=7, fig.height=4, fig.alt = "fig4.5"---------------------
 plotSilhouette(sil_fuzzy, grayscale = TRUE) # Use grayscale palette
 plotSilhouette(sil_fuzzy, summary.legend = TRUE) # Include size + avg silhouette in legend
 plotSilhouette(sil_fuzzy, label = TRUE) # Label bars with row index
