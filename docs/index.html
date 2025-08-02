@@ -61,7 +61,32 @@
 
 <p>An <a href="https://www.r-project.org/" class="external-link">R</a> package for silhouette-based diagnostics in standard, soft, and multi-way clustering.</p>
 <p>Quantifies clustering quality by measuring both <strong>cohesion within clusters</strong> and <strong>separation between clusters</strong>. Implements advanced silhouette width computations for diverse clustering structures, including: simplified silhouette by <a href="https://doi.org/10.1080/0094965031000136012" class="external-link">Van der Laan et al. (2003)</a>, Probability of Alternative Cluster normalization methods by <a href="https://doi.org/10.1080/10618600.2022.2050249" class="external-link">Raymaekers &amp; Rousseeuw (2022)</a>, fuzzy clustering and silhouette diagnostics using membership probabilities by <a href="https://doi.org/10.1016/j.fss.2006.07.006" class="external-link">Campello &amp; Hruschka (2006)</a> and <a href="https://doi.org/10.1080/23737484.2024.2408534" class="external-link">Bhat &amp; Kiruthika (2024)</a>, and multi-way clustering extensions such as block and tensor clustering by <a href="https://doi.org/10.1007/s00357-008-9005-9" class="external-link">Schepers et al. (2008)</a> and <a href="https://doi.org/10.21203/rs.3.rs-6973596/v1" class="external-link">Bhat &amp; Kiruthika (2025)</a>. Provides tools for computation and visualization based on <a href="https://doi.org/10.1016/0377-0427(87)90125-7" class="external-link">Rousseeuw (1987)</a> to support robust and reproducible cluster diagnostics across standard, soft, and multi-way clustering settings.</p>
+<p><em>Note:</em> This package does not use the classical <a href="https://doi.org/10.1016/0377-0427(87)90125-7" class="external-link">Rousseeuw (1987)</a> calculation directly.</p>
 <hr>
+<div class="section level2">
+<h2 id="white_check_mark-why-this-package">✅ Why This Package?<a class="anchor" aria-label="anchor" href="#white_check_mark-why-this-package"></a>
+</h2>
+<ul>
+<li>
+<strong>Unified &amp; consistent</strong>: Offers one coherent interface for crisp, soft, and multi-way clustering silhouette diagnostics.<br>
+</li>
+<li>
+<strong>Flexible</strong>: Works with distance matrices, clustering outputs, or soft membership probabilities.<br>
+</li>
+<li>
+<strong>Advanced</strong>: Implements newer normalization methods (PAC), handles soft clustering, and supports mode-wise silhouette aggregation.<br>
+</li>
+<li>
+<strong>Visualization</strong>: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from <a href="https://CRAN.R-project.org/package=factoextra" class="external-link"><code>factoextra</code></a> and <a href="https://CRAN.R-project.org/package=cluster" class="external-link"><code>cluster</code></a> R packages.<br>
+</li>
+<li>
+<strong>Comparability</strong>: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.<br>
+</li>
+<li>
+<strong>Interoperable</strong>: Can incorporate output from <strong>any clustering algorithm</strong>—including user-defined ones—as long as it provides either a <strong>proximity (distance/dissimilarity) matrix</strong> or a <strong>membership probability matrix</strong>.</li>
+</ul>
+<hr>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -73,7 +98,7 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Install from GitHub</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kskbhat/Silhouette"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kskbhat/Silhouette"</span><span class="op">)</span></span></code></pre></div>
 <p>From CRAN, install via:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"Silhouette"</span><span class="op">)</span></span></code></pre></div>
