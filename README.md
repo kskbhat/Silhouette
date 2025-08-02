@@ -27,7 +27,7 @@ Quantifies clustering quality by measuring both **cohesion within clusters** and
 -   **Advanced**: Implements newer normalization methods (PAC), handles soft clustering, and supports mode-wise silhouette aggregation.\
 -   **Visualization**: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from [`factoextra`](https://doi.org/10.32614/CRAN.package.factoextra) and [`cluster`](https://doi.org/10.32614/CRAN.package.cluster) R packages.\
 -   **Comparability**: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.\
--   - **Interoperable**: `Silhouette()` and `softSilhouette()` works with any clustering output that provides a proximity or membership probability matrix. Users can also supply a proximity matrix and a clustering function—*including S3 or S4 methods*—to let `Silhouette()` or `softSilhouette()` perform clustering and compute silhouettes internally in one step.
+- **Interoperable**: `Silhouette()` and `softSilhouette()` works with any clustering output that provides a proximity or membership probability matrix. Users can also supply a proximity matrix and a clustering function—*including S3 or S4 methods*—to let `Silhouette()` or `softSilhouette()` perform clustering and compute silhouettes internally in one step.
 
 
 ------------------------------------------------------------------------
