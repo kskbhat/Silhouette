@@ -33,6 +33,10 @@ jobs:
           r-version: ${{ matrix.r-version }}
           use-public-rspm: true
 
+      - name: Install Ghostscript on Ubuntu
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ghostscript
+
       - name: Install Ghostscript on macOS
         if: runner.os == 'macOS'
         run: brew install ghostscript
