@@ -1,3 +1,7 @@
+# Silhouette 0.9.5 (July 2025)
+
+- Updated README, typo in NEWS, Updated DESCRIPTION.
+
 # Silhouette 0.9.4 (July 2025)
 
 - Clarified the description of the **PAC (Probability of Alternative Cluster)** method in the documentation by citing the original authors (Author, Year).

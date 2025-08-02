@@ -1,7 +1,7 @@
 Package: Silhouette
 Type: Package
 Title: Proximity Measure Based Diagnostics for Standard, Soft, and Multi-Way Clustering
-Version: 0.9.4
+Version: 0.9.5
 Depends: R (>= 4.2.0)
 Language: en-US
 Authors@R: c(person(given = "Shrikrishna",
