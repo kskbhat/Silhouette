@@ -25,7 +25,7 @@ Quantifies clustering quality by measuring both **cohesion within clusters** and
 - **Unified & consistent**: Offers one coherent interface for crisp, soft, and multi-way clustering silhouette diagnostics.  
 - **Flexible**: Works with distance matrices, clustering outputs, or soft membership probabilities.  
 - **Advanced**: Implements newer normalization methods (PAC), handles soft clustering, and supports mode-wise silhouette aggregation.  
-- **Visualization**: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from [`factoextra`](https://CRAN.R-project.org/package=factoextra) and [`cluster`](https://CRAN.R-project.org/package=cluster) R packages.  
+- **Visualization**: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from [`factoextra`](https://doi.org/10.32614/CRAN.package.factoextra) and [`cluster`](https://doi.org/10.32614/CRAN.package.cluster) R packages.  
 - **Comparability**: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.  
 - **Interoperable**: Can incorporate output from **any clustering algorithm**—including user-defined ones—as long as it provides either a **proximity (distance/dissimilarity or similarity) matrix** or a **membership probability matrix** between cluster to observations.
 
