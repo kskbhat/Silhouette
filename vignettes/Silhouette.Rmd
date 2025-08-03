@@ -198,6 +198,7 @@ plot(sil_fm1)
     For an even more streamlined workflow, the `Silhouette()` function can internally manage clustering and silhouette calculations by accepting the names of the distance and probability components (`"d"` and `"u"`) along with the clustering function:
 
 ```{r fuzzy-silhouette5, fig.width=7, fig.height=4, fig.alt = "fig1.3"}
+library(ppclust)
 sil_fcm1 <- Silhouette(prox_matrix = "d", prob_matrix = "u", clust_fun = fcm, x = iris[, -5], centers = 3)
 plot(sil_fcm1)
 ```
@@ -383,7 +384,6 @@ plotSilhouette(hcut_result)
 
 ```{r plot4, fig.width=7, fig.height=4, fig.alt = "fig4.4"}
 data(iris)
-fcm_out <- ppclust::fcm(iris[, 1:4], 3)
 sil_fuzzy <- Silhouette(
   prox_matrix = "d", prob_matrix = "u", clust_fun = fcm,
   x = iris[, 1:4], centers = 3, sort = TRUE

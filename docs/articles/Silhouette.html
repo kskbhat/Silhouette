@@ -344,7 +344,8 @@ accepting the names of the distance and probability components
 function:</li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sil_fcm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="st">"d"</span>, prob_matrix <span class="op">=</span> <span class="st">"u"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ppclust</span><span class="op">)</span></span>
+<span><span class="va">sil_fcm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span>prox_matrix <span class="op">=</span> <span class="st">"d"</span>, prob_matrix <span class="op">=</span> <span class="st">"u"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sil_fcm1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/fuzzy-silhouette5-1.png" alt="fig1.3" width="672"></p>
 <p>This approach removes the need to manually extract matrices from the
@@ -605,7 +606,6 @@ with ppclust):</strong></li>
 </ul>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
-<span><span class="va">fcm_out</span> <span class="op">&lt;-</span> <span class="fu">ppclust</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ppclust/man/fcm.html" class="external-link">fcm</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">sil_fuzzy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Silhouette.html">Silhouette</a></span><span class="op">(</span></span>
 <span>  prox_matrix <span class="op">=</span> <span class="st">"d"</span>, prob_matrix <span class="op">=</span> <span class="st">"u"</span>, clust_fun <span class="op">=</span> <span class="va">fcm</span>,</span>
 <span>  x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">3</span>, sort <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -699,12 +699,11 @@ dimension names:</li>
 <span>  print.summary <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
-<span><span class="co">#&gt; Extended silhouette: 0.6273 </span></span>
+<span><span class="co">#&gt; Extended silhouette: 0.7134 </span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Dimension Summary:</span></span>
 <span><span class="co">#&gt;   dimension n_obs avg_sil_width</span></span>
-<span><span class="co">#&gt; 1      Rows   150        0.6174</span></span>
+<span><span class="co">#&gt; 1      Rows   150        0.7057</span></span>
 <span><span class="co">#&gt; 2   Columns     4        1.0000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Available components:</span></span>

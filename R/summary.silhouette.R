@@ -11,7 +11,6 @@
 #'   \item \code{avg.width}: The overall average silhouette width.
 #'   \item \code{sil.sum}: A data frame with columns \code{cluster}, \code{size}, and \code{avg.sil.width} summarizing cluster sizes and average silhouette widths.
 #' }
-#'
 summary.Silhouette <- function(object, print.summary = TRUE, ...) {
   x <- object
   # Validate input

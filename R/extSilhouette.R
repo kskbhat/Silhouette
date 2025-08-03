@@ -99,7 +99,7 @@ extSilhouette <- function(sil_list, dim_names = NULL, print.summary = FALSE) {
     cat("---------------------------\n")
     cat("Extended silhouette:", round(ext_sil_width, 4), "\n")
     cat("---------------------------\n")
-    cat("\nDimension Summary:\n")
+    cat("Dimension Summary:\n")
     print(dim_table)
     cat("\nAvailable components:\n")
     print(names(result))
