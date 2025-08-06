@@ -23,21 +23,21 @@ search: true
 home:
   title: Silhouette Package
   sidebar:
-    structure: [authors, license, citation, community, build-status, cran-status]
+    structure: [authors, license, citation, community, cran-status, links, build-status]
     components:
       build-status:
         title: "Build Status"
         text: |
           [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
           [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
-          [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+
       cran-status:
-        title: "CRAN Status"
+        title: "CRAN & Lifecycle"
         text: |
           [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)
           ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette)
           ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)
-
+          [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 authors:
   Shrikrishna Bhat K:
     href: https://github.com/kskbhat
