@@ -1,14 +1,15 @@
 template:
-  logo: man/figures/logo.png
   bootstrap: 5
-  bslib:
-    bootswatch: flatly
+  package: tidytemplate
+  logo: man/figures/logo.png
+
   includes:
-    in_header:
-      # <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
+    in_header: |
+      <script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-  params:
-    mathjax: true
+
+development:
+  mode: auto
 
 url: https://kskbhat.github.io/Silhouette
 
@@ -18,26 +19,6 @@ repo:
   source: true
 
 search: true
-
-navbar:
-  structure:
-    left: [home, vignette, reference]
-    right: [news, github]
-
-  components:
-    vignette:
-      text: "User Guide"
-      href: articles/Silhouette.html
-
-    news:
-      icon: fa-newspaper
-      href: news/index.html
-      aria-label: "News"
-
-    github:
-      icon: fa-github
-      href: https://github.com/kskbhat/Silhouette
-      aria-label: "GitHub"
 
 home:
   title: Silhouette Package
@@ -57,8 +38,9 @@ home:
           ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette)
           ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)
 
-development:
-  mode: auto
+authors:
+  Shrikrishna Bhat K:
+    href: https://github.com/kskbhat
 
 reference:
 - title: All Functions
@@ -67,8 +49,3 @@ reference:
     - softSilhouette
     - plotSilhouette
     - extSilhouette
-
-articles:
-- title: Vignettes
-  contents:
-    - Silhouette
