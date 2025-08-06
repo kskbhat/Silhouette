@@ -15,5 +15,5 @@ citEntry(
   year = 2025,
   note = "R package version 0.9.5",
   doi = "10.32614/CRAN.package.Silhouette",
-  url = "https://CRAN.R-project.org/package=Silhouette"
+  url = "https://kskbhat.github.io/Silhouette"
 )
