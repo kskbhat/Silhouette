@@ -20,6 +20,22 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         r-version: ['oldrel', 'release', 'devel']
+        include:
+          # Add extra specific combinations (from haven example)
+          - os: ubuntu-latest
+            r-version: oldrel-1
+          - os: ubuntu-latest
+            r-version: oldrel-2
+          - os: ubuntu-latest
+            r-version: oldrel-3
+          - os: ubuntu-latest
+            r-version: oldrel-4
+          - os: windows-latest
+            r-version: oldrel-4
+          - os: ubuntu-latest
+            r-version: devel
+            http-user-agent: release
+      # Note: exclude duplicates if needed (optional)
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -31,6 +47,7 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.r-version }}
+          http-user-agent: ${{ matrix.http-user-agent }}
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
