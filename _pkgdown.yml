@@ -1,8 +1,8 @@
 template:
   logo: man/figures/logo.png
   bootstrap: 5
-  #bslib:
-   # bootswatch: cerulean
+  bslib:
+    bootswatch: flatly
   includes:
     in_header:
       # <script defer data-domain="pkgdown.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
