@@ -57,13 +57,13 @@ install.packages("Silhouette")
 
 Usage of the main functions is demonstrated in the package examples and documentation.
 
-For an intro, see the vignette A quick tour of `Silhouette`, which is available as
+For an intro, see the vignette `Silhouette`, which is available as
 
 ``` r
 vignette("Silhouette")
 ```
 
-You can access the vignette from the `Get started` tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/).
+You can access the vignette from the [Get started](https://kskbhat.github.io/Silhouette/articles/Silhouette.html) tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/).
 
 ------------------------------------------------------------------------
 
