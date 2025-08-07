@@ -23,7 +23,7 @@ search: true
 home:
   title: Silhouette Package
   sidebar:
-    structure: [authors, license, citation, community, cran-status, links, build-status]
+    structure: [links, license, community, citation, authors]
     components:
       build-status:
         title: "Build Status"
