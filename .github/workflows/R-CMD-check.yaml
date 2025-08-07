@@ -21,17 +21,16 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         r-version: ['oldrel', 'release', 'devel']
         include:
-          # Add extra specific combinations (from haven example)
           - os: ubuntu-latest
             r-version: oldrel-1
           - os: ubuntu-latest
             r-version: oldrel-2
-          - os: ubuntu-latest
-            r-version: oldrel-3
-          - os: ubuntu-latest
-            r-version: oldrel-4
-          - os: windows-latest
-            r-version: oldrel-4
+     #     - os: ubuntu-latest
+     #       r-version: oldrel-3
+     #     - os: ubuntu-latest
+     #       r-version: oldrel-4
+     #     - os: windows-latest
+     #       r-version: oldrel-4
           - os: ubuntu-latest
             r-version: devel
             http-user-agent: release
