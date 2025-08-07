@@ -2,11 +2,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)
-![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette)
-![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)
-<!--
+[![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html) [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette) ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette) ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) <!--
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)](https://cran.r-project.org/package=Silhouette)
 [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
@@ -31,8 +27,7 @@ Quantifies clustering quality by measuring both **cohesion within clusters** and
 -   **Advanced**: Implements newer normalization methods (PAC), handles soft clustering, and supports mode-wise silhouette aggregation.\
 -   **Visualization**: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from [`factoextra`](https://doi.org/10.32614/CRAN.package.factoextra) and [`cluster`](https://doi.org/10.32614/CRAN.package.cluster) R packages.\
 -   **Comparability**: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.\
-- **Interoperable**: `Silhouette()` and `softSilhouette()` works with any clustering output that provides a proximity or membership probability matrix. Users can also supply a proximity matrix and a clustering function—*including S3 or S4 methods*—to let `Silhouette()` or `softSilhouette()` perform clustering and compute silhouettes internally in one step.
-
+-   **Interoperable**: `Silhouette()` and `softSilhouette()` works with any clustering output that provides a proximity or membership probability matrix. Users can also supply a proximity matrix and a clustering function—*including S3 or S4 methods*—to let `Silhouette()` or `softSilhouette()` perform clustering and compute silhouettes internally in one step.
 
 ------------------------------------------------------------------------
 
@@ -68,7 +63,7 @@ For an intro, see the vignette A quick tour of `Silhouette`, which is available 
 vignette("Silhouette")
 ```
 
-You can access the vignette from the `User Guide` tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/).
+You can access the vignette from the `Get started` tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/).
 
 ------------------------------------------------------------------------
 
