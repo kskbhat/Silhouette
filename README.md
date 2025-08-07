@@ -64,3 +64,15 @@ vignette("Silhouette")
 ```
 
 You can access the vignette from the [Get started](https://kskbhat.github.io/Silhouette/articles/Silhouette.html) tab in the top navigation bar of the package's [website](https://kskbhat.github.io/Silhouette/).
+
+------------------------------------------------------------------------
+
+## Report a Bug or Request a Feature
+
+If you encounter a bug or have an idea for a new feature in the **Silhouette** package, please let us know by opening an issue on GitHub:
+
+- [Create an issue on GitHub](https://github.com/kskbhat/Silhouette/issues)
+- For bugs: include a minimal reproducible example, describe the expected vs. actual behavior, and mention your R and package versions
+- For feature requests: clearly describe the proposed feature, its purpose, and how it would benefit users
+
+Your feedback and suggestions are valuable and help improve the package.
