@@ -13,3 +13,4 @@
 ^CRAN-SUBMISSION$
 ^LICENSE$
 ^inst/CITATION$
+^inst/hexsticker\.R$
