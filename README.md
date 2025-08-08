@@ -4,7 +4,7 @@
 [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette) ![CRAN downloads per day](https://cranlogs.r-pkg.org/badges/last-day/Silhouette)
 
 
-[![GitHub Release](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
+[![GitHub](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
 <!--
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
