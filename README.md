@@ -3,6 +3,8 @@
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html) [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette) ![CRAN downloads per day](https://cranlogs.r-pkg.org/badges/last-day/Silhouette)
  ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) 
+
+[![GitHub version](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases)](https://github.com/kskbhat/Silhouette/releases)
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
 <!--
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
