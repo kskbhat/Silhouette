@@ -1,7 +1,7 @@
 # Silhouette <a href="https://kskbhat.github.io/Silhouette/"><img src="man/figures/logo.png" alt="Silhouette website" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html) [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette) ![CRAN downloads per day](https://cranlogs.r-pkg.org/badges/last-day/Silhouette)
+[![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette) ![CRAN downloads per day](https://cranlogs.r-pkg.org/badges/last-day/Silhouette)
  ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) 
 
 [![GitHub Release](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
