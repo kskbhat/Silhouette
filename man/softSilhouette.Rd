@@ -46,6 +46,8 @@ A data frame of class \code{"Silhouette"} containing cluster assignments, neares
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.
 }
 \details{
@@ -53,6 +55,11 @@ Although the silhouette method was originally developed for evaluating clusterin
 
 See \doi{10.1080/23737484.2024.2408534} for more details.
 }
+\section{Lifecycle}{
+
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+
 \examples{
 \donttest{
 # Compare two soft clustering algorithms using softSilhouett

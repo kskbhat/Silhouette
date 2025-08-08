@@ -21,6 +21,8 @@ A list of class \code{"extSilhouette"} with the following components:
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Computes an extended silhouette width for multi-way clustering (e.g., biclustering, triclustering, or n-mode tensor clustering) by combining silhouette widths from a list of Silhouette objects, each representing one mode of clustering. The extended silhouette width is the weighted average of the average silhouette widths from each mode, weighted by the number of observations in each mode's silhouette analysis. The output is an object of class \code{extSilhouette}.
 }
 \details{
@@ -56,7 +58,6 @@ if (requireNamespace("blockcluster", quietly = TRUE)) {
   ext_sil <- extSilhouette(list(sil_mode1, sil_mode2),print.summary = TRUE)
 }
 }
-
 }
 \references{
 Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \doi{10.1007/s00357-008-9005-9}

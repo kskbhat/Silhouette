@@ -1,5 +1,8 @@
 #' Calculate Extended Silhouette Width for Multi-Way Clustering
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
 #' Computes an extended silhouette width for multi-way clustering (e.g., biclustering, triclustering, or n-mode tensor clustering) by combining silhouette widths from a list of Silhouette objects, each representing one mode of clustering. The extended silhouette width is the weighted average of the average silhouette widths from each mode, weighted by the number of observations in each mode's silhouette analysis. The output is an object of class \code{extSilhouette}.
 #'
 #' @param sil_list A list of objects of class \code{"Silhouette"}, typically the output of \code{\link{Silhouette}} or \code{\link{softSilhouette}}, where each object represents the silhouette analysis for one mode of multi-way clustering (e.g., rows, columns, or other dimensions in biclustering or tensor clustering).
@@ -52,7 +55,7 @@
 #'   ext_sil <- extSilhouette(list(sil_mode1, sil_mode2),print.summary = TRUE)
 #' }
 #' }
-#'
+#' @import lifecycle
 #' @export
 extSilhouette <- function(sil_list, dim_names = NULL, print.summary = FALSE) {
   if (!all(sapply(sil_list, inherits, "Silhouette"))) {

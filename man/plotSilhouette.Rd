@@ -21,6 +21,8 @@ plotSilhouette(x, label = FALSE, summary.legend = TRUE, grayscale = FALSE, ...)
 A \code{ggplot2} object representing the Silhouette plot.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend.
 }
 \details{

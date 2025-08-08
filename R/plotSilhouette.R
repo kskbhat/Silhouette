@@ -1,5 +1,8 @@
 #' Plot Silhouette Analysis Results
 #'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend.
 #'
 #' @param x An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, or \code{\link[cluster]{silhouette}} from \pkg{cluster}, \pkg{factoextra} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.
@@ -97,7 +100,7 @@
 #' }
 #' }
 #' @export
-#' @import dplyr ggplot2 ggpubr methods
+#' @import dplyr ggplot2 ggpubr methods lifecycle
 plotSilhouette <- function(x,
                            label = FALSE,
                            summary.legend = TRUE,

@@ -1,5 +1,8 @@
 #' Calculate Silhouette Width for Soft Clustering Algorithms
 #'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.
 #'
 #' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}).
@@ -36,6 +39,10 @@
 #'
 #' Bhat Kapu, S., & Kiruthika. (2024). Some density-based silhouette diagnostics for soft clustering algorithms. Communications in Statistics: Case Studies, Data Analysis and Applications, 10(3-4), 221-238. \doi{10.1080/23737484.2024.2408534}
 #'
+#'
+#' @section Lifecycle:
+#' `r lifecycle::badge("stable")`
+#'
 #' @examples
 #' \donttest{
 #' # Compare two soft clustering algorithms using softSilhouett
@@ -63,6 +70,7 @@
 #'   cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
 #' }
 #' }
+#' @import lifecycle
 #' @export
 softSilhouette <- function(prob_matrix,
                            prob_type = c("pp", "nlpp", "pd"),

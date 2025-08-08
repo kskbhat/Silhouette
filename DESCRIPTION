@@ -25,6 +25,7 @@ Imports:
     dplyr,
     ggplot2,
     ggpubr,
+    lifecycle,
     methods
 Suggests:
     knitr,
@@ -35,5 +36,6 @@ Suggests:
     cluster,
     factoextra,
     proxy
+RdMacros: lifecycle
 VignetteBuilder: knitr
 Config/testthat/edition: 3

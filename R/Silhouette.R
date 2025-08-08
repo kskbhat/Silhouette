@@ -1,5 +1,8 @@
 #' Calculate Silhouette Widths, Summary, and Plot for Clustering Results
 #'
+#' @description
+#' `r lifecycle::badge('stable')`
+#'
 #' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 #'
 #' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).
@@ -119,9 +122,8 @@
 #'   message("Install 'ppclust': install.packages('ppclust')")
 #' }
 #' }
-#'
 #' @export
-#' @import dplyr
+#' @import dplyr lifecycle
 Silhouette <- function(prox_matrix,
                        proximity_type = c("dissimilarity", "similarity"),
                        method = c("medoid", "pac"),

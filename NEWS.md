@@ -1,7 +1,9 @@
 # Silhouette 0.9.5 (August 2025)
 
-- Updated README, DESCRIPTION.
-- Corrected an example code in vignettes.
+- Improved documentation:
+  - Updated `README.md` and `DESCRIPTION` fields.
+  - Fixed an example in the vignettes for clarity.
+- Added **lifecycle badges** to all exported functions.
 
 # Silhouette 0.9.4 (July 2025)
 
