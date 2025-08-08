@@ -46,9 +46,11 @@ authors:
     href: https://www.pondiuni.edu.in/faculy_profiles/dr-kiruthika/
 
 reference:
-- title: All Functions
-  contents:
-    - Silhouette
-    - softSilhouette
-    - plotSilhouette
-    - extSilhouette
+  - title: For clustering
+    contents:
+      - Silhouette
+      - softSilhouette
+      - plotSilhouette
+  - title: For Block clustering/Tri-clustering/Multi-way clustering
+    contents:
+      - extSilhouette
