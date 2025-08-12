@@ -1,11 +1,12 @@
 # Silhouette <a href="https://kskbhat.github.io/Silhouette/"><img src="man/figures/logo.png" alt="Silhouette website" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)[![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette) [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
+[![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)[![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette) 
 
 [![GitHub](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
 <!--
+[![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)](https://cran.r-project.org/package=Silhouette)
 
@@ -25,11 +26,11 @@ Quantifies clustering quality by measuring both **cohesion within clusters** and
 
 ## ✅ Why This Package?
 
--   **Unified & consistent**: Offers one coherent interface for crisp, soft, and multi-way clustering silhouette diagnostics.\
--   **Flexible**: Works with distance matrices, clustering outputs, or soft membership probabilities.\
--   **Advanced**: Implements newer normalization methods (PAC), handles soft clustering, and supports mode-wise silhouette aggregation.\
--   **Visualization**: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from [`factoextra`](https://doi.org/10.32614/CRAN.package.factoextra) and [`cluster`](https://doi.org/10.32614/CRAN.package.cluster) R packages.\
--   **Comparability**: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.\
+-   **Unified & consistent**: Offers one coherent interface for crisp, soft, and multi-way clustering silhouette diagnostics.
+-   **Flexible**: Works with distance matrices, clustering outputs, or soft membership probabilities.
+-   **Advanced**: Implements newer normalization methods (PAC), handles soft clustering, and supports mode-wise silhouette aggregation.
+-   **Visualization**: Plot functions produce clear, customizable silhouette plots compatible with many clustering outputs and existing silhouette outputs from [`factoextra`](https://doi.org/10.32614/CRAN.package.factoextra) and [`cluster`](https://doi.org/10.32614/CRAN.package.cluster) R packages.
+-   **Comparability**: Summaries and plots make it easy to compare clustering algorithms or tune the number of clusters.
 -   **Interoperable**: `Silhouette()` and `softSilhouette()` works with any clustering output that provides a proximity or membership probability matrix. Users can also supply a proximity matrix and a clustering function—*including S3 or S4 methods*—to let `Silhouette()` or `softSilhouette()` perform clustering and compute silhouettes internally in one step.
 
 ------------------------------------------------------------------------
