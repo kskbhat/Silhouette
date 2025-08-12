@@ -20,68 +20,49 @@ summary.Silhouette <- function(object, print.summary = TRUE, ...) {
 
   proximity_type <- attr(x, "proximity_type")
   method <- attr(x, "method")
+  average <- attr(x, "average")
+  widths <- x
 
   # Compute average silhouette widths
-  if (is.null(x$weight)) {
-    clus.avg.widths <- tapply(x$sil_width, x$cluster, mean, na.rm = TRUE)
-    avg.width <- mean(x$sil_width, na.rm = TRUE)
-  } else {
-    sil_weight <- x$weight * x$sil_width
-    clus.avg.widths <- tapply(seq_along(x$sil_width), x$cluster, function(idx) {
-      sum(sil_weight[idx], na.rm = TRUE) / sum(x$weight[idx], na.rm = TRUE)
+  if (average == "crisp") {
+    clus.avg.widths <- tapply(widths$sil_width, widths$cluster, mean, na.rm = TRUE)
+    avg.width <- mean(widths$sil_width, na.rm = TRUE)
+  } else if (average == "fuzzy") {
+    sil_weight <- widths$weight * widths$sil_width
+    clus.avg.widths <- tapply(seq_along(widths$sil_width), widths$cluster, function(idx) {
+      sum(sil_weight[idx], na.rm = TRUE) / sum(widths$weight[idx], na.rm = TRUE)
     })
-    avg.width <- sum(sil_weight, na.rm = TRUE) / sum(x$weight, na.rm = TRUE)
+    avg.width <- sum(sil_weight, na.rm = TRUE) / sum(widths$weight, na.rm = TRUE)
+  } else if (average == "median") {
+    clus.avg.widths <- tapply(widths$sil_width, widths$cluster, median, na.rm = TRUE)
+    avg.width <- median(widths$sil_width, na.rm = TRUE)
   }
 
-  # Prepare summary output
-  name.proximity_type <- paste(noquote(proximity_type))
-  name.method <- paste(noquote(method))
-  dash1p <- "--------------------------------------------"
-  dash2p <- "--------------------------------------------------"
-  dashs1p <- "-----------------------------------------"
-  dashs2p <- "-----------------------------------------------"
-  dash1 <- "-----------------------------------------------"
-  dash2 <- "-----------------------------------------------------"
-  dashs1 <- "--------------------------------------------"
-  dashs2 <- "--------------------------------------------------"
-  dash <- if (method == "pac") {
-    ifelse(is.null(x$weight), ifelse(proximity_type == "dissimilarity", dash1p, dashs1p), ifelse(proximity_type == "dissimilarity", dash2p, dashs2p))
-  } else {
-    ifelse(is.null(x$weight), ifelse(proximity_type == "dissimilarity", dash1, dashs1), ifelse(proximity_type == "dissimilarity", dash2, dashs2))
-  }
-  name.ave <- paste(noquote(round(avg.width, 4)))
-
-
-  if (!is.numeric(clus.avg.widths) || is.null(names(clus.avg.widths))) {
-    warning("clus.avg.widths is not a named numeric vector; summary may be incorrect.")
-  }
-  n <- table(x$cluster)
+  # Summary data
+  n <- table(widths$cluster)
   sil.sum <- data.frame(
     cluster = names(clus.avg.widths),
     size = as.vector(n),
     avg.sil.width = round(clus.avg.widths, 4)
   )
+
+  # Construct summary output string
+
+  if (average == "crisp") {
+    header <- sprintf("Average crisp %s %s silhouette: %.4f",proximity_type, method, avg.width)
+  } else if (average == "fuzzy") {
+    header <- sprintf("Average fuzzy %s %s silhouette: %.4f",proximity_type, method, avg.width)
+  } else if (average == "median") {
+    header <- sprintf("Median %s %s silhouette: %.4f",proximity_type, method, avg.width)
+  }
+
+
+
   if (print.summary) {
-    cat(dash)
-    if (is.null(x$weight)) {
-      cat(
-        "\nAverage",
-        name.proximity_type,
-        name.method,
-        "silhouette:",
-        name.ave, "\n"
-      )
-    } else {
-      cat(
-        "\nAverage",
-        "fuzzy",
-        name.proximity_type,
-        name.method,
-        "silhouette:",
-        name.ave, "\n"
-      )
-    }
-    cat(dash, "\n")
+    message(strrep("-", nchar(header)))
+    message(header)
+    message(strrep("-", nchar(header)))
+    cat("\n")
     print(sil.sum)
   }
 

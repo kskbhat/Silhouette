@@ -1,8 +1,12 @@
 template:
   bootstrap: 5
-  package: tidytemplate
-  logo: man/figures/logo.png
-
+  math-rendering: mathjax
+  light-switch: true
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+    danger: "#A6081A"
   includes:
     in_header: |
       <script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script>
@@ -50,7 +54,13 @@ reference:
     contents:
       - Silhouette
       - softSilhouette
+      - cerSilhouette
+      - dbSilhouette
       - plotSilhouette
   - title: For Block clustering/Tri-clustering/Multi-way clustering
     contents:
       - extSilhouette
+
+navbar:
+  structure:
+    right: [search, github, lightswitch]

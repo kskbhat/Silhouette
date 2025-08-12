@@ -9,7 +9,15 @@
 #' @param label Logical; if \code{TRUE}, the x-axis is labeled with observation row indices from the input data and titled "Row Index". Defaults to \code{FALSE}.
 #' @param summary.legend Logical; if \code{TRUE}, prints a summary of average silhouette widths and sizes for each cluster in legend ("Cluster (Size): Width"). If \code{FALSE}, the legend shows only cluster numbers. Defaults to \code{TRUE}.
 #' @param grayscale Logical; if \code{TRUE}, the plot uses a grayscale color palette for clusters. If \code{FALSE}, uses the default or specified color palette. Defaults to \code{FALSE}.
-#' @param ... Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}).
+#' @param linetype Character or numeric value specifying the type of line
+#'   to be used for the horizontal reference line indicating the average
+#'   silhouette width. Accepts standard ggplot2 linetype values, such as:
+#'   \itemize{
+#'     \item Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, `"twodash"`.
+#'     \item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+#'   }
+#'   Defaults to `"dashed"`.
+#' @param ... Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}).
 #'
 #' @details
 #' The Silhouette plot displays the silhouette width (\code{sil_width}) for each observation, grouped by cluster, with bars sorted by cluster and descending silhouette width. The \code{summary.legend} option adds cluster sizes and average silhouette widths to the legend.
@@ -100,11 +108,14 @@
 #' }
 #' }
 #' @export
-#' @import dplyr ggplot2 ggpubr methods lifecycle
+#' @importFrom dplyr mutate arrange %>%
+#' @importFrom ggplot2 ggplot aes geom_bar labs ylim geom_hline theme scale_fill_grey scale_color_grey scale_fill_discrete scale_color_discrete element_text
+#' @importFrom ggpubr ggpar
 plotSilhouette <- function(x,
                            label = FALSE,
                            summary.legend = TRUE,
                            grayscale = FALSE,
+                           linetype = c("dashed", "solid", "dotted", "dotdash", "longdash", "twodash"),
                            ...) {
   # Initialize variables to NULL
   cluster <- sil_width <- original_name <- name <- NULL
@@ -114,16 +125,31 @@ plotSilhouette <- function(x,
     summary_stats <- summary(df, print.summary = FALSE)
     clus.avg.widths <- summary_stats$clus.avg.widths
     avg.width <- summary_stats$avg.width
+    average <- attr(x, "average")
+    method <- attr(x, "method")
   } else if (inherits(x, c("eclust", "hcut", "pam", "clara", "fanny"))) {
     df <- as.data.frame(x$silinfo$widths, stringsAsFactors = TRUE)
     clus.avg.widths <- x$silinfo$clus.avg.widths
     avg.width <- x$silinfo$avg.width
+    average = "crisp"
+    method = NULL
   } else if (inherits(x, "silhouette")) {
     df <- as.data.frame(x[, 1:3], stringsAsFactors = TRUE)
     clus.avg.widths <- tapply(df$sil_width, df$cluster, mean, na.rm = TRUE)
     avg.width <- mean(df$sil_width, na.rm = TRUE)
+    average = "crisp"
+    method = NULL
   } else {
     stop("Don't support an object of class ", class(x))
+  }
+
+  # Allow numeric codes 1:6 OR named linetypes
+  if (is.numeric(linetype)) {
+    if (!linetype %in% 1:6) {
+      stop("If numeric, 'linetype' must be between 1 and 6.")
+    }
+  } else {
+    linetype <- match.arg(linetype)
   }
 
   # Preserve original row names before arranging
@@ -150,14 +176,21 @@ plotSilhouette <- function(x,
   line_color <- ifelse(grayscale, "black", "red")
 
   # Determine subtitle based on presence of weight column
-  subtitle_text <- if ("weight" %in% names(x)) {
-    paste0("Average Fuzzy silhouette width: ", round(avg.width, 4))
-  } else {
+  subtitle_text <- if (average == "crisp") {
     paste0("Average silhouette width: ", round(avg.width, 4))
+  } else if (average == "fuzzy") {
+    paste0("Average fuzzy silhouette width: ", round(avg.width, 4))
+  } else if (average == "median") {
+    paste0("Median silhouette width: ", round(avg.width, 4))
   }
 
   # Set x-axis label based on label parameter
   x_label <- if (label) "Row Index" else ""
+  y_label <- if (!is.null(method)) {
+    paste(method, "Silhouette Width")
+  } else {
+    "Silhouette Width"
+  }
 
   p <- ggplot2::ggplot(
     df,
@@ -170,7 +203,7 @@ plotSilhouette <- function(x,
   ) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::labs(
-      y = "Silhouette Width",
+      y = y_label,
       x = x_label,
       title = "Clusters Silhouette Plot",
       subtitle = subtitle_text
@@ -178,7 +211,7 @@ plotSilhouette <- function(x,
     ggplot2::ylim(c(NA, 1)) +
     ggplot2::geom_hline(
       yintercept = avg.width,
-      linetype = "dashed",
+      linetype = linetype,
       color = line_color
     ) +
     ggplot2::theme(

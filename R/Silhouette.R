@@ -8,7 +8,21 @@
 #' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).
 #' @param proximity_type Character string specifying the type of proximity measure in \code{prox_matrix}. Options are \code{"similarity"} (higher values indicate closer proximity) or \code{"dissimilarity"} (lower values indicate closer proximity). Defaults to \code{"dissimilarity"}.
 #' @param method Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"medoid"}.
-#' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}). When not \code{NULL}, fuzzy silhouette width is calculated. Defaults to \code{NULL} for crisp silhouette.
+#' @param average Character string specifying the method for computing the average silhouette width.
+#'   Options are:
+#'   \itemize{
+#'     \item \code{"crisp"} – unweighted (simple) average.
+#'     \item \code{"fuzzy"} – weighted average based on membership probability differences.
+#'     \item \code{"median"} – median silhouette width across observations.
+#'   }
+#'   Defaults to \code{"crisp"}.
+#' @param prob_matrix A numeric matrix of cluster membership probabilities, where rows represent
+#'   observations and columns represent clusters (depending on \code{prob_type}).
+#'   If \code{clust_fun} is provided, \code{prob_matrix} can be given as the name of the matrix
+#'   component (e.g., \code{"u"} for the \code{\link[ppclust]{fcm}} function).
+#'   When \code{NULL} and \code{average = "fuzzy"}, the function falls back to computing the
+#'   \code{"crisp"} silhouette with a warning, since fuzzy silhouette widths require membership
+#'   probabilities. Defaults to \code{NULL}.
 #' @param a Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.
 #' @param sort Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.
 #' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{FALSE}.
@@ -67,6 +81,7 @@
 #' \describe{
 #'   \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 #'   \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+#'   \item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 #' }
 #' @seealso \code{\link{softSilhouette}}, \code{\link{plotSilhouette}}
 #'
@@ -123,10 +138,12 @@
 #' }
 #' }
 #' @export
-#' @import dplyr lifecycle
+#' @importFrom dplyr mutate arrange %>%
+#' @importFrom stats median
 Silhouette <- function(prox_matrix,
                        proximity_type = c("dissimilarity", "similarity"),
                        method = c("medoid", "pac"),
+                       average = c("crisp", "fuzzy","median"),
                        prob_matrix = NULL,
                        a = 2,
                        sort = FALSE,
@@ -218,9 +235,17 @@ Silhouette <- function(prox_matrix,
       stop("Extracted prob_matrix must have at least two columns (clusters).")
     }
   }
+
   # Ensure valid argument choices
   proximity_type <- match.arg(proximity_type)
   method <- match.arg(method)
+  average <- match.arg(average)
+
+  # Warn if fuzzy average requested without prob_matrix
+  if (average == "fuzzy" && is.null(prob_matrix)) {
+    warning("average = 'fuzzy' requires prob_matrix; falling back to 'crisp'.")
+    average <- "crisp"
+  }
 
   # Validate a
   if (!is.numeric(a) || a <= 0) {
@@ -297,19 +322,23 @@ Silhouette <- function(prox_matrix,
   # Add attributes to the widths data frame
   attr(widths, "proximity_type") <- proximity_type
   attr(widths, "method") <- method
-
+  attr(widths, "average") <- average
   if (print.summary) {
-    # Compute average silhouette widths for summary
-    if (is.null(prob_matrix)) {
+    if (average == "crisp") {
       clus.avg.widths <- tapply(widths$sil_width, widths$cluster, mean, na.rm = TRUE)
       avg.width <- mean(widths$sil_width, na.rm = TRUE)
-    } else {
+
+    } else if (average == "fuzzy") {
       sil_weight <- widths$weight * widths$sil_width
       clus.avg.widths <- tapply(seq_along(widths$sil_width), widths$cluster, function(idx) {
         sum(sil_weight[idx], na.rm = TRUE) / sum(widths$weight[idx], na.rm = TRUE)
       })
       avg.width <- sum(sil_weight, na.rm = TRUE) / sum(widths$weight, na.rm = TRUE)
+    } else if (average == "median") {
+      clus.avg.widths <- tapply(widths$sil_width, widths$cluster, stats::median, na.rm = TRUE)
+      avg.width <- stats::median(widths$sil_width, na.rm = TRUE)
     }
+
 
     # Summary data
     n <- table(widths$cluster)
@@ -320,10 +349,13 @@ Silhouette <- function(prox_matrix,
     )
 
     # Construct summary output string
-    header <- if (is.null(prob_matrix)) {
-      sprintf("Average %s %s silhouette: %.4f", proximity_type, method, avg.width)
-    } else {
-      sprintf("Average fuzzy %s %s silhouette: %.4f", proximity_type, method, avg.width)
+
+    if (average == "crisp") {
+      header <- sprintf("Average crisp %s %s silhouette: %.4f",proximity_type, method, avg.width)
+    } else if (average == "fuzzy") {
+      header <- sprintf("Average fuzzy %s %s silhouette: %.4f",proximity_type, method, avg.width)
+    } else if (average == "median") {
+      header <- sprintf("Median %s %s silhouette: %.4f",proximity_type, method, avg.width)
     }
 
     message(strrep("-", nchar(header)))

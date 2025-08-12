@@ -8,8 +8,9 @@ softSilhouette(
   prob_matrix,
   prob_type = c("pp", "nlpp", "pd"),
   method = c("pac", "medoid"),
-  average = c("crisp", "fuzzy"),
+  average = c("crisp", "fuzzy", "median"),
   a = 2,
+  sort = FALSE,
   print.summary = FALSE,
   clust_fun = NULL,
   ...
@@ -28,9 +29,18 @@ Defaults to \code{"pp"}.}
 
 \item{method}{Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"pac"}.}
 
-\item{average}{Character string specifying the type of average silhouette width calculation. Options are \code{"crisp"} (simple average) or \code{"fuzzy"} (weighted average based on membership differences). Defaults to \code{"crisp"}.}
+\item{average}{Character string specifying the method for computing the average silhouette width.
+Options are:
+\itemize{
+\item \code{"crisp"} – unweighted (simple) average.
+\item \code{"fuzzy"} – weighted average based on membership probability differences.
+\item \code{"median"} – median silhouette width across observations.
+}
+Defaults to \code{"crisp"}.}
 
 \item{a}{Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.}
+
+\item{sort}{Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.}
 
 \item{print.summary}{Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{FALSE}.}
 
@@ -43,6 +53,7 @@ A data frame of class \code{"Silhouette"} containing cluster assignments, neares
 \describe{
 \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+\item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 }
 \description{

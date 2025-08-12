@@ -11,6 +11,7 @@ Silhouette(
   prox_matrix,
   proximity_type = c("dissimilarity", "similarity"),
   method = c("medoid", "pac"),
+  average = c("crisp", "fuzzy", "median"),
   prob_matrix = NULL,
   a = 2,
   sort = FALSE,
@@ -19,7 +20,14 @@ Silhouette(
   ...
 )
 
-\method{plot}{Silhouette}(x, label = FALSE, summary.legend = TRUE, grayscale = FALSE, ...)
+\method{plot}{Silhouette}(
+  x,
+  label = FALSE,
+  summary.legend = TRUE,
+  grayscale = FALSE,
+  linetype = c("dashed", "solid", "dotted", "dotdash", "longdash", "twodash"),
+  ...
+)
 
 \method{summary}{Silhouette}(object, print.summary = TRUE, ...)
 }
@@ -30,7 +38,22 @@ Silhouette(
 
 \item{method}{Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"medoid"}.}
 
-\item{prob_matrix}{A numeric matrix where rows represent observations and columns represent cluster membership probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}). When not \code{NULL}, fuzzy silhouette width is calculated. Defaults to \code{NULL} for crisp silhouette.}
+\item{average}{Character string specifying the method for computing the average silhouette width.
+Options are:
+\itemize{
+\item \code{"crisp"} – unweighted (simple) average.
+\item \code{"fuzzy"} – weighted average based on membership probability differences.
+\item \code{"median"} – median silhouette width across observations.
+}
+Defaults to \code{"crisp"}.}
+
+\item{prob_matrix}{A numeric matrix of cluster membership probabilities, where rows represent
+observations and columns represent clusters (depending on \code{prob_type}).
+If \code{clust_fun} is provided, \code{prob_matrix} can be given as the name of the matrix
+component (e.g., \code{"u"} for the \code{\link[ppclust]{fcm}} function).
+When \code{NULL} and \code{average = "fuzzy"}, the function falls back to computing the
+\code{"crisp"} silhouette with a warning, since fuzzy silhouette widths require membership
+probabilities. Defaults to \code{NULL}.}
 
 \item{a}{Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.}
 
@@ -50,6 +73,15 @@ Silhouette(
 
 \item{grayscale}{Logical; if \code{TRUE}, the plot uses a grayscale color palette for clusters. If \code{FALSE}, uses the default or specified color palette. Defaults to \code{FALSE}.}
 
+\item{linetype}{Character or numeric value specifying the type of line
+to be used for the horizontal reference line indicating the average
+silhouette width. Accepts standard ggplot2 linetype values, such as:
+\itemize{
+\item Character: \code{"solid"}, \code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, \code{"twodash"}.
+\item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+}
+Defaults to \code{"dashed"}.}
+
 \item{object}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function.}
 }
 \value{
@@ -57,6 +89,7 @@ A data frame of class \code{"Silhouette"} containing cluster assignments, neares
 \describe{
 \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+\item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 
 Further,  \code{summary} returns a list containing:

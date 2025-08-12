@@ -4,7 +4,14 @@
 \alias{plotSilhouette}
 \title{Plot Silhouette Analysis Results}
 \usage{
-plotSilhouette(x, label = FALSE, summary.legend = TRUE, grayscale = FALSE, ...)
+plotSilhouette(
+  x,
+  label = FALSE,
+  summary.legend = TRUE,
+  grayscale = FALSE,
+  linetype = c("dashed", "solid", "dotted", "dotdash", "longdash", "twodash"),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, or \code{\link[cluster]{silhouette}} from \pkg{cluster}, \pkg{factoextra} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.}
@@ -15,7 +22,16 @@ plotSilhouette(x, label = FALSE, summary.legend = TRUE, grayscale = FALSE, ...)
 
 \item{grayscale}{Logical; if \code{TRUE}, the plot uses a grayscale color palette for clusters. If \code{FALSE}, uses the default or specified color palette. Defaults to \code{FALSE}.}
 
-\item{...}{Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}).}
+\item{linetype}{Character or numeric value specifying the type of line
+to be used for the horizontal reference line indicating the average
+silhouette width. Accepts standard ggplot2 linetype values, such as:
+\itemize{
+\item Character: \code{"solid"}, \code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, \code{"twodash"}.
+\item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+}
+Defaults to \code{"dashed"}.}
+
+\item{...}{Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}).}
 }
 \value{
 A \code{ggplot2} object representing the Silhouette plot.

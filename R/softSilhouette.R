@@ -14,8 +14,16 @@
 #' }
 #' Defaults to \code{"pp"}.
 #' @param method Character string specifying the silhouette calculation method. Options are \code{"pac"} (Probability of Alternative Cluster) or \code{"medoid"}. Defaults to \code{"pac"}.
-#' @param average Character string specifying the type of average silhouette width calculation. Options are \code{"crisp"} (simple average) or \code{"fuzzy"} (weighted average based on membership differences). Defaults to \code{"crisp"}.
+#' @param average Character string specifying the method for computing the average silhouette width.
+#'   Options are:
+#'   \itemize{
+#'     \item \code{"crisp"} – unweighted (simple) average.
+#'     \item \code{"fuzzy"} – weighted average based on membership probability differences.
+#'     \item \code{"median"} – median silhouette width across observations.
+#'   }
+#'   Defaults to \code{"crisp"}.
 #' @param a Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.
+#' @param sort Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.
 #' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{FALSE}.
 #' @param clust_fun Optional S3 or S4 function object or function as character string specifying a clustering function that produces the proximity measure matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"d"} for \code{\link[ppclust]{fcm}} when \code{proximity_type = "dissimilarity"}). Defaults to \code{NULL}.
 #' @param ... Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{\link[ppclust]{fcm}}.
@@ -29,6 +37,7 @@
 #' \describe{
 #'   \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 #'   \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+#'   \item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 #' }
 #'
 #' @seealso \code{\link{Silhouette}},\code{\link{plotSilhouette}}
@@ -70,13 +79,13 @@
 #'   cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
 #' }
 #' }
-#' @import lifecycle
 #' @export
 softSilhouette <- function(prob_matrix,
                            prob_type = c("pp", "nlpp", "pd"),
                            method = c("pac", "medoid"),
-                           average = c("crisp", "fuzzy"),
+                           average = c("crisp", "fuzzy","median"),
                            a = 2,
+                           sort = FALSE,
                            print.summary = FALSE,
                            clust_fun = NULL, ...) {
   # Validate prob_matrix and clust_fun
@@ -176,7 +185,9 @@ softSilhouette <- function(prob_matrix,
     prox_matrix = prox_matrix,
     proximity_type = proximity_type,
     method = method,
+    average = average,
     a = a,
+    sort = sort,
     print.summary = print.summary
   )
 
