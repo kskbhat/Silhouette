@@ -126,7 +126,7 @@ plotSilhouette <- function(x,
     if (ncol(x) < 3) {
       stop("Silhouette object must have at least 3 columns")
     }
-    df <- as.data.frame(x[, 1:3], stringsAsFactors = TRUE)
+    df <- as.data.frame(x, stringsAsFactors = TRUE)
     summary_stats <- summary(x, print.summary = FALSE)
     clus.avg.widths <- summary_stats$clus.avg.widths
     avg.width <- summary_stats$avg.width
