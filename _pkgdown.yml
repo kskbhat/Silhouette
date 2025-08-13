@@ -10,7 +10,7 @@ template:
   includes:
     in_header: |
       <script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+      #<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 
 development:
   mode: auto
@@ -27,21 +27,23 @@ search: true
 home:
   title: Silhouette Package
   sidebar:
-    structure: [links, license, community, citation, authors]
+    structure: [links, license, community, citation, authors,build-status,cran-status,github-status]
     components:
       build-status:
-        title: "Build Status"
+        title: "Checking & Testing"
         text: |
           [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
-          [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
-
+          [![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)
       cran-status:
-        title: "CRAN & Lifecycle"
+        title: "CRAN Status"
         text: |
           [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)
-          ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette)
           ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)
-          [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+          [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
+      github-status:
+        title: "Github Status"
+        text: |
+          [![GitHub](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
 
 authors:
   Shrikrishna Bhat K:

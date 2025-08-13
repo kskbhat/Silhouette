@@ -12,18 +12,14 @@
 #'   \item \code{sil.sum}: A data frame with columns \code{cluster}, \code{size}, and \code{avg.sil.width} summarizing cluster sizes and average silhouette widths.
 #' }
 summary.Silhouette <- function(object, print.summary = TRUE, ...) {
-  x <- object
-  # Validate input
-  if (!inherits(x, "Silhouette")) {
-    stop("x must be of class 'Silhouette'.")
+  if (!inherits(object, "Silhouette")) {
+    stop("object must be of class 'Silhouette'.")
   }
+  proximity_type <- attr(object, "proximity_type")
+  method <- attr(object, "method")
+  average <- attr(object, "average")
+  widths <- object
 
-  proximity_type <- attr(x, "proximity_type")
-  method <- attr(x, "method")
-  average <- attr(x, "average")
-  widths <- x
-
-  # Compute average silhouette widths
   if (average == "crisp") {
     clus.avg.widths <- tapply(widths$sil_width, widths$cluster, mean, na.rm = TRUE)
     avg.width <- mean(widths$sil_width, na.rm = TRUE)
@@ -33,30 +29,17 @@ summary.Silhouette <- function(object, print.summary = TRUE, ...) {
       sum(sil_weight[idx], na.rm = TRUE) / sum(widths$weight[idx], na.rm = TRUE)
     })
     avg.width <- sum(sil_weight, na.rm = TRUE) / sum(widths$weight, na.rm = TRUE)
-  } else if (average == "median") {
+  } else {
     clus.avg.widths <- tapply(widths$sil_width, widths$cluster, median, na.rm = TRUE)
     avg.width <- median(widths$sil_width, na.rm = TRUE)
   }
-
-  # Summary data
   n <- table(widths$cluster)
-  sil.sum <- data.frame(
-    cluster = names(clus.avg.widths),
-    size = as.vector(n),
-    avg.sil.width = round(clus.avg.widths, 4)
-  )
+  sil.sum <- data.frame(cluster = names(clus.avg.widths), size = as.vector(n), avg.sil.width = round(clus.avg.widths, 4))
 
-  # Construct summary output string
-
-  if (average == "crisp") {
-    header <- sprintf("Average crisp %s %s silhouette: %.4f",proximity_type, method, avg.width)
-  } else if (average == "fuzzy") {
-    header <- sprintf("Average fuzzy %s %s silhouette: %.4f",proximity_type, method, avg.width)
-  } else if (average == "median") {
-    header <- sprintf("Median %s %s silhouette: %.4f",proximity_type, method, avg.width)
-  }
-
-
+  header <- switch(average,
+                   crisp = sprintf("Average crisp %s %s silhouette: %.4f", proximity_type, method, avg.width),
+                   fuzzy = sprintf("Average fuzzy %s %s silhouette: %.4f", proximity_type, method, avg.width),
+                   median = sprintf("Median %s %s silhouette: %.4f", proximity_type, method, avg.width))
 
   if (print.summary) {
     message(strrep("-", nchar(header)))
@@ -64,12 +47,9 @@ summary.Silhouette <- function(object, print.summary = TRUE, ...) {
     message(strrep("-", nchar(header)))
     cat("\n")
     print(sil.sum)
+    cat("\n")
   }
 
-  # Invisibly return results
-  invisible(list(
-    clus.avg.widths = clus.avg.widths,
-    avg.width = avg.width,
-    sil.sum = sil.sum
-  ))
+  invisible(list(clus.avg.widths = clus.avg.widths, avg.width = avg.width, sil.sum = sil.sum))
 }
+

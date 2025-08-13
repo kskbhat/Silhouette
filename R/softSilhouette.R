@@ -83,11 +83,12 @@
 softSilhouette <- function(prob_matrix,
                            prob_type = c("pp", "nlpp", "pd"),
                            method = c("pac", "medoid"),
-                           average = c("crisp", "fuzzy","median"),
+                           average = c("crisp", "fuzzy", "median"),
                            a = 2,
                            sort = FALSE,
                            print.summary = FALSE,
                            clust_fun = NULL, ...) {
+
   # Validate prob_matrix and clust_fun
   if (is.null(clust_fun)) {
     if (!is.matrix(prob_matrix) || !is.numeric(prob_matrix)) {
@@ -96,7 +97,7 @@ softSilhouette <- function(prob_matrix,
     if (ncol(prob_matrix) < 2) {
       stop("prob_matrix must have at least two columns (clusters).")
     }
-  } else { # clust_fun is not NULL
+  } else {
     if (!is.character(prob_matrix) || length(prob_matrix) != 1) {
       stop("When clust_fun is not NULL, prob_matrix must be a single string naming a matrix component.")
     }
@@ -104,64 +105,43 @@ softSilhouette <- function(prob_matrix,
       stop("clust_fun must be a function object or a string naming a function (e.g., 'kmeans').")
     }
 
-
-    # Get the clustering function (S3 or S4)
     if (is.character(clust_fun)) {
-      clust_fun <- if (exists(clust_fun, mode = "function")) {
-        get(clust_fun, mode = "function")
+      if (exists(clust_fun, mode = "function", envir = parent.frame())) {
+        clust_fun <- get(clust_fun, mode = "function", envir = parent.frame())
       } else if (isGeneric(clust_fun)) {
-        getMethod(clust_fun, "ANY") # Adjust signature if needed
+        clust_fun <- getMethod(clust_fun, "ANY")
       } else {
         stop("Function '", clust_fun, "' not found")
       }
     }
-
-    # Call the clustering function
-    clust_out <- tryCatch(
-      clust_fun(...),
-      error = function(e) stop("Error in clustering function: ", e$message)
-    )
-
-    # Extract the matrix (S3 or S4)
+    clust_out <- tryCatch(clust_fun(...),
+                          error = function(e) stop("Error in clustering function: ", e$message))
     prob_matrix <- if (isS4(clust_out)) {
-      if (prob_matrix %in% slotNames(clust_out)) {
-        slot(clust_out, prob_matrix)
-      } else {
-        stop("Slot '", prob_matrix, "' not found in clustering output.")
-      }
+      if (prob_matrix %in% slotNames(clust_out)) slot(clust_out, prob_matrix) else stop("Slot '", prob_matrix, "' not found in clustering output.")
     } else {
-      if (prob_matrix %in% names(clust_out)) {
-        clust_out[[prob_matrix]]
-      } else {
-        stop("Component '", prob_matrix, "' not found in clustering output.")
-      }
+      if (prob_matrix %in% names(clust_out)) clust_out[[prob_matrix]] else stop("Component '", prob_matrix, "' not found in clustering output.")
+    }
+    if (!is.matrix(prob_matrix) || !is.numeric(prob_matrix)) {
+      stop("Extracted prob_matrix must be a numeric matrix.")
+    }
+    if (ncol(prob_matrix) < 2) {
+      stop("Extracted prob_matrix must have at least two columns (clusters).")
     }
   }
 
-  # Ensure prob_matrix is a numeric matrix after extraction
-  if (!is.matrix(prob_matrix) || !is.numeric(prob_matrix)) {
-    stop("Extracted prob_matrix must be a numeric matrix.")
-  }
-  # Check row sums of prob_matrix
-  row_sums <- rowSums(prob_matrix)
-  if (any(abs(row_sums - 1) > 1e-6)) {
-    stop("Each row of prob_matrix must sum to 1.")
-  }
-  if (ncol(prob_matrix) < 2) {
-    stop("Extracted prob_matrix must have at least two columns (clusters).")
+
+  if (any(abs(rowSums(prob_matrix) - 1) > .Machine$double.eps^0.5)) {
+    stop("Each row of prob_matrix must sum to 1 after normalization for prob_type = 'pd'.")
   }
 
-  # Validate a
   if (!is.numeric(a) || a <= 0) {
     stop("a must be a positive numeric value.")
   }
 
-  # Ensure valid argument choices
   prob_type <- match.arg(prob_type)
   method <- match.arg(method)
   average <- match.arg(average)
 
-  # Transform probability matrix based on prob_type
   if (prob_type == "pp") {
     proximity_type <- "similarity"
     prox_matrix <- prob_matrix
@@ -178,9 +158,15 @@ softSilhouette <- function(prob_matrix,
       stop("Column sums in prob_matrix must be non-zero for prob_type = 'pd'.")
     }
     prox_matrix <- prob_matrix / pm_den
+    # Normalize rows after division to ensure rows sum to 1
+    row_sums_norm <- rowSums(prox_matrix)
+    if (any(abs(row_sums_norm - 1) > 1e-6)) {
+      stop("Each row of prob_matrix must sum to 1 after normalization for prob_type = 'pd'.")
+    }
+  } else {
+    stop("Unknown prob_type")
   }
 
-  # Prepare arguments for Silhouette function
   sil_args <- list(
     prox_matrix = prox_matrix,
     proximity_type = proximity_type,
@@ -191,14 +177,13 @@ softSilhouette <- function(prob_matrix,
     print.summary = print.summary
   )
 
-  # Set prob_matrix for fuzzy average
   if (average == "fuzzy") {
     sil_args$prob_matrix <- prob_matrix
   } else {
     sil_args$prob_matrix <- NULL
   }
 
-  # Call Silhouette function
   result <- do.call(Silhouette, sil_args)
   return(result)
 }
+

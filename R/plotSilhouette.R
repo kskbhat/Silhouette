@@ -117,12 +117,17 @@ plotSilhouette <- function(x,
                            grayscale = FALSE,
                            linetype = c("dashed", "solid", "dotted", "dotdash", "longdash", "twodash"),
                            ...) {
-  # Initialize variables to NULL
   cluster <- sil_width <- original_name <- name <- NULL
 
   if (inherits(x, "Silhouette")) {
-    df <- x
-    summary_stats <- summary(df, print.summary = FALSE)
+    if (!is.matrix(x) && !is.data.frame(x)) {
+      stop("Silhouette object must be a matrix or data.frame")
+    }
+    if (ncol(x) < 3) {
+      stop("Silhouette object must have at least 3 columns")
+    }
+    df <- as.data.frame(x[, 1:3], stringsAsFactors = TRUE)
+    summary_stats <- summary(x, print.summary = FALSE)
     clus.avg.widths <- summary_stats$clus.avg.widths
     avg.width <- summary_stats$avg.width
     average <- attr(x, "average")
@@ -131,18 +136,23 @@ plotSilhouette <- function(x,
     df <- as.data.frame(x$silinfo$widths, stringsAsFactors = TRUE)
     clus.avg.widths <- x$silinfo$clus.avg.widths
     avg.width <- x$silinfo$avg.width
-    average = "crisp"
-    method = NULL
+    average <- "crisp"
+    method <- NULL
   } else if (inherits(x, "silhouette")) {
-    df <- as.data.frame(x[, 1:3], stringsAsFactors = TRUE)
+    if (!is.matrix(x) && !is.data.frame(x)) {
+      stop("silhouette object must be a matrix or data.frame")
+    }
+    if (ncol(x) < 3) {
+      stop("silhouette object must have at least 3 columns")
+    }
+    df <- as.data.frame(x[,1:3], stringsAsFactors = TRUE)
     clus.avg.widths <- tapply(df$sil_width, df$cluster, mean, na.rm = TRUE)
     avg.width <- mean(df$sil_width, na.rm = TRUE)
-    average = "crisp"
-    method = NULL
+    average <- "crisp"
+    method <- NULL
   } else {
     stop("Don't support an object of class ", class(x))
   }
-
   # Allow numeric codes 1:6 OR named linetypes
   if (is.numeric(linetype)) {
     if (!linetype %in% 1:6) {
