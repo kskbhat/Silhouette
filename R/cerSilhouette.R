@@ -122,7 +122,7 @@ cerSilhouette <- function(prob_matrix,
   } else {
     widths <- data.frame(cluster = cluster, neighbor = neighbor, weight = weight, sil_width = sil_width)
   }
-
+  original_name <- NULL
   if (sort) {
     widths <- widths %>%
       dplyr::mutate(original_name = row.names(widths)) %>%
