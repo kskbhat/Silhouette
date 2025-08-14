@@ -192,10 +192,9 @@ centroid using <code>proxy::dist()</code>.</li>
 <span><span class="co">#&gt; 5       1        2 0.9455979</span></span>
 <span><span class="co">#&gt; 6       1        2 0.7848442</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil</span><span class="op">)</span></span>
-<span><span class="co">#&gt; -----------------------------------------------------</span></span>
-<span><span class="co">#&gt; Average crisp dissimilarity medoid silhouette: 0.6664</span></span>
-<span><span class="co">#&gt; -----------------------------------------------------</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; -----------------------------------------------</span></span>
+<span><span class="co">#&gt; Average dissimilarity medoid silhouette: 0.6664 </span></span>
+<span><span class="co">#&gt; ----------------------------------------------- </span></span>
 <span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
 <span><span class="co">#&gt; 1       1   50        0.8592</span></span>
 <span><span class="co">#&gt; 2       2   62        0.5546</span></span>
@@ -220,10 +219,9 @@ output:</li>
 <span><span class="co">#&gt; 50       1        2 0.9158517</span></span>
 <span><span class="co">#&gt; 41       1        2 0.8993130</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil_pac</span><span class="op">)</span></span>
-<span><span class="co">#&gt; --------------------------------------------------</span></span>
-<span><span class="co">#&gt; Average crisp dissimilarity pac silhouette: 0.5376</span></span>
-<span><span class="co">#&gt; --------------------------------------------------</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------</span></span>
+<span><span class="co">#&gt; Average dissimilarity pac silhouette: 0.5376 </span></span>
+<span><span class="co">#&gt; -------------------------------------------- </span></span>
 <span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
 <span><span class="co">#&gt; 1       1   50        0.7603</span></span>
 <span><span class="co">#&gt; 2       2   62        0.4136</span></span>
@@ -241,10 +239,9 @@ stored in the returned object. To extract them programmatically, use the
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">sil_pac</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; --------------------------------------------------</span></span>
-<span><span class="co">#&gt; Average crisp dissimilarity pac silhouette: 0.5376</span></span>
-<span><span class="co">#&gt; --------------------------------------------------</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------</span></span>
+<span><span class="co">#&gt; Average dissimilarity pac silhouette: 0.5376 </span></span>
+<span><span class="co">#&gt; -------------------------------------------- </span></span>
 <span><span class="co">#&gt;   cluster size avg.sil.width</span></span>
 <span><span class="co">#&gt; 1       1   50        0.7603</span></span>
 <span><span class="co">#&gt; 2       2   62        0.4136</span></span>
@@ -723,6 +720,7 @@ dimension names:</li>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt; Extended silhouette: 0.7134 </span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Dimension Summary:</span></span>
 <span><span class="co">#&gt;   dimension n_obs avg_sil_width</span></span>
 <span><span class="co">#&gt; 1      Rows   150        0.7057</span></span>
