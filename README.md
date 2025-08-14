@@ -1,7 +1,7 @@
 # Silhouette <a href="https://kskbhat.github.io/Silhouette/"><img src="man/figures/logo.png" alt="Silhouette website" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)[![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette) 
+[![CRAN Status (ago)](https://www.r-pkg.org/badges/version/Silhouette)](https://cran.r-project.org/package=Silhouette)[![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette) ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette) 
 
 [![GitHub](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)

@@ -27,23 +27,23 @@ search: true
 home:
   title: Silhouette Package
   sidebar:
-    structure: [links, license, community, citation, authors,build-status,cran-status,github-status]
+    structure: [links, license, community, citation, authors,dev-status]
     components:
-      build-status:
-        title: "Checking & Testing"
+      dev-status:
+        title: "Dev Status"
         text: |
-          [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
-          [![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)
-      cran-status:
-        title: "CRAN Status"
-        text: |
-          [![CRAN Status (ago)](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)
+          [![CRAN Status](https://www.r-pkg.org/badges/version-ago/Silhouette)](https://cran.r-project.org/package=Silhouette)
+
           ![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)
-          [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
-      github-status:
-        title: "Github Status"
-        text: |
+
+          ![Monthly Downloads](https://cranlogs.r-pkg.org/badges/Silhouette)
+
           [![GitHub](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
+
+          [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml)
+
+          [![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)
+
 
 authors:
   Shrikrishna Bhat K:
