@@ -119,9 +119,9 @@ dbSilhouette <- function(prob_matrix,
   sil_width <- sil_width_num / max(abs(sil_width_num))
 
   if (average == "fuzzy") {
-    widths <- data.frame(cluster = cluster, neighbor = neighbor, sil_width = sil_width)
-  } else {
     widths <- data.frame(cluster = cluster, neighbor = neighbor, weight = weight, sil_width = sil_width)
+  } else {
+    widths <- data.frame(cluster = cluster, neighbor = neighbor, sil_width = sil_width)
   }
   original_name <- NULL
   if (sort) {

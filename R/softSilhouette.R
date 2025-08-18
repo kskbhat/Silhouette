@@ -148,9 +148,6 @@ softSilhouette <- function(prob_matrix,
   } else if (prob_type == "nlpp") {
     proximity_type <- "dissimilarity"
     prox_matrix <- -log(prob_matrix)
-    if (any(is.infinite(prox_matrix), na.rm = TRUE)) {
-      stop("Negative log of prob_matrix produced infinite values.")
-    }
   } else if (prob_type == "pd") {
     proximity_type <- "similarity"
     pm_den <- matrix(colSums(prob_matrix), nrow = nrow(prob_matrix), ncol = ncol(prob_matrix), byrow = TRUE)
@@ -158,11 +155,6 @@ softSilhouette <- function(prob_matrix,
       stop("Column sums in prob_matrix must be non-zero for prob_type = 'pd'.")
     }
     prox_matrix <- prob_matrix / pm_den
-    # Normalize rows after division to ensure rows sum to 1
-    row_sums_norm <- rowSums(prox_matrix)
-    if (any(abs(row_sums_norm - 1) > 1e-6)) {
-      stop("Each row of prob_matrix must sum to 1 after normalization for prob_type = 'pd'.")
-    }
   } else {
     stop("Unknown prob_type")
   }

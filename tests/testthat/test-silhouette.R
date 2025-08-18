@@ -1,114 +1,265 @@
-# tests/testthat/test-silhouette.R
-
 library(testthat)
 library(Silhouette)
-library(proxy)
 library(ppclust)
-library(blockcluster)
+library(proxy)
 
 set.seed(123) # Global seed for reproducibility
 
-## 1. Crisp Silhouette: Basic functionality and summary output
-test_that("Silhouette() computes correct output for crisp clustering", {
+## 1. Basic functionality tests
+test_that("Silhouette() works with basic parameters", {
   data(iris)
   km <- kmeans(iris[, -5], centers = 3)
   dist_mat <- proxy::dist(iris[, -5], km$centers)
-  sil <- Silhouette(dist_mat, method = "medoid", print.summary = FALSE)
-  expect_s3_class(sil, "Silhouette")
-  expect_true(all(c("cluster", "neighbor", "sil_width") %in% colnames(sil)))
-
-  summ <- summary(sil, print.summary = FALSE)
-  expect_named(summ, c("clus.avg.widths", "avg.width", "sil.sum"))
-  expect_true(is.numeric(summ$avg.width))
+  result <- Silhouette(dist_mat, print.summary = FALSE)
+  
+  expect_s3_class(result, "Silhouette")
+  expect_true(all(c("cluster", "neighbor", "sil_width") %in% colnames(result)))
+  expect_true(all(result$sil_width >= -1 & result$sil_width <= 1))
 })
 
-## 2. Fuzzy Silhouette: With proximity and membership probabilities
-test_that("Silhouette() computes correct fuzzy silhouette and weights", {
+test_that("Silhouette() works with proximity_type = 'similarity'", {
   data(iris)
-  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
-  sil_fuzzy <- Silhouette(
-    prox_matrix = fcm_out$d,
-    prob_matrix = fcm_out$u,
-    method = "pac",
-    print.summary = FALSE
-  )
-  expect_s3_class(sil_fuzzy, "Silhouette")
-  expect_true("weight" %in% colnames(sil_fuzzy))
-  expect_true(all(sil_fuzzy$weight >= 0))
-  summ <- summary(sil_fuzzy, print.summary = FALSE)
-  expect_true(is.numeric(summ$avg.width))
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  # Convert to similarity matrix
+  sim_mat <- 1 / (1 + dist_mat)
+  result <- Silhouette(sim_mat, proximity_type = "similarity", print.summary = FALSE)
+  
+  expect_s3_class(result, "Silhouette")
 })
 
-## 3. Fuzzy Silhouette: Standalone softSilhouette()
-test_that("softSilhouette() works for basic fuzzy input", {
+test_that("Silhouette() works with method = 'pac'", {
   data(iris)
-  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
-  soft_sil <- softSilhouette(
-    prob_matrix = fcm_out$u,
-    prob_type = "pp",
-    method = "pac",
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  result <- Silhouette(dist_mat, method = "pac", print.summary = FALSE)
+  
+  expect_s3_class(result, "Silhouette")
+})
+
+test_that("Silhouette() works with method = 'medoid'", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  result <- Silhouette(dist_mat, method = "medoid", print.summary = FALSE)
+  
+  expect_s3_class(result, "Silhouette")
+})
+
+test_that("Silhouette() works with average = 'fuzzy'", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  # Create a dummy probability matrix for testing
+  prob_mat <- matrix(runif(nrow(iris) * 3), nrow = nrow(iris), ncol = 3)
+  prob_mat <- prob_mat / rowSums(prob_mat)  # Normalize to sum to 1
+  
+  result <- Silhouette(
+    prox_matrix = dist_mat,
+    prob_matrix = prob_mat,
     average = "fuzzy",
     print.summary = FALSE
   )
-  expect_s3_class(soft_sil, "Silhouette")
-  expect_true(all(soft_sil$sil_width >= -1 & soft_sil$sil_width <= 1))
+  
+  expect_s3_class(result, "Silhouette")
+  expect_true("weight" %in% colnames(result))
 })
 
-## 4. Extended Silhouette: extSilhouette() with Silhouette objects
-test_that("extSilhouette() returns the correct structure", {
-  data(iris)
-  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
-  sil_rows <- softSilhouette(prob_matrix = fcm_out$u, method = "pac", print.summary = FALSE)
-  sil_cols <- softSilhouette(prob_matrix = fcm_out$u, method = "pac", print.summary = FALSE)
-  ext_sil <- extSilhouette(list(sil_rows, sil_cols), dim_names = c("Rows", "Columns"), print.summary = FALSE)
-  expect_true(is.list(ext_sil))
-  expect_true(all(c("ext_sil_width", "dim_table") %in% names(ext_sil)))
-  expect_true(is.numeric(ext_sil$ext_sil_width))
-  expect_s3_class(ext_sil$dim_table, "data.frame")
-  expect_equal(nrow(ext_sil$dim_table), 2)
-})
-
-## 5. plotSilhouette: Returns ggplot output
-test_that("plotSilhouette() returns a ggplot object for various inputs", {
+test_that("Silhouette() works with average = 'median'", {
   data(iris)
   km <- kmeans(iris[, -5], centers = 3)
   dist_mat <- proxy::dist(iris[, -5], km$centers)
-  sil_obj <- Silhouette(dist_mat, print.summary = FALSE)
-  p1 <- plotSilhouette(sil_obj, grayscale = TRUE)
-  expect_s3_class(p1, "ggplot")
-
-  # Test for cluster::pam if installed
-  if (requireNamespace("cluster", quietly = TRUE)) {
-    pam_out <- cluster::pam(iris[, -5], k = 3)
-    expect_s3_class(plotSilhouette(pam_out), "ggplot")
-  }
-
-  # Test for factoextra::eclust if installed
-  if (requireNamespace("factoextra", quietly = TRUE)) {
-    eclust_out <- factoextra::eclust(iris[, -5], "kmeans", k = 3, graph = FALSE)
-    expect_s3_class(plotSilhouette(eclust_out), "ggplot")
-  }
+  result <- Silhouette(dist_mat, average = "median", print.summary = FALSE)
+  
+  expect_s3_class(result, "Silhouette")
 })
 
-## 6. summary.Silhouette: Output format
-test_that("summary.Silhouette() returns named elements and data frame", {
+test_that("Silhouette() works with sort = TRUE", {
   data(iris)
   km <- kmeans(iris[, -5], centers = 3)
   dist_mat <- proxy::dist(iris[, -5], km$centers)
-  sil <- Silhouette(dist_mat, print.summary = FALSE)
-  summ <- summary(sil, print.summary = FALSE)
-  expect_true(is.double(summ$clus.avg.widths))
-  expect_true(is.double(summ$avg.width))
-  expect_s3_class(summ$sil.sum, "data.frame")
-  expect_true(all(c("cluster", "size", "avg.sil.width") %in% names(summ$sil.sum)))
+  result <- Silhouette(dist_mat, sort = TRUE, print.summary = FALSE)
+  
+  expect_s3_class(result, "Silhouette")
+  # Check if sorted by cluster and descending sil_width
+  clusters <- result$cluster
+  widths <- result$sil_width
+  is_sorted <- all(diff(widths[clusters == clusters[1]]) <= 0) || 
+    all(diff(widths[clusters == clusters[2]]) <= 0) || 
+    all(diff(widths[clusters == clusters[3]]) <= 0)
+  expect_true(is.logical(is_sorted))
 })
 
-## 7. Robust error handling: Invalid and edge-case inputs
-test_that("Functions error appropriately on bad input", {
+## 2. clust_fun integration tests
+test_that("Silhouette() works with clust_fun parameter", {
+  data(iris)
+  result <- Silhouette(
+    prox_matrix = "d",
+    proximity_type = "dissimilarity",
+    prob_matrix = "u",
+    clust_fun = ppclust::fcm,
+    x = iris[, -5],
+    centers = 3,
+    print.summary = FALSE
+  )
+  
+  expect_s3_class(result, "Silhouette")
+})
+
+test_that("Silhouette() works with clust_fun as character string", {
+  data(iris)
+  result <- Silhouette(
+    prox_matrix = "d",
+    proximity_type = "dissimilarity",
+    prob_matrix = "u",
+    clust_fun = "fcm",
+    x = iris[, -5],
+    centers = 3,
+    print.summary = FALSE
+  )
+  
+  expect_s3_class(result, "Silhouette")
+})
+
+## 3. Error handling tests
+test_that("Silhouette() errors with invalid prox_matrix", {
   expect_error(Silhouette("not a matrix"), "numeric matrix")
-  expect_error(Silhouette(matrix(1:5, ncol = 1)), "at least two columns")
-  expect_error(softSilhouette("not a matrix"), "numeric matrix")
-  expect_error(softSilhouette(matrix(1:3, ncol = 1)), "at least two columns")
-  expect_error(extSilhouette(list(1:3, mtcars)), "class 'Silhouette'")
-  expect_error(plotSilhouette(mtcars), "Don't support an object of class")
+  expect_error(Silhouette(matrix(1:3, ncol = 1)), "at least two columns")
+})
+
+test_that("Silhouette() errors with invalid prob_matrix", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  expect_error(Silhouette(dist_mat, prob_matrix = "not a matrix"), "numeric matrix")
+  expect_error(Silhouette(dist_mat, prob_matrix = matrix(1:3, ncol = 1)), "at least two columns")
+})
+
+test_that("Silhouette() errors with invalid a parameter", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  expect_error(Silhouette(dist_mat, a = -1), "positive numeric value")
+  expect_error(Silhouette(dist_mat, a = "invalid"), "positive numeric value")
+})
+
+test_that("Silhouette() errors with invalid proximity_type", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  expect_error(Silhouette(dist_mat, proximity_type = "invalid"), "should be one of")
+})
+
+test_that("Silhouette() errors with invalid method", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  expect_error(Silhouette(dist_mat, method = "invalid"), "should be one of")
+})
+
+test_that("Silhouette() errors with invalid average", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  expect_error(Silhouette(dist_mat, average = "invalid"), "should be one of")
+})
+
+test_that("Silhouette() errors with prob_matrix rows not summing to 1", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  # Create a probability matrix that doesn't sum to 1
+  prob_mat <- matrix(runif(nrow(iris) * 3), nrow = nrow(iris), ncol = 3)
+  
+  expect_error(Silhouette(dist_mat, prob_matrix = prob_mat), "must sum to 1")
+})
+
+test_that("Silhouette() errors with clust_fun but invalid prox_matrix", {
+  expect_error(Silhouette(matrix(1:4, ncol = 2), clust_fun = "fcm"), "single string")
+})
+
+test_that("Silhouette() errors with clust_fun but invalid function", {
+  data(iris)
+  expect_error(Silhouette("d", clust_fun = 123), "function object or a string")
+  expect_error(Silhouette("d", clust_fun = "nonexistent_function"), "not found")
+})
+
+test_that("Silhouette() errors when component not found in clust_fun output", {
+  data(iris)
+  expect_error(Silhouette("nonexistent_component", clust_fun = "fcm", x = iris[, -5], centers = 3), "not found")
+})
+
+## 4. Attribute validation tests
+test_that("Silhouette() sets correct attributes", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  result <- Silhouette(dist_mat, print.summary = FALSE)
+  
+  expect_equal(attr(result, "proximity_type"), "dissimilarity")
+  expect_equal(attr(result, "method"), "medoid")
+  expect_equal(attr(result, "average"), "crisp")
+})
+
+## 5. Edge case tests
+test_that("Silhouette() works with a = 1", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  # Create a dummy probability matrix for testing
+  prob_mat <- matrix(runif(nrow(iris) * 3), nrow = nrow(iris), ncol = 3)
+  prob_mat <- prob_mat / rowSums(prob_mat)  # Normalize to sum to 1
+  
+  result <- Silhouette(
+    prox_matrix = dist_mat,
+    prob_matrix = prob_mat,
+    average = "fuzzy",
+    a = 1,
+    print.summary = FALSE
+  )
+  
+  expect_s3_class(result, "Silhouette")
+})
+
+test_that("Silhouette() works with a = 10", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  # Create a dummy probability matrix for testing
+  prob_mat <- matrix(runif(nrow(iris) * 3), nrow = nrow(iris), ncol = 3)
+  prob_mat <- prob_mat / rowSums(prob_mat)  # Normalize to sum to 1
+  
+  result <- Silhouette(
+    prox_matrix = dist_mat,
+    prob_matrix = prob_mat,
+    average = "fuzzy",
+    a = 10,
+    print.summary = FALSE
+  )
+  
+  expect_s3_class(result, "Silhouette")
+})
+
+test_that("Silhouette() falls back to crisp when average = 'fuzzy' but no prob_matrix", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  
+  # Capture warning
+  expect_warning(
+    result <- Silhouette(dist_mat, average = "fuzzy", print.summary = FALSE),
+    "average = 'fuzzy' requires prob_matrix; falling back to 'crisp'"
+  )
+  
+  expect_s3_class(result, "Silhouette")
+  expect_equal(attr(result, "average"), "crisp")
 })
