@@ -13,3 +13,10 @@
 ^CRAN-SUBMISSION$
 ^LICENSE$
 ^inst/hexsticker\.R$
+
+# pkgdown/quarto generated site artifacts
+^articles$
+^reference$
+^news$
+^deps$
+^tests/testthat/_snaps$
