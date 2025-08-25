@@ -32,8 +32,8 @@ home:
       downloads:
         title: ""
         text: |
-            ![All Time](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)
-            ![This Month](https://cranlogs.r-pkg.org/badges/last-month/Silhouette)
+            [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)
+            [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=green)](https://r-pkg.org/pkg/Silhouette)
 
 authors:
   Shrikrishna Bhat K:

@@ -429,7 +429,7 @@ plotSilhouette(hcut_result)
 
 - **drclust::silhouette Visualization:**
 
-```{r plot3.1, fig.width=6, fig.height=5, fig.alt = "fig4.3.1"}
+```{r plot3.1, fig.width=7, fig.height=6, fig.alt = "fig4.3.1"}
 library(drclust)
 # Loading the numeric in matrix 
 iris_mat <- as.matrix(iris[,-5])
