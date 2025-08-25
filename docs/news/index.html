@@ -14,7 +14,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,32 @@
       <small>Source: <a href="https://github.com/kskbhat/Silhouette/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.6" id="silhouette-096-august-2025">Silhouette 0.9.6 (August 2025)<a class="anchor" aria-label="anchor" href="#silhouette-096-august-2025"></a></h2>
+<p><strong>New Features</strong></p>
+<ul><li><p>Introduced new functions:</p></li>
+<li><p><strong><code><a href="../reference/getSilhouette.html">getSilhouette()</a></code></strong><br>
+Constructs a Silhouette class object directly from user-provided components without performing silhouette calculations. Allows users to build Silhouette objects when they already have cluster assignments, neighbor clusters, silhouette widths, and optional weights.</p></li>
+<li><p><strong><code><a href="../reference/is.Silhouette.html">is.Silhouette()</a></code></strong><br>
+Tests whether an object is of class “Silhouette” with optional strict validation. Checks both class inheritance and expected structure including required columns, attributes, and value ranges.</p></li>
+<li><p><strong><code><a href="../reference/cerSilhouette.html">cerSilhouette()</a></code></strong><br>
+Computes certainty silhouette widths for soft clustering using maximum posterior probabilities. Provides an alternative evaluation method for fuzzy clustering algorithms with support for crisp, fuzzy, and median averaging.</p></li>
+<li><p><strong><code><a href="../reference/dbSilhouette.html">dbSilhouette()</a></code></strong><br>
+Computes density-based silhouette widths using log-ratios of posterior probabilities based on Menardi (2011) method. Offers normalized silhouette evaluation for soft clustering with enhanced discrimination between cluster assignments.</p></li>
+</ul><p><strong>Improvements</strong></p>
+<ul><li>Extended existing functions to support <strong>median-based silhouette calculations</strong> as an alternative to mean-based computations.</li>
+<li>Added new <code>average</code> attribute for existing Silhouette class supporting “crisp”, “fuzzy”, and “median” options.</li>
+<li>Enhanced clustering evaluation capabilities with density-based and certainty-based statistical measures.</li>
+<li>Updated documentation to reflect new median calculation options and soft clustering methods.</li>
+</ul><div class="section level3">
+<h3 id="updated-dependencies-0-9-6">Updated Dependencies<a class="anchor" aria-label="anchor" href="#updated-dependencies-0-9-6"></a></h3>
+<ul><li>
+<strong>Imports</strong>: <code>dplyr</code>, <code>ggplot2</code>, <code>ggpubr</code>, <code>methods</code>, <code>stats</code><br></li>
+<li>
+<strong>Suggests</strong>: <code>proxy</code>, <code>ppclust</code>, <code>blockcluster</code>, <code>cluster</code>, <code>factoextra</code>, <code>drclust</code>
+</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.5" id="silhouette-095-august-2025">Silhouette 0.9.5 (August 2025)<a class="anchor" aria-label="anchor" href="#silhouette-095-august-2025"></a></h2>
 <ul><li>Improved documentation:

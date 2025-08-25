@@ -2,7 +2,7 @@
 #' @method summary Silhouette
 #' @export
 #' @import methods
-#' @param object An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function.
+#' @param object An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}},  \code{\link{dbSilhouette}}, and  \code{\link{cerSilhouette}} function.
 #' @param print.summary Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{TRUE}.
 #'
 #' @return Further,  \code{summary} returns a list containing:
@@ -12,7 +12,7 @@
 #'   \item \code{sil.sum}: A data frame with columns \code{cluster}, \code{size}, and \code{avg.sil.width} summarizing cluster sizes and average silhouette widths.
 #' }
 summary.Silhouette <- function(object, print.summary = TRUE, ...) {
-  if (!inherits(object, "Silhouette")) {
+  if (!is.Silhouette(object, strict = TRUE)) {
     stop("object must be of class 'Silhouette'.")
   }
   proximity_type <- attr(object, "proximity_type")

@@ -14,7 +14,7 @@ plotSilhouette(
 )
 }
 \arguments{
-\item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, or \code{\link[cluster]{silhouette}} from \pkg{cluster}, \pkg{factoextra} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.}
+\item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}} and \code{\link{cerSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, \code{\link[cluster]{silhouette}}, or \code{\link[drclust]{silhouette}} from \pkg{cluster}, \pkg{factoextra}, \pkg{drclust} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.}
 
 \item{label}{Logical; if \code{TRUE}, the x-axis is labeled with observation row indices from the input data and titled "Row Index". Defaults to \code{FALSE}.}
 
@@ -37,21 +37,19 @@ Defaults to \code{"dashed"}.}
 A \code{ggplot2} object representing the Silhouette plot.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend.
 }
 \details{
 The Silhouette plot displays the silhouette width (\code{sil_width}) for each observation, grouped by cluster, with bars sorted by cluster and descending silhouette width. The \code{summary.legend} option adds cluster sizes and average silhouette widths to the legend.
 
-This function replica of S3 method for objects of class \code{"Silhouette"}, typically produced by the \code{\link{Silhouette}} or \code{\link{softSilhouette}} functions in this package. It also supports objects of the following classes, with silhouette information extracted from their respective component:
+This function replica of S3 method for objects of class \code{"Silhouette"}, typically produced by the \code{\link{Silhouette}}, \code{\link{softSilhouette}}, , \code{\link{dbSilhouette}} or , \code{\link{cerSilhouette}} functions in this package. It also supports objects of the following classes, with silhouette information extracted from their respective component:
 \itemize{
 \item \code{"eclust"}: Produced by \code{\link[factoextra]{eclust}} from the \pkg{factoextra} package.
 \item \code{"hcut"}: Produced by \code{\link[factoextra]{hcut}} from the \pkg{factoextra} package.
 \item \code{"pam"}: Produced by \code{\link[cluster]{pam}} from the \pkg{cluster} package.
 \item \code{"clara"}: Produced by \code{\link[cluster]{clara}} from the \pkg{cluster} package.
 \item \code{"fanny"}: Produced by \code{\link[cluster]{fanny}} from the \pkg{cluster} package.
-\item \code{"silhouette"}: Produced by \code{\link[cluster]{silhouette}} from the \pkg{cluster} package.
+\item \code{"silhouette"}: Produced by \code{\link[cluster]{silhouette}} from the \pkg{cluster} package or \code{\link[drclust]{silhouette}} from the \pkg{drclust} package.
 }
 For these classes (\code{"eclust"}, \code{"hcut"}, \code{"pam"}, \code{"clara"}, \code{"fanny"}, \code{"silhouette"}), users should explicitly call \code{plotSilhouette()} (e.g., \code{plotSilhouette(pam_result)}) to ensure the correct method is used, as the generic \code{plot()} may not dispatch to this function for these objects.
 }
@@ -121,11 +119,20 @@ if (requireNamespace("factoextra", quietly = TRUE)) {
   hcut_result <- hcut(iris[, 1:4], k = 3)
   plotSilhouette(hcut_result)
 }
+
+# Silhouette plot for hcut clustering
+if (requireNamespace("drclust", quietly = TRUE)) {
+  library(drclust)
+  iris_mat <- as.matrix(iris[,-5])
+  drclust_out <- dpcakm(iris_mat, 20, 3)
+  d <- silhouette(iris_mat, drclust_out)
+  plotSilhouette(d$cl.silhouette)
+}
 }
 }
 \references{
 Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{Journal of Computational and Applied Mathematics}, 20, 53--65. \doi{10.1016/0377-0427(87)90125-7}
 }
 \seealso{
-\code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, \code{\link[cluster]{silhouette}}
+\code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}
 }

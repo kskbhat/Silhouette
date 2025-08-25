@@ -1,8 +1,5 @@
 #' Calculate Silhouette Widths, Summary, and Plot for Clustering Results
 #'
-#' @description
-#' `r lifecycle::badge('stable')`
-#'
 #' Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 #'
 #' @param prox_matrix A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).
@@ -63,27 +60,29 @@
 #' **Note:**
 #' The `"medoid"` and `"pac"` options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from **classification algorithms**. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.
 #'
-#' If `prob_matrix` is `NULL`, the **crisp silhouette index** (\eqn{CS}) is:
+#' If `average = "crisp"`, the **crisp silhouette index** is calculated as (\eqn{CS}) is:
 #' \deqn{
 #'   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 #' }
 #' summarizing overall clustering quality.
 #'
-#' If `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+#' If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
 #' with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
-#' the **fuzzy silhouette index** (\eqn{FS}) is used:
+#' the **fuzzy silhouette index** (\eqn{FS}) is calculated as:
 #' \deqn{
-#'   FS = \frac{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i) }{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} }
+#'   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 #' }
-#' where \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
+#' where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is `weight` and \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
+#'
+#' If `average = "median"` then median Silhoutte is Calculated
 #'
 #' @return A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 #' \describe{
 #'   \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 #'   \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
-#'   \item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+#'   \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 #' }
-#' @seealso \code{\link{softSilhouette}}, \code{\link{plotSilhouette}}
+#' @seealso \code{\link{softSilhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}, \code{\link{plotSilhouette}}
 #'
 #' @references
 #' Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{Journal of Computational and Applied Mathematics}, 20, 53--65. \doi{10.1016/0377-0427(87)90125-7}
@@ -113,7 +112,7 @@
 #' # Scree plot for optimal clusters (2 to 7)
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
 #'   library(ppclust)
-#'   avg_sil_width <- numeric(6)
+#'   avg_sil_width <- rep(NA,7)
 #'   for (k in 2:7) {
 #'     out <- Silhouette(
 #'       prox_matrix = "d",
@@ -122,10 +121,10 @@
 #'       clust_fun = ppclust::fcm,
 #'       x = iris[, 1:4],
 #'       centers = k,
-#'       sort = TRUE
+#'       average = "fuzzy"
 #'     )
 #'     # Compute average silhouette width from widths
-#'     avg_sil_width[k - 1] <- summary(out, print.summary = FALSE)$avg.width
+#'     avg_sil_width[k] <- summary(out, print.summary = FALSE)$avg.width
 #'   }
 #'   plot(avg_sil_width,
 #'     type = "o",

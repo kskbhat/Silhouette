@@ -5,9 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Plot Silhouette Analysis Results — plotSilhouette"><meta name="description" content="
-Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:description" content="
-Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"><script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script></head><body><p>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Plot Silhouette Analysis Results — plotSilhouette"><meta name="description" content="Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:description" content="Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"><script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script></head><body><p>
 #<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script></p>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -16,7 +14,7 @@ Creates a silhouette plot for visualizing the silhouette widths of clustering re
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,8 +47,7 @@ Creates a silhouette plot for visualizing the silhouette widths of clustering re
     </div>
 
     <div class="ref-description section level2">
-    <p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="figures/lifecycle-stable.svg" alt="[Stable]"></a></p>
-<p>Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend.</p>
+    <p>Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend.</p>
     </div>
 
     <div class="section level2">
@@ -70,7 +67,7 @@ Creates a silhouette plot for visualizing the silhouette widths of clustering re
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>An object of class <code>"Silhouette"</code>, typically the output of the <code><a href="Silhouette.html">Silhouette</a></code> and <code><a href="softSilhouette.html">softSilhouette</a></code> function. Also supports objects classes <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code>, or <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code> from <span class="pkg">cluster</span>, <span class="pkg">factoextra</span> packages. For these classes, explicitly call <code>plotSilhouette()</code> to generate the plot.</p></dd>
+<dd><p>An object of class <code>"Silhouette"</code>, typically the output of the <code><a href="Silhouette.html">Silhouette</a></code>, <code><a href="softSilhouette.html">softSilhouette</a></code>, <code><a href="dbSilhouette.html">dbSilhouette</a></code> and <code><a href="cerSilhouette.html">cerSilhouette</a></code> function. Also supports objects classes <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code>, or <code>silhouette</code> from <span class="pkg">cluster</span>, <span class="pkg">factoextra</span>, <span class="pkg">drclust</span> packages. For these classes, explicitly call <code>plotSilhouette()</code> to generate the plot.</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
@@ -104,12 +101,12 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The Silhouette plot displays the silhouette width (<code>sil_width</code>) for each observation, grouped by cluster, with bars sorted by cluster and descending silhouette width. The <code>summary.legend</code> option adds cluster sizes and average silhouette widths to the legend.</p>
-<p>This function replica of S3 method for objects of class <code>"Silhouette"</code>, typically produced by the <code><a href="Silhouette.html">Silhouette</a></code> or <code><a href="softSilhouette.html">softSilhouette</a></code> functions in this package. It also supports objects of the following classes, with silhouette information extracted from their respective component:</p><ul><li><p><code>"eclust"</code>: Produced by <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code> from the <span class="pkg">factoextra</span> package.</p></li>
+<p>This function replica of S3 method for objects of class <code>"Silhouette"</code>, typically produced by the <code><a href="Silhouette.html">Silhouette</a></code>, <code><a href="softSilhouette.html">softSilhouette</a></code>, , <code><a href="dbSilhouette.html">dbSilhouette</a></code> or , <code><a href="cerSilhouette.html">cerSilhouette</a></code> functions in this package. It also supports objects of the following classes, with silhouette information extracted from their respective component:</p><ul><li><p><code>"eclust"</code>: Produced by <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code> from the <span class="pkg">factoextra</span> package.</p></li>
 <li><p><code>"hcut"</code>: Produced by <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code> from the <span class="pkg">factoextra</span> package.</p></li>
 <li><p><code>"pam"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code> from the <span class="pkg">cluster</span> package.</p></li>
 <li><p><code>"clara"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code> from the <span class="pkg">cluster</span> package.</p></li>
 <li><p><code>"fanny"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code> from the <span class="pkg">cluster</span> package.</p></li>
-<li><p><code>"silhouette"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code> from the <span class="pkg">cluster</span> package.</p></li>
+<li><p><code>"silhouette"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code> from the <span class="pkg">cluster</span> package or <code>silhouette</code> from the <span class="pkg">drclust</span> package.</p></li>
 </ul><p>For these classes (<code>"eclust"</code>, <code>"hcut"</code>, <code>"pam"</code>, <code>"clara"</code>, <code>"fanny"</code>, <code>"silhouette"</code>), users should explicitly call <code>plotSilhouette()</code> (e.g., <code>plotSilhouette(pam_result)</code>) to ensure the correct method is used, as the generic <code><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot()</a></code> may not dispatch to this function for these objects.</p>
     </div>
     <div class="section level2">
@@ -118,7 +115,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="Silhouette.html">Silhouette</a></code>, <code><a href="softSilhouette.html">softSilhouette</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code></p></div>
+    <div class="dont-index"><p><code><a href="Silhouette.html">Silhouette</a></code>, <code><a href="softSilhouette.html">softSilhouette</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code>, <code>silhouette</code></p></div>
     </div>
 
     <div class="section level2">
@@ -133,6 +130,14 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span>  <span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'proxy'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:stats':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as.dist, dist</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:base':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as.matrix</span>
 <span class="r-plt img"><img src="plotSilhouette-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#' # Fuzzy Silhouette with ppclust::fcm</span></span></span>
@@ -188,6 +193,8 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span>  <span class="va">eclust_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="st">"kmeans"</span>, k <span class="op">=</span> <span class="fl">3</span>, graph <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">plotSilhouette</span><span class="op">(</span><span class="va">eclust_result</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: ggplot2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</span>
 <span class="r-plt img"><img src="plotSilhouette-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Silhouette plot for hcut clustering</span></span></span>
@@ -196,6 +203,42 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span>  <span class="fu">plotSilhouette</span><span class="op">(</span><span class="va">hcut_result</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="plotSilhouette-8.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Silhouette plot for hcut clustering</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"drclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">drclust</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">iris_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/proxy/man/dist.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>,<span class="op">-</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">drclust_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/drclust/man/dpcakm.html" class="external-link">dpcakm</a></span><span class="op">(</span><span class="va">iris_mat</span>, <span class="fl">20</span>, <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">silhouette</span><span class="op">(</span><span class="va">iris_mat</span>, <span class="va">drclust_out</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">plotSilhouette</span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">cl.silhouette</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'drclust'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:cluster':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     silhouette</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    cluster size ave.sil.width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1   20          0.17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2   16          0.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3   12          0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4   11          0.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5    9          0.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6    9          0.23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7    8          0.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8    8          0.12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9    8          0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10    6          0.38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      11    6         -0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      12    6          0.23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      13    5          0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      14    5         -0.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      15    5          0.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      16    4          0.26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17      17    4          0.19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18      18    4         -0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19      19    3          0.28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20      20    1          0.00</span>
+<span class="r-plt img"><img src="plotSilhouette-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

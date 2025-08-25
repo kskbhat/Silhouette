@@ -41,16 +41,14 @@ A data frame of class \code{"Silhouette"} containing cluster assignments, neares
 \describe{
 \item{proximity_type}{The proximity type used i.e., \code{"similarity"}.}
 \item{method}{The silhouette calculation method used i.e., \code{"db"}.}
-\item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+\item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 Computes silhouette widths based on Menardi (2011) density-based method using log-ratios of posterior probabilities.
 }
 \details{
-Let the posterior probability matrix as
+Let the posterior probability matrix or cluster membership matrix as
 \deqn{\Gamma = [\gamma_{ik}]_{n \times K},}
 
 The \strong{density-based silhouette width} for observation \eqn{i} is:
@@ -59,7 +57,54 @@ The \strong{density-based silhouette width} for observation \eqn{i} is:
 \frac{\log\left( \frac{\gamma_{ik}}{\max_{k' \neq k} \gamma_{ik'}} \right)}
 {\max_{j=1,\dots,n} \left| \log\left( \frac{\gamma_{jk}}{\max_{k' \neq k} \gamma_{jk'}} \right) \right|}
 }
+
+#' If \code{average = "crisp"}, the \strong{crisp silhouette index} is calculated as (\eqn{CS}) is:
+\deqn{
+  CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
+}
+summarizing overall clustering quality.
+
+If \code{average = "fuzzy"} and \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
+the \strong{fuzzy silhouette index} (\eqn{FS}) is calculated as:
+\deqn{
+  FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
+}
+where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is \code{weight} and \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
+
+If \code{average = "median"} then median Silhoutte is Calculated
+}
+\examples{
+\donttest{
+# Compare two soft clustering algorithms using dbSilhouette
+# Example: FCM vs. FCM2 on iris data, using average silhouette width as a criterion
+data(iris)
+if (requireNamespace("ppclust", quietly = TRUE)) {
+  fcm_result <- ppclust::fcm(iris[, 1:4], 3)
+  out_fcm <- dbSilhouette(prob_matrix = fcm_result$u, print.summary = TRUE)
+  plot(out_fcm)
+  sfcm <- summary(out_fcm, print.summary = FALSE)
+} else {
+  message("Install 'ppclust' to run this example: install.packages('ppclust')")
+}
+if (requireNamespace("ppclust", quietly = TRUE)) {
+  fcm2_result <- ppclust::fcm2(iris[, 1:4], 3)
+  out_fcm2 <- dbSilhouette(prob_matrix = fcm2_result$u, print.summary = TRUE)
+  plot(out_fcm2)
+  sfcm2 <- summary(out_fcm2, print.summary = FALSE)
+} else {
+  message("Install 'ppclust' to run this example: install.packages('ppclust')")
+}
+# Compare average silhouette widths of fcm and fcm2
+if (requireNamespace("ppclust", quietly = TRUE)) {
+  cat("FCM average silhouette width:", sfcm$avg.width, "\n",
+  "FCM2 average silhouette width:", sfcm2$avg.width, "\n")
+}
+}
 }
 \references{
 Menardi, G. (2011). Density-based silhouette diagnostics for clustering methods. \emph{Statistics and Computing}, 21(3), 295--308. \doi{10.1007/s11222-010-9169-0}
+}
+\seealso{
+\code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}, \code{\link{plotSilhouette}}
 }

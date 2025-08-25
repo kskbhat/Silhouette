@@ -5,9 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate Silhouette Widths, Summary, and Plot for Clustering Results — Silhouette"><meta name="description" content="
-Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation."><meta property="og:description" content="
-Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"><script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script></head><body><p>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate Silhouette Widths, Summary, and Plot for Clustering Results — Silhouette"><meta name="description" content="Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation."><meta property="og:description" content="Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"><script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script></head><body><p>
 #<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script></p>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -16,7 +14,7 @@ Computes the silhouette width for each observation based on clustering results, 
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,8 +47,7 @@ Computes the silhouette width for each observation based on clustering results, 
     </div>
 
     <div class="ref-description section level2">
-    <p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="figures/lifecycle-stable.svg" alt="[Stable]"></a></p>
-<p>Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.</p>
+    <p>Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.</p>
     </div>
 
     <div class="section level2">
@@ -137,7 +134,7 @@ probabilities. Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>An object of class <code>"Silhouette"</code>, typically the output of the <code>Silhouette</code> and <code><a href="softSilhouette.html">softSilhouette</a></code> function. Also supports objects classes <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code>, or <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code> from <span class="pkg">cluster</span>, <span class="pkg">factoextra</span> packages. For these classes, explicitly call <code><a href="plotSilhouette.html">plotSilhouette()</a></code> to generate the plot.</p></dd>
+<dd><p>An object of class <code>"Silhouette"</code>, typically the output of the <code>Silhouette</code>, <code><a href="softSilhouette.html">softSilhouette</a></code>, <code><a href="dbSilhouette.html">dbSilhouette</a></code> and <code><a href="cerSilhouette.html">cerSilhouette</a></code> function. Also supports objects classes <code><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></code>, <code><a href="https://rdrr.io/pkg/factoextra/man/hcut.html" class="external-link">hcut</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/pam.html" class="external-link">pam</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code>, <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code>, or <code>silhouette</code> from <span class="pkg">cluster</span>, <span class="pkg">factoextra</span>, <span class="pkg">drclust</span> packages. For these classes, explicitly call <code><a href="plotSilhouette.html">plotSilhouette()</a></code> to generate the plot.</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
@@ -161,7 +158,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 
 
 <dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>An object of class <code>"Silhouette"</code>, typically the output of the <code>Silhouette</code> and <code><a href="softSilhouette.html">softSilhouette</a></code> function.</p></dd>
+<dd><p>An object of class <code>"Silhouette"</code>, typically the output of the <code>Silhouette</code>, <code><a href="softSilhouette.html">softSilhouette</a></code>,  <code><a href="dbSilhouette.html">dbSilhouette</a></code>, and  <code><a href="cerSilhouette.html">cerSilhouette</a></code> function.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -172,7 +169,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <dt>method</dt>
 <dd><p>The silhouette calculation method used (<code>"medoid"</code> or <code>"pac"</code>).</p></dd>
 
-<dt><code>"average"</code></dt>
+<dt>average</dt>
 <dd><p>Character — the averaging method: <code>"crisp"</code>, <code>"fuzzy"</code>, or <code>"median"</code>.</p></dd>
 
 
@@ -208,18 +205,19 @@ The normalizer \(N(x_i)\) is selected according to the <code>method</code> argum
 </ul></li>
 </ul><p><strong>Note:</strong>
 The <code>"medoid"</code> and <code>"pac"</code> options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from <strong>classification algorithms</strong>. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.</p>
-<p>If <code>prob_matrix</code> is <code>NULL</code>, the <strong>crisp silhouette index</strong> (\(CS\)) is:
+<p>If <code>average = "crisp"</code>, the <strong>crisp silhouette index</strong> is calculated as (\(CS\)) is:
 $$
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 $$
 summarizing overall clustering quality.</p>
-<p>If <code>prob_matrix</code> is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
+<p>If <code>average = "fuzzy"</code> and <code>prob_matrix</code> is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
 with \(\gamma_{ik}\) representing the probability of observation \(i\) belonging to cluster \(k\),
-the <strong>fuzzy silhouette index</strong> (\(FS\)) is used:
+the <strong>fuzzy silhouette index</strong> (\(FS\)) is calculated as:
 $$
-  FS = \frac{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i) }{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} }
+  FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 $$
-where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confident assignments.</p>
+where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}\) is <code>weight</code> and \(\alpha\) (the <code>a</code> argument) controls the emphasis on confident assignments.</p>
+<p>If <code>average = "median"</code> then median Silhoutte is Calculated</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -231,7 +229,7 @@ where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confiden
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="softSilhouette.html">softSilhouette</a></code>, <code><a href="plotSilhouette.html">plotSilhouette</a></code></p></div>
+    <div class="dont-index"><p><code><a href="softSilhouette.html">softSilhouette</a></code>, <code><a href="dbSilhouette.html">dbSilhouette</a></code>, <code><a href="cerSilhouette.html">cerSilhouette</a></code>, <code><a href="getSilhouette.html">getSilhouette</a></code>, <code><a href="is.Silhouette.html">is.Silhouette</a></code>, <code><a href="plotSilhouette.html">plotSilhouette</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -253,8 +251,8 @@ where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confiden
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   50        0.8592</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   38        0.5950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   38        0.5950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   50        0.8592</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   62        0.5546</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
@@ -263,7 +261,7 @@ where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confiden
 <span class="r-in"><span><span class="co"># Scree plot for optimal clusters (2 to 7)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ppclust</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">avg_sil_width</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">avg_sil_width</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>,<span class="fl">7</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="kw">for</span> <span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">Silhouette</span><span class="op">(</span></span></span>
 <span class="r-in"><span>      prox_matrix <span class="op">=</span> <span class="st">"d"</span>,</span></span>
@@ -272,10 +270,10 @@ where \(\alpha\) (the <code>a</code> argument) controls the emphasis on confiden
 <span class="r-in"><span>      clust_fun <span class="op">=</span> <span class="fu">ppclust</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ppclust/man/fcm.html" class="external-link">fcm</a></span>,</span></span>
 <span class="r-in"><span>      x <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>      centers <span class="op">=</span> <span class="va">k</span>,</span></span>
-<span class="r-in"><span>      sort <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>      average <span class="op">=</span> <span class="st">"fuzzy"</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="co"># Compute average silhouette width from widths</span></span></span>
-<span class="r-in"><span>    <span class="va">avg_sil_width</span><span class="op">[</span><span class="va">k</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">avg.width</span></span></span>
+<span class="r-in"><span>    <span class="va">avg_sil_width</span><span class="op">[</span><span class="va">k</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">avg.width</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">avg_sil_width</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"o"</span>,</span></span>

@@ -1,3 +1,33 @@
+# Silhouette 0.9.6 (August 2025)
+
+**New Features**
+
+- Introduced new functions: 
+
+- **`getSilhouette()`**  
+  Constructs a Silhouette class object directly from user-provided components without performing silhouette calculations. Allows users to build Silhouette objects when they already have cluster assignments, neighbor clusters, silhouette widths, and optional weights.
+
+- **`is.Silhouette()`**  
+  Tests whether an object is of class "Silhouette" with optional strict validation. Checks both class inheritance and expected structure including required columns, attributes, and value ranges.
+
+- **`cerSilhouette()`**  
+  Computes certainty silhouette widths for soft clustering using maximum posterior probabilities. Provides an alternative evaluation method for fuzzy clustering algorithms with support for crisp, fuzzy, and median averaging.
+
+- **`dbSilhouette()`**  
+  Computes density-based silhouette widths using log-ratios of posterior probabilities based on Menardi (2011) method. Offers normalized silhouette evaluation for soft clustering with enhanced discrimination between cluster assignments.
+
+**Improvements**
+
+- Extended existing functions to support **median-based silhouette calculations** as an alternative to mean-based computations.
+- Added new `average` attribute for existing Silhouette class supporting "crisp", "fuzzy", and "median" options.
+- Enhanced clustering evaluation capabilities with density-based and certainty-based statistical measures.
+- Updated documentation to reflect new median calculation options and soft clustering methods.
+
+## Updated Dependencies
+
+- **Imports**: `dplyr`, `ggplot2`, `ggpubr`, `methods`, `stats`  
+- **Suggests**: `proxy`, `ppclust`, `blockcluster`, `cluster`, `factoextra`, `drclust`
+
 # Silhouette 0.9.5 (August 2025)
 
 - Improved documentation:

@@ -5,9 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate Silhouette Width for Soft Clustering Algorithms — softSilhouette"><meta name="description" content="
-Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:description" content="
-Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"><script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script></head><body><p>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate Silhouette Width for Soft Clustering Algorithms — softSilhouette"><meta name="description" content="Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:description" content="Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"><script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script></head><body><p>
 #<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script></p>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -16,7 +14,7 @@ Computes silhouette widths for soft clustering results by interpreting cluster m
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,8 +47,7 @@ Computes silhouette widths for soft clustering results by interpreting cluster m
     </div>
 
     <div class="ref-description section level2">
-    <p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="figures/lifecycle-stable.svg" alt="[Stable]"></a></p>
-<p>Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.</p>
+    <p>Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.</p>
     </div>
 
     <div class="section level2">
@@ -130,7 +127,7 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
 <dt>method</dt>
 <dd><p>The silhouette calculation method used (<code>"medoid"</code> or <code>"pac"</code>).</p></dd>
 
-<dt><code>"average"</code></dt>
+<dt>average</dt>
 <dd><p>Character — the averaging method: <code>"crisp"</code>, <code>"fuzzy"</code>, or <code>"median"</code>.</p></dd>
 
 
@@ -140,12 +137,19 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
     <p>Although the silhouette method was originally developed for evaluating clustering structure within a single result, this implementation allows leveraging cluster membership probabilities from soft clustering methods to construct proximity-based silhouettes. These silhouette widths can be compared heuristically across different algorithms to assess clustering quality.</p>
 <p>See <a href="https://doi.org/10.1080/23737484.2024.2408534" class="external-link">doi:10.1080/23737484.2024.2408534</a>
  for more details.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="lifecycle">Lifecycle<a class="anchor" aria-label="anchor" href="#lifecycle"></a></h2>
-
-
-<p><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="figures/lifecycle-stable.svg" alt="[Stable]"></a></p>
+<p>#' If <code>average = "crisp"</code>, the <strong>crisp silhouette index</strong> is calculated as (\(CS\)) is:
+$$
+  CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
+$$
+summarizing overall clustering quality.</p>
+<p>If <code>average = "fuzzy"</code> and <code>prob_matrix</code> is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
+with \(\gamma_{ik}\) representing the probability of observation \(i\) belonging to cluster \(k\),
+the <strong>fuzzy silhouette index</strong> (\(FS\)) is calculated as:
+$$
+  FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
+$$
+where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}\) is <code>weight</code> and \(\alpha\) (the <code>a</code> argument) controls the emphasis on confident assignments.</p>
+<p>If <code>average = "median"</code> then median Silhoutte is Calculated</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -176,8 +180,8 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   40        0.7005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   50        0.9507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   50        0.9507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   40        0.7005</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   60        0.6261</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
@@ -194,18 +198,18 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   25        0.3623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   65        0.5636</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   60        0.2666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   65        0.5636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   25        0.3623</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="co"># Compare average silhouette widths of fcm and fcm2</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"FCM average silhouette width:"</span>, <span class="va">sfcm</span><span class="op">$</span><span class="va">avg.width</span>, <span class="st">"\n"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"FCM2 average silhouette width:"</span>, <span class="va">sfcm2</span><span class="op">$</span><span class="va">avg.width</span>, <span class="st">"\n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"FCM average silhouette width:"</span>, <span class="va">sfcm</span><span class="op">$</span><span class="va">avg.width</span>, <span class="st">"\n"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"FCM2 average silhouette width:"</span>, <span class="va">sfcm2</span><span class="op">$</span><span class="va">avg.width</span>, <span class="st">"\n"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FCM average silhouette width: 0.7541271 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> FCM2 average silhouette width: 0.411275 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  FCM2 average silhouette width: 0.411275 </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

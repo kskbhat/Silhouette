@@ -65,5 +65,5 @@ Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mo
 Bhat Kapu, S., & Kiruthika, C. (2025). Block Probabilistic Distance Clustering: A Unified Framework and Evaluation. PREPRINT (Version 1) available at Research Square. \doi{10.21203/rs.3.rs-6973596/v1}
 }
 \seealso{
-\code{\link{Silhouette}}, \code{\link{softSilhouette}}
+\code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}
 }

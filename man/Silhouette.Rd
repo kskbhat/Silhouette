@@ -65,7 +65,7 @@ probabilities. Defaults to \code{NULL}.}
 
 \item{...}{Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{\link[ppclust]{fcm}}.}
 
-\item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, or \code{\link[cluster]{silhouette}} from \pkg{cluster}, \pkg{factoextra} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.}
+\item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}} and \code{\link{cerSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, \code{\link[cluster]{silhouette}}, or \code{\link[drclust]{silhouette}} from \pkg{cluster}, \pkg{factoextra}, \pkg{drclust} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.}
 
 \item{label}{Logical; if \code{TRUE}, the x-axis is labeled with observation row indices from the input data and titled "Row Index". Defaults to \code{FALSE}.}
 
@@ -82,14 +82,14 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:
 }
 Defaults to \code{"dashed"}.}
 
-\item{object}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}} and \code{\link{softSilhouette}} function.}
+\item{object}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}},  \code{\link{dbSilhouette}}, and  \code{\link{cerSilhouette}} function.}
 }
 \value{
 A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 \describe{
 \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
-\item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+\item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 
 Further,  \code{summary} returns a list containing:
@@ -100,8 +100,6 @@ Further,  \code{summary} returns a list containing:
 }
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 }
 \details{
@@ -144,19 +142,21 @@ The normalizer \eqn{N(x_i)} is selected according to the \code{method} argument.
 \strong{Note:}
 The \code{"medoid"} and \code{"pac"} options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from \strong{classification algorithms}. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.
 
-If \code{prob_matrix} is \code{NULL}, the \strong{crisp silhouette index} (\eqn{CS}) is:
+If \code{average = "crisp"}, the \strong{crisp silhouette index} is calculated as (\eqn{CS}) is:
 \deqn{
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 }
 summarizing overall clustering quality.
 
-If \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+If \code{average = "fuzzy"} and \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
 with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
-the \strong{fuzzy silhouette index} (\eqn{FS}) is used:
+the \strong{fuzzy silhouette index} (\eqn{FS}) is calculated as:
 \deqn{
-  FS = \frac{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} S(x_i) }{ \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha} }
+  FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 }
-where \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
+where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is \code{weight} and \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
+
+If \code{average = "median"} then median Silhoutte is Calculated
 }
 \examples{
 # Standard silhouette with k-means on iris dataset
@@ -175,7 +175,7 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
 # Scree plot for optimal clusters (2 to 7)
 if (requireNamespace("ppclust", quietly = TRUE)) {
   library(ppclust)
-  avg_sil_width <- numeric(6)
+  avg_sil_width <- rep(NA,7)
   for (k in 2:7) {
     out <- Silhouette(
       prox_matrix = "d",
@@ -184,10 +184,10 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
       clust_fun = ppclust::fcm,
       x = iris[, 1:4],
       centers = k,
-      sort = TRUE
+      average = "fuzzy"
     )
     # Compute average silhouette width from widths
-    avg_sil_width[k - 1] <- summary(out, print.summary = FALSE)$avg.width
+    avg_sil_width[k] <- summary(out, print.summary = FALSE)$avg.width
   }
   plot(avg_sil_width,
     type = "o",
@@ -212,5 +212,5 @@ Raymaekers, J., & Rousseeuw, P. J. (2022). Silhouettes and quasi residual plots 
 Bhat Kapu, S., & Kiruthika. (2024). Some density-based silhouette diagnostics for soft clustering algorithms. Communications in Statistics: Case Studies, Data Analysis and Applications, 10(3-4), 221-238. \doi{10.1080/23737484.2024.2408534}
 }
 \seealso{
-\code{\link{softSilhouette}}, \code{\link{plotSilhouette}}
+\code{\link{softSilhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}, \code{\link{plotSilhouette}}
 }

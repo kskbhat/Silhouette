@@ -1,8 +1,5 @@
 #' Calculate Silhouette Width for Soft Clustering Algorithms
 #'
-#' @description
-#' `r lifecycle::badge('stable')`
-#'
 #' Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths.
 #'
 #' @param prob_matrix A numeric matrix where rows represent observations and columns represent cluster membership probabilities (or transformed probabilities, depending on \code{prob_type}). If \code{clust_fun} is provided, \code{prob_matrix} should be the name of the matrix component as a string (e.g., \code{"u"} for \code{\link[ppclust]{fcm}}).
@@ -33,24 +30,36 @@
 #'
 #' See \doi{10.1080/23737484.2024.2408534} for more details.
 #'
+#' #' If `average = "crisp"`, the **crisp silhouette index** is calculated as (\eqn{CS}) is:
+#' \deqn{
+#'   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
+#' }
+#' summarizing overall clustering quality.
+#'
+#' If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+#' with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
+#' the **fuzzy silhouette index** (\eqn{FS}) is calculated as:
+#' \deqn{
+#'   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
+#' }
+#' where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is `weight` and \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
+#'
+#' If `average = "median"` then median Silhoutte is Calculated
+#'
 #' @return A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 #' \describe{
 #'   \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
 #'   \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
-#'   \item{\code{"average"}}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+#'   \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 #' }
 #'
-#' @seealso \code{\link{Silhouette}},\code{\link{plotSilhouette}}
+#' @seealso \code{\link{Silhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}, \code{\link{plotSilhouette}}
 #'
 #' @references
 #'
 #' Raymaekers, J., & Rousseeuw, P. J. (2022). Silhouettes and quasi residual plots for neural nets and tree-based classifiers. \emph{Journal of Computational and Graphical Statistics}, 31(4), 1332--1343. \doi{10.1080/10618600.2022.2050249}
 #'
 #' Bhat Kapu, S., & Kiruthika. (2024). Some density-based silhouette diagnostics for soft clustering algorithms. Communications in Statistics: Case Studies, Data Analysis and Applications, 10(3-4), 221-238. \doi{10.1080/23737484.2024.2408534}
-#'
-#'
-#' @section Lifecycle:
-#' `r lifecycle::badge("stable")`
 #'
 #' @examples
 #' \donttest{
@@ -75,8 +84,8 @@
 #' }
 #' # Compare average silhouette widths of fcm and fcm2
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
-#'   cat("FCM average silhouette width:", sfcm$avg.width, "\n")
-#'   cat("FCM2 average silhouette width:", sfcm2$avg.width, "\n")
+#'   cat("FCM average silhouette width:", sfcm$avg.width, "\n",
+#'   "FCM2 average silhouette width:", sfcm2$avg.width, "\n")
 #' }
 #' }
 #' @export
