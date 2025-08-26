@@ -8,9 +8,9 @@ template:
     btn-border-radius: 0.25rem
     danger: "#A6081A"
   includes:
-    in_header: |
-      <script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script>
-      #<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    # in_header: |
+    #   <script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script>
+    #   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 
 development:
   mode: auto
@@ -33,7 +33,7 @@ home:
         title: ""
         text: |
             [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)
-            [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=green)](https://r-pkg.org/pkg/Silhouette)
+            [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=green)](https://kskbhat.r-universe.dev/Silhouette)
 
 authors:
   Shrikrishna Bhat K:
