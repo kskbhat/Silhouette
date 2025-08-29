@@ -47,6 +47,13 @@
 #'   \item{method}{The silhouette calculation method used i.e., \code{"certainty"}.}
 #'   \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 #' }
+#' 
+#' @section S3 Methods:
+#' Objects of class \code{"Silhouette"} have the following S3 methods available:
+#' \describe{
+#'   \item{\code{\link[=plot.Silhouette]{plot()}}}{Creates a silhouette plot showing silhouette widths for each observation, grouped by cluster. The plot includes a horizontal reference line at the overall average silhouette width.}
+#'   \item{\code{\link[=summary.Silhouette]{summary()}}}{Returns a list containing cluster-wise average silhouette widths (\code{clus.avg.widths}), overall average silhouette width (\code{avg.width}), and a summary data frame (\code{sil.sum}) with cluster sizes and average widths.}
+#' }
 #'
 #' @references
 #'
