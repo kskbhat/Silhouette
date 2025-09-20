@@ -1,11 +1,12 @@
 # Silhouette <a href="https://kskbhat.github.io/Silhouette/"><img src="man/figures/logo.png" alt="Silhouette website" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![CRAN Status (ago)](https://www.r-pkg.org/badges/version/Silhouette)](https://cran.r-project.org/package=Silhouette)[![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette)[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)[![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=green)](https://kskbhat.r-universe.dev/Silhouette)[![CRAN Task View: Cluster Analysis & Finite Mixture Models](https://img.shields.io/badge/CRAN%20Task%20View-Cluster-blue)](https://CRAN.R-project.org/view=Cluster)
+[![CRAN Status (ago)](https://www.r-pkg.org/badges/version/Silhouette)](https://cran.r-project.org/package=Silhouette)[![codecov](https://codecov.io/gh/kskbhat/Silhouette/branch/main/graph/badge.svg)](https://codecov.io/gh/kskbhat/Silhouette
 
 [![GitHub](https://img.shields.io/github/v/release/kskbhat/Silhouette?include_prereleases&label=GitHub%20Release)](https://github.com/kskbhat/Silhouette/releases)
 [![R-CMD-check](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/R-CMD-check.yaml) [![pages-build-deployment](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/kskbhat/Silhouette/actions/workflows/pages/pages-build-deployment)
 <!--
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)[![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=green)](https://kskbhat.r-universe.dev/Silhouette)[![CRAN Task View: Cluster Analysis & Finite Mixture Models](https://img.shields.io/badge/CRAN%20Task%20View-Cluster-blue)](https://CRAN.R-project.org/view=Cluster)
 [![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.Silhouette-blue.svg)](https://doi.org/10.32614/CRAN.package.Silhouette)
 [![CRAN Status](https://www.r-pkg.org/badges/version/Silhouette)](https://CRAN.R-project.org/package=Silhouette)
 [![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette)](https://cran.r-project.org/package=Silhouette)
