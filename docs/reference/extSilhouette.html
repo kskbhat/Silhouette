@@ -28,7 +28,6 @@ Computes an extended silhouette width for multi-way clustering (e.g., biclusteri
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/kskbhat/Silhouette/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -126,7 +125,7 @@ Each <code>Silhouette</code> object in <code>sil_list</code> must contain a non-
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ----------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Copyright (C)  &lt;MODAL team @INRIA,Lille &amp; U.M.R. C.N.R.S. 6599 Heudiasyc, UTC&gt;</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Please post questions and bugs at: &lt;https://gforge.inria.fr/forum/forum.php?forum_id=11190&amp;group_id=3679&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Co-Clustering successfully terminated! </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Co-Clustering Failed!  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"blockcluster"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">sil_mode1</span> <span class="op">&lt;-</span> <span class="fu"><a href="softSilhouette.html">softSilhouette</a></span><span class="op">(</span></span></span>
@@ -140,16 +139,7 @@ Each <code>Silhouette</code> object in <code>sil_list</code> must contain a non-
 <span class="r-in"><span>  <span class="co"># Extended silhouette</span></span></span>
 <span class="r-in"><span>  <span class="va">ext_sil</span> <span class="op">&lt;-</span> <span class="fu">extSilhouette</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">sil_mode1</span>, <span class="va">sil_mode2</span><span class="op">)</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Extended silhouette: 0.9325 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension Summary:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   dimension n_obs avg_sil_width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Mode 1   150        0.9307</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    Mode 2     4        1.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Available components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ext_sil_width" "dim_table"    </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in softSilhouette(prob_matrix = result@rowposteriorprob, method = "pac"):</span> When clust_fun is NULL, prob_matrix must be a numeric matrix.</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

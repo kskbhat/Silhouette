@@ -140,8 +140,8 @@ softSilhouette <- function(prob_matrix,
 
 
   if (any(abs(rowSums(prob_matrix) - 1) > .Machine$double.eps^0.5)) {
-    stop("Each row of prob_matrix must sum to 1 after normalization for prob_type = 'pd'.")
-  }
+    stop("Each row of prob_matrix must sum to 1")
+    }
 
   if (!is.numeric(a) || a <= 0) {
     stop("a must be a positive numeric value.")
@@ -159,7 +159,7 @@ softSilhouette <- function(prob_matrix,
     prox_matrix <- -log(prob_matrix)
   } else if (prob_type == "pd") {
     proximity_type <- "similarity"
-    pm_den <- matrix(colSums(prob_matrix), nrow = nrow(prob_matrix), ncol = ncol(prob_matrix), byrow = TRUE)
+    pm_den <- matrix(colSums(prob_matrix), nrow = nrow(prob_matrix), ncol = ncol(prob_matrix), byrow = TRUE)/nrow(prob_matrix)
     if (any(pm_den == 0, na.rm = TRUE)) {
       stop("Column sums in prob_matrix must be non-zero for prob_type = 'pd'.")
     }
@@ -187,4 +187,3 @@ softSilhouette <- function(prob_matrix,
   result <- do.call(Silhouette, sil_args)
   return(result)
 }
-

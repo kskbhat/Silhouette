@@ -1,4 +1,4 @@
-# Silhouette 0.9.6 (August 2025)
+# Silhouette 0.9.6 (October 2025)
 
 **New Features**
 
@@ -16,12 +16,16 @@
 - **`dbSilhouette()`**  
   Computes density-based silhouette widths using log-ratios of posterior probabilities based on Menardi (2011) method. Offers normalized silhouette evaluation for soft clustering with enhanced discrimination between cluster assignments.
 
+- **`calSilhouette()`**  
+  Computes all available silhouette indices from the package functions and returns a comparative summary data frame. Automatically calculates crisp, fuzzy, and median silhouette values across different methods including proximity-based (medoid, pac), soft silhouette variations (pp_pac, pp_medoid, nlpp_pac, nlpp_medoid, pd_pac, pd_medoid), and probability-based methods (cer, db). Supports direct matrix input or clustering function output for streamlined comparative analysis.
+
 **Improvements**
 
 - Extended existing functions to support **median-based silhouette calculations** as an alternative to mean-based computations.
 - Added new `average` attribute for existing Silhouette class supporting "crisp", "fuzzy", and "median" options.
 - Enhanced clustering evaluation capabilities with density-based and certainty-based statistical measures.
 - Updated documentation to reflect new median calculation options and soft clustering methods.
+- Enhanced `calSilhouette()` to compute all combinations of `softSilhouette()` methods (pp, nlpp, pd) with both pac and medoid approaches, providing comprehensive comparative analysis across 11 different silhouette computation methods.
 
 ## Updated Dependencies
 

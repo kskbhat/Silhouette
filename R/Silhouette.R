@@ -100,13 +100,13 @@
 #' data(iris)
 #' # Crisp Silhouette with k-means
 #' out <- kmeans(iris[, -5], 3)
-#' if (requireNamespace("ppclust", quietly = TRUE)) {
+#' if (requireNamespace("proxy", quietly = TRUE)) {
 #'   library(proxy)
 #'   dist <- proxy::dist(iris[, -5], out$centers)
 #'   silh_out <- Silhouette(dist,print.summary = TRUE)
 #'   plot(silh_out)
 #' } else {
-#'   message("Install 'ppclust': install.packages('ppclust')")
+#'   message("Install 'proxy': install.packages('ppclust')")
 #' }
 #' \donttest{
 #' # Scree plot for optimal clusters (2 to 7)
@@ -224,12 +224,17 @@ Silhouette <- function(prox_matrix,
   maxn <- function(x, n) order(x, decreasing = TRUE)[n]
   minn <- function(x, n) order(x, decreasing = FALSE)[n]
 
-  if (proximity_type == "similarity") {
-    cluster <- apply(prox_matrix, 1, maxn, n = 1)
-    neighbor <- apply(prox_matrix, 1, maxn, n = 2)
+  if(is.null(prob_matrix)){
+    if (proximity_type == "similarity") {
+      cluster <- apply(prox_matrix, 1, maxn, n = 1)
+      neighbor <- apply(prox_matrix, 1, maxn, n = 2)
+    } else {
+      cluster <- apply(prox_matrix, 1, minn, n = 1)
+      neighbor <- apply(prox_matrix, 1, minn, n = 2)
+    }
   } else {
-    cluster <- apply(prox_matrix, 1, minn, n = 1)
-    neighbor <- apply(prox_matrix, 1, minn, n = 2)
+    cluster <- apply(prob_matrix, 1, maxn, n = 1)
+    neighbor <- apply(prob_matrix, 1, maxn, n = 2)
   }
 
   sil_width <- numeric(nrow(prox_matrix))
@@ -306,4 +311,3 @@ Silhouette <- function(prox_matrix,
 
   structure(widths, class = c("Silhouette", "data.frame"))
 }
-

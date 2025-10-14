@@ -267,6 +267,7 @@ plotSilhouette <- function(x,
   }
   return(p)
 }
+
 #' Plot method for Silhouette objects
 #'
 #' @inheritParams plotSilhouette
@@ -274,3 +275,5 @@ plotSilhouette <- function(x,
 #' @method plot Silhouette
 #' @export
 plot.Silhouette <- plotSilhouette
+
+

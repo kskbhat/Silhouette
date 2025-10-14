@@ -3,6 +3,7 @@
 S3method(plot,Silhouette)
 S3method(summary,Silhouette)
 export(Silhouette)
+export(calSilhouette)
 export(cerSilhouette)
 export(dbSilhouette)
 export(extSilhouette)

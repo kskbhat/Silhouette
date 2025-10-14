@@ -26,20 +26,26 @@ search: true
 
 home:
   title: Silhouette Package
+  links:
+  - text: "CRAN Task View: Cluster"
+    href: https://CRAN.R-project.org/view=Cluster
+  # - text: <img src="https://img.shields.io/badge/CRAN%20Task%20View-Cluster-orange" alt="CRAN Task View">
+  #   href: https://CRAN.R-project.org/view=Cluster
   sidebar:
-    structure: [links, license, community, citation, authors,downloads,dev]
+    structure: [downloads, links, license, community, citation, authors]
     components:
       downloads:
-        title: ""
+        title: "Downloads"
         text: |
+            [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=brightgreen)](https://kskbhat.r-universe.dev/Silhouette)
             [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)
-            [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=green)](https://kskbhat.r-universe.dev/Silhouette)
+
 
 authors:
   Shrikrishna Bhat K:
-    href: https://github.com/kskbhat
+    href: "https://github.com/kskbhat"
   Kiruthika C:
-    href: https://www.pondiuni.edu.in/faculy_profiles/dr-kiruthika/
+    href: "https://www.pondiuni.edu.in/faculy_profiles/dr-kiruthika/"
 
 reference:
   - title: For clustering
@@ -48,6 +54,7 @@ reference:
       - softSilhouette
       - cerSilhouette
       - dbSilhouette
+      - calSilhouette
       - getSilhouette
       - is.Silhouette
       - plotSilhouette
@@ -57,5 +64,4 @@ reference:
 
 navbar:
   structure:
-    right: [search, github, lightswitch]
-
+    right: [search,lightswitch]

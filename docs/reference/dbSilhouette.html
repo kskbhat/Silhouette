@@ -26,7 +26,6 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/kskbhat/Silhouette/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -164,8 +163,8 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   40        0.2456</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   60        0.2225</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   50        0.5074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   50        0.5074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   60        0.2225</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
@@ -177,13 +176,13 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Install 'ppclust' to run this example: install.packages('ppclust')"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ---------------------------------------</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Median similarity db silhouette: 0.2607</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Median similarity db silhouette: 0.1089</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ---------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   25        0.2642</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   60        0.1943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   65        0.4942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   72        0.0195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2    2        0.0575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   76        0.2517</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="co"># Compare average silhouette widths of fcm and fcm2</span></span></span>
@@ -192,7 +191,7 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-in"><span>  <span class="st">"FCM2 average silhouette width:"</span>, <span class="va">sfcm2</span><span class="op">$</span><span class="va">avg.width</span>, <span class="st">"\n"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FCM average silhouette width: 0.3097745 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  FCM2 average silhouette width: 0.2607283 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  FCM2 average silhouette width: 0.1089476 </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

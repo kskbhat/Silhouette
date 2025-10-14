@@ -75,6 +75,9 @@ This vignette demonstrates the essential features of the package using the well-
 
 **`cerSilhouette()`**: Computes certainty silhouette widths for soft clustering, using the maximum posterior probabilities as silhouette values.
 
+- **`calSilhouette()`**  
+  Computes all available silhouette indices from the package functions and returns a comparative summary data frame. Automatically calculates crisp, fuzzy, and median silhouette values across different methods including proximity-based (medoid, pac), soft silhouette variations (pp_pac, pp_medoid, nlpp_pac, nlpp_medoid, pd_pac, pd_medoid), and probability-based methods (cer, db). Supports direct matrix input or clustering function output for streamlined comparative analysis.
+
 **`getSilhouette()`**: Constructs a Silhouette class object directly from user-provided components (e.g., cluster assignments, neighbor clusters, silhouette widths).
 
 **`is.Silhouette()`**: Tests whether an object is of class "Silhouette", with optional strict structural validation.
@@ -501,7 +504,217 @@ plotSilhouette(sil_custom, summary.legend = TRUE)
 
 This approach allows users to integrate custom silhouette computations into the **Silhouette** package’s visualization framework, ensuring flexibility for specialized workflows while maintaining compatibility with `plotSilhouette()`.
 
-## 6. Extended Silhouette Analysis for Multi-Way Clustering
+## 6. Comprehensive Comparison of All Silhouette Methods with `calSilhouette()`
+
+The `calSilhouette()` function provides a streamlined approach to compute and compare all available silhouette methods from the package in a single call. This function is particularly useful for:
+
+- Comparing multiple silhouette computation methods simultaneously
+- Evaluating clustering quality across different averaging approaches (crisp, fuzzy, median)
+- Rapid assessment of clustering performance using various silhouette formulations
+
+**Key Features:**
+- Automatically computes all compatible silhouette methods based on available input matrices
+- Returns a comprehensive summary data frame comparing crisp, fuzzy, and median silhouette values
+- Supports both direct matrix input and clustering function output
+- Computes up to 11 different silhouette methods when both proximity and probability matrices are provided
+
+**Available Methods:**
+
+When **proximity matrix** is provided:
+- `medoid` - Medoid-based silhouette
+- `pac` - PAC-based silhouette
+
+When **probability matrix** is provided:
+- `pp_pac`, `pp_medoid` - Posterior probabilities with PAC/Medoid methods
+- `nlpp_pac`, `nlpp_medoid` - Negative log posterior probabilities with PAC/Medoid methods
+- `pd_pac`, `pd_medoid` - Probability distribution with PAC/Medoid methods
+- `cer` - Certainty-based silhouette
+- `db` - Density-based silhouette
+
+### a. Comprehensive Method Comparison Using Clustering Function
+
+This example demonstrates how to use `calSilhouette()` with a clustering function to automatically compute all available silhouette methods:
+
+```{r calSil1}
+library(ppclust)
+data(iris)
+
+# Compute all silhouette methods using FCM clustering
+summary_result <- calSilhouette(
+  prox_matrix = "d",
+  prob_matrix = "u",
+  proximity_type = "dissimilarity",
+  clust_fun = ppclust::fcm,
+  x = iris[, -5],
+  centers = 3,
+  print.summary = TRUE
+)
+
+# View the results
+print(summary_result)
+```
+
+### b. Method Comparison Using Pre-computed Matrices
+
+When clustering has already been performed, you can directly use the output matrices:
+
+```{r calSil2}
+# Perform clustering first
+fcm_result <- ppclust::fcm(iris[, -5], centers = 3)
+
+# Compute all silhouette methods using the clustering output
+summary_direct <- calSilhouette(
+  prox_matrix = fcm_result$d,
+  prob_matrix = fcm_result$u,
+  proximity_type = "dissimilarity",
+  a = 2,
+  print.summary = TRUE
+)
+
+# Access specific results
+summary_direct
+```
+
+### c. Comparing Clustering Algorithms Using `calSilhouette()`
+
+A powerful application of `calSilhouette()` is comparing multiple clustering algorithms across all silhouette methods:
+
+```{r calSil3}
+# Compare FCM and FCM2 algorithms
+fcm_summary <- calSilhouette(
+  prox_matrix = "d",
+  prob_matrix = "u",
+  proximity_type = "dissimilarity",
+  clust_fun = ppclust::fcm,
+  x = iris[, -5],
+  centers = 3,
+  print.summary = FALSE
+)
+
+fcm2_summary <- calSilhouette(
+  prox_matrix = "d",
+  prob_matrix = "u",
+  proximity_type = "dissimilarity",
+  clust_fun = ppclust::fcm2,
+  x = iris[, -5],
+  centers = 3,
+  print.summary = FALSE
+)
+
+# Create comparison data frame
+comparison <- data.frame(
+  Method = fcm_summary$Method,
+  FCM_Crisp = fcm_summary$Crisp,
+  FCM2_Crisp = fcm2_summary$Crisp,
+  FCM_Fuzzy = fcm_summary$Fuzzy,
+  FCM2_Fuzzy = fcm2_summary$Fuzzy
+)
+
+print(comparison)
+```
+
+### d. Visualizing Method Comparisons
+
+Visualize the comparison across different methods and averaging approaches:
+
+```{r calSil4, fig.width=8, fig.height=5, fig.alt = "fig7.1"}
+library(ggplot2)
+library(tidyr)
+
+# Reshape data for plotting
+comparison_long <- tidyr::pivot_longer(
+  comparison,
+  cols = -Method,
+  names_to = "Algorithm_Type",
+  values_to = "Silhouette_Width"
+)
+
+# Create grouped bar plot
+ggplot(comparison_long, aes(x = Method, y = Silhouette_Width, fill = Algorithm_Type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    title = "Comparison of Silhouette Methods: FCM vs FCM2",
+    x = "Silhouette Method",
+    y = "Average Silhouette Width",
+    fill = "Algorithm & Type"
+  ) +
+  scale_fill_brewer(palette = "Set2")
+```
+
+### e. Selecting Optimal Number of Clusters Using `calSilhouette()`
+
+Use `calSilhouette()` to evaluate clustering quality across different numbers of clusters:
+
+```{r calSil5, fig.width=8, fig.height=5, fig.alt = "fig7.2"}
+# Compute silhouette summaries for k = 2 to 6
+k_range <- 2:6
+results_list <- list()
+
+for (k in k_range) {
+  results_list[[as.character(k)]] <- calSilhouette(
+    prox_matrix = "d",
+    prob_matrix = "u",
+    proximity_type = "dissimilarity",
+    clust_fun = ppclust::fcm,
+    x = iris[, -5],
+    centers = k,
+    print.summary = FALSE
+  )
+}
+
+# Extract crisp pac method silhouette widths for comparison
+pac_widths <- sapply(results_list, function(x) x$Crisp[x$Method == "pac"])
+
+# Plot optimal k selection
+plot(k_range, pac_widths,
+  type = "o", pch = 19,
+  xlab = "Number of Clusters (k)",
+  ylab = "Average Silhouette Width (PAC method)",
+  main = "Optimal Cluster Selection using calSilhouette()",
+  col = "steelblue", lwd = 2
+)
+grid()
+```
+
+### f. Method-Specific Analysis
+
+Extract and analyze specific methods from the comprehensive summary:
+
+```{r calSil6}
+# Get all pac-based methods
+pac_methods <- summary_result[grep("pac", summary_result$Method), ]
+print("PAC-based methods:")
+print(pac_methods)
+
+# Get all medoid-based methods
+medoid_methods <- summary_result[grep("medoid", summary_result$Method), ]
+print("Medoid-based methods:")
+print(medoid_methods)
+
+# Compare crisp vs fuzzy vs median averaging
+cat("\nBest method by crisp averaging:", 
+    summary_result$Method[which.max(summary_result$Crisp)], "\n")
+cat("Best method by fuzzy averaging:", 
+    summary_result$Method[which.max(summary_result$Fuzzy)], "\n")
+cat("Best method by median averaging:", 
+    summary_result$Method[which.max(summary_result$Median)], "\n")
+```
+
+**Practical Guidance:**
+
+- Use `calSilhouette()` when you need a comprehensive overview of clustering quality across multiple methodological perspectives
+- The function is especially useful for algorithm comparison studies and sensitivity analyses
+- Different methods may highlight different aspects of cluster quality; examining multiple methods provides a more robust assessment
+- For crisp clustering (when only proximity matrix is available), the function automatically computes only the applicable methods (medoid, pac)
+- The `a` parameter controls the fuzzifier for weighted averaging in fuzzy methods (default = 2)
+
+**Summary:**
+
+`calSilhouette()` provides a powerful, unified interface for comprehensive silhouette analysis, enabling researchers to evaluate clustering solutions from multiple perspectives simultaneously. This function streamlines comparative studies, supports robust cluster validation, and facilitates reproducible clustering diagnostics across different algorithms and parameter settings. Its integration with the package's visualization capabilities makes it an essential tool for thorough clustering quality assessment.
+
+## 7. Extended Silhouette Analysis for Multi-Way Clustering
 
 The `extSilhouette()` function enables silhouette-based evaluation for multi-way clustering scenarios, such as biclustering or tensor clustering, by aggregating silhouette indices from each mode (e.g., rows, columns) into a single summary metric.
 This approach allows you to rigorously assess the overall clustering structure when partitioning data along multiple dimensions.
@@ -548,7 +761,7 @@ ext_sil <- extSilhouette(
 The `extSilhouette()` function returns: - The overall extended silhouette width—a weighted average summarizing clustering quality across all modes.
 - A dimension statistics table, reporting the number of observations and average silhouette width for each mode (e.g., rows, columns).
 
-*Note:*\
+*Note:*\  
 If a distance matrix is available from the output of a biclustering algorithm, you can compute individual mode silhouettes using `Silhouette()`.
 
 The results can be combined with `extSilhouette()` to enable direct comparison of clustering solutions across multiple biclustering algorithms, facilitating objective model assessment [@bhat2025block].
