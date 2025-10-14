@@ -28,16 +28,17 @@ Imports:
     lifecycle,
     methods,
     stats
-Suggests:
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0),
+Suggests: 
+    proxy,
     ppclust,
     blockcluster,
     cluster,
     factoextra,
-    proxy,
-    drclust
+    drclust,
+    tidyr,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 RdMacros: lifecycle
 VignetteBuilder: knitr
 Config/testthat/edition: 3

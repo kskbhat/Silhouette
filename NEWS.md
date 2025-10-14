@@ -29,7 +29,7 @@
 
 ## Updated Dependencies
 
-- **Imports**: `dplyr`, `ggplot2`, `ggpubr`, `methods`, `stats`  
+- **Imports**: `dplyr`, `ggplot2`, `ggpubr`, `lifecycle`, `methods`, `stats`  
 - **Suggests**: `proxy`, `ppclust`, `blockcluster`, `cluster`, `factoextra`, `drclust`
 
 # Silhouette 0.9.5 (August 2025)
