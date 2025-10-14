@@ -26,7 +26,6 @@
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/kskbhat/Silhouette/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch"><li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
@@ -45,7 +44,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.9.6" id="silhouette-096-august-2025">Silhouette 0.9.6 (August 2025)<a class="anchor" aria-label="anchor" href="#silhouette-096-august-2025"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.9.6" id="silhouette-096-october-2025">Silhouette 0.9.6 (October 2025)<a class="anchor" aria-label="anchor" href="#silhouette-096-october-2025"></a></h2>
 <p><strong>New Features</strong></p>
 <ul><li><p>Introduced new functions:</p></li>
 <li><p><strong><code><a href="../reference/getSilhouette.html">getSilhouette()</a></code></strong><br>
@@ -56,11 +55,14 @@ Tests whether an object is of class “Silhouette” with optional strict valida
 Computes certainty silhouette widths for soft clustering using maximum posterior probabilities. Provides an alternative evaluation method for fuzzy clustering algorithms with support for crisp, fuzzy, and median averaging.</p></li>
 <li><p><strong><code><a href="../reference/dbSilhouette.html">dbSilhouette()</a></code></strong><br>
 Computes density-based silhouette widths using log-ratios of posterior probabilities based on Menardi (2011) method. Offers normalized silhouette evaluation for soft clustering with enhanced discrimination between cluster assignments.</p></li>
+<li><p><strong><code><a href="../reference/calSilhouette.html">calSilhouette()</a></code></strong><br>
+Computes all available silhouette indices from the package functions and returns a comparative summary data frame. Automatically calculates crisp, fuzzy, and median silhouette values across different methods including proximity-based (medoid, pac), soft silhouette variations (pp_pac, pp_medoid, nlpp_pac, nlpp_medoid, pd_pac, pd_medoid), and probability-based methods (cer, db). Supports direct matrix input or clustering function output for streamlined comparative analysis.</p></li>
 </ul><p><strong>Improvements</strong></p>
 <ul><li>Extended existing functions to support <strong>median-based silhouette calculations</strong> as an alternative to mean-based computations.</li>
 <li>Added new <code>average</code> attribute for existing Silhouette class supporting “crisp”, “fuzzy”, and “median” options.</li>
 <li>Enhanced clustering evaluation capabilities with density-based and certainty-based statistical measures.</li>
 <li>Updated documentation to reflect new median calculation options and soft clustering methods.</li>
+<li>Enhanced <code><a href="../reference/calSilhouette.html">calSilhouette()</a></code> to compute all combinations of <code><a href="../reference/softSilhouette.html">softSilhouette()</a></code> methods (pp, nlpp, pd) with both pac and medoid approaches, providing comprehensive comparative analysis across 11 different silhouette computation methods.</li>
 </ul><div class="section level3">
 <h3 id="updated-dependencies-0-9-6">Updated Dependencies<a class="anchor" aria-label="anchor" href="#updated-dependencies-0-9-6"></a></h3>
 <ul><li>
