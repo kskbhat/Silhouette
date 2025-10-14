@@ -554,7 +554,7 @@ summary_result <- calSilhouette(
 head(summary_result)
 ```
 
-### b. Method Comparison Using Pre-computed Matrices
+### b. Method Comparison Using Output Proximity Matrices
 
 When clustering has already been performed, you can directly use the output matrices:
 

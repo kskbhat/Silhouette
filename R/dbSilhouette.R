@@ -42,7 +42,7 @@
 #' }
 #' where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is `weight` and \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
 #'
-#' If `average = "median"` then median Silhoutte is Calculated
+#' If `average = "median"` then median Silhouette is Calculated
 #'
 #' @return A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 #' \describe{

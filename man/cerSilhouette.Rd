@@ -69,7 +69,7 @@ the \strong{fuzzy silhouette index} (\eqn{FS}) is calculated as:
 }
 where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is \code{weight} and \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
 
-If \code{average = "median"} then median Silhoutte is Calculated
+If \code{average = "median"} then median Silhouette is Calculated
 }
 \examples{
 \donttest{
