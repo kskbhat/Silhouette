@@ -743,25 +743,25 @@ FANNY):</strong></li>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt;    cluster size ave.sil.width</span></span>
-<span><span class="co">#&gt; 1        1   17          0.16</span></span>
-<span><span class="co">#&gt; 2        2   16          0.35</span></span>
-<span><span class="co">#&gt; 3        3   14          0.06</span></span>
-<span><span class="co">#&gt; 4        4   10          0.15</span></span>
-<span><span class="co">#&gt; 5        5    9         -0.09</span></span>
-<span><span class="co">#&gt; 6        6    9          0.11</span></span>
-<span><span class="co">#&gt; 7        7    8          0.28</span></span>
-<span><span class="co">#&gt; 8        8    8         -0.02</span></span>
-<span><span class="co">#&gt; 9        9    7          0.23</span></span>
-<span><span class="co">#&gt; 10      10    7          0.12</span></span>
-<span><span class="co">#&gt; 11      11    7          0.08</span></span>
-<span><span class="co">#&gt; 12      12    6          0.41</span></span>
-<span><span class="co">#&gt; 13      13    6         -0.05</span></span>
-<span><span class="co">#&gt; 14      14    6          0.09</span></span>
-<span><span class="co">#&gt; 15      15    5          0.31</span></span>
-<span><span class="co">#&gt; 16      16    4          0.08</span></span>
-<span><span class="co">#&gt; 17      17    4          0.45</span></span>
-<span><span class="co">#&gt; 18      18    3          0.28</span></span>
-<span><span class="co">#&gt; 19      19    3          0.31</span></span>
+<span><span class="co">#&gt; 1        1   20          0.17</span></span>
+<span><span class="co">#&gt; 2        2   16          0.36</span></span>
+<span><span class="co">#&gt; 3        3   12          0.03</span></span>
+<span><span class="co">#&gt; 4        4   11          0.11</span></span>
+<span><span class="co">#&gt; 5        5    9          0.09</span></span>
+<span><span class="co">#&gt; 6        6    9          0.23</span></span>
+<span><span class="co">#&gt; 7        7    8          0.36</span></span>
+<span><span class="co">#&gt; 8        8    8          0.12</span></span>
+<span><span class="co">#&gt; 9        9    8          0.01</span></span>
+<span><span class="co">#&gt; 10      10    6          0.38</span></span>
+<span><span class="co">#&gt; 11      11    6         -0.05</span></span>
+<span><span class="co">#&gt; 12      12    6          0.23</span></span>
+<span><span class="co">#&gt; 13      13    5          0.08</span></span>
+<span><span class="co">#&gt; 14      14    5         -0.02</span></span>
+<span><span class="co">#&gt; 15      15    5          0.27</span></span>
+<span><span class="co">#&gt; 16      16    4          0.26</span></span>
+<span><span class="co">#&gt; 17      17    4          0.19</span></span>
+<span><span class="co">#&gt; 18      18    4         -0.08</span></span>
+<span><span class="co">#&gt; 19      19    3          0.28</span></span>
 <span><span class="co">#&gt; 20      20    1          0.00</span></span>
 <span><span class="fu"><a href="../reference/plotSilhouette.html">plotSilhouette</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">cl.silhouette</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Silhouette_files/figure-html/plot3.1-1.png" alt="fig4.3.1" width="672"></p>
@@ -1009,16 +1009,16 @@ multiple clustering algorithms across all silhouette methods:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         Method FCM_Crisp FCM2_Crisp FCM_Fuzzy FCM2_Fuzzy</span></span>
-<span><span class="co">#&gt; 1       medoid 0.8288288  0.7181559 0.9297577  0.8566239</span></span>
-<span><span class="co">#&gt; 2          pac 0.7541271  0.5988649 0.8799106  0.7700619</span></span>
-<span><span class="co">#&gt; 3       pp_pac 0.7541271  0.5988649 0.8799106  0.7700619</span></span>
-<span><span class="co">#&gt; 4    pp_medoid 0.8288288  0.7181559 0.9297577  0.8566239</span></span>
-<span><span class="co">#&gt; 5     nlpp_pac 0.8185224  0.6700537 0.9304926  0.8326067</span></span>
-<span><span class="co">#&gt; 6  nlpp_medoid 0.8749545  0.7748310 0.9604788  0.8991463</span></span>
-<span><span class="co">#&gt; 7       pd_pac 0.7469894  0.4262756 0.8786105  0.5744897</span></span>
-<span><span class="co">#&gt; 8    pd_medoid 0.8196600  0.5598445 0.9280044  0.6963562</span></span>
-<span><span class="co">#&gt; 9          cer 0.8572481  0.7452355 0.9248327  0.8427990</span></span>
-<span><span class="co">#&gt; 10          db 0.3303585  0.3473950 0.4206051  0.5002794</span></span></code></pre></div>
+<span><span class="co">#&gt; 1       medoid 0.8288288  0.4615477 0.9297577  0.6551615</span></span>
+<span><span class="co">#&gt; 2          pac 0.7541271  0.3275398 0.8799106  0.5004519</span></span>
+<span><span class="co">#&gt; 3       pp_pac 0.7541271  0.3275398 0.8799106  0.5004519</span></span>
+<span><span class="co">#&gt; 4    pp_medoid 0.8288288  0.4615477 0.9297577  0.6551615</span></span>
+<span><span class="co">#&gt; 5     nlpp_pac 0.8185224  0.3753343 0.9304926  0.5572167</span></span>
+<span><span class="co">#&gt; 6  nlpp_medoid 0.8749545  0.5127992 0.9604788  0.7051622</span></span>
+<span><span class="co">#&gt; 7       pd_pac 0.7469894  0.3161353 0.8786105  0.5155924</span></span>
+<span><span class="co">#&gt; 8    pd_medoid 0.8196600  0.4349761 0.9280044  0.6629823</span></span>
+<span><span class="co">#&gt; 9          cer 0.8572481  0.5835120 0.9248327  0.6535044</span></span>
+<span><span class="co">#&gt; 10          db 0.3303585  0.4591286 0.4206051  0.7221797</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="d--visualizing-method-comparisons">d. Visualizing Method Comparisons<a class="anchor" aria-label="anchor" href="#d--visualizing-method-comparisons"></a>
@@ -1346,11 +1346,11 @@ dimension names:</li>
 <span>  print.summary <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
-<span><span class="co">#&gt; Extended silhouette: 0.7057 </span></span>
+<span><span class="co">#&gt; Extended silhouette: 0.7407 </span></span>
 <span><span class="co">#&gt; ---------------------------</span></span>
 <span><span class="co">#&gt; Dimension Summary:</span></span>
 <span><span class="co">#&gt;   dimension n_obs avg_sil_width</span></span>
-<span><span class="co">#&gt; 1      Rows   150        0.6979</span></span>
+<span><span class="co">#&gt; 1      Rows   150        0.7338</span></span>
 <span><span class="co">#&gt; 2   Columns     4        1.0000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Available components:</span></span>
