@@ -5,7 +5,7 @@ knitr::opts_chunk$set(
 )
 
 ## ----check-packages, echo=FALSE, message=FALSE, warning=FALSE-----------------
-required_packages <- c("proxy", "ppclust", "blockcluster", "cluster", "factoextra", "ggplot2")
+required_packages <- c("proxy", "ppclust", "blockcluster", "cluster", "factoextra", "ggplot2", "tidyr")
 
 missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
 
@@ -242,30 +242,6 @@ is.Silhouette(data.frame(a = 1:6))      # Non-Silhouette object: FALSE
 # Visualize the custom Silhouette object
 plotSilhouette(sil_custom, summary.legend = TRUE)
 
-## ----ext1---------------------------------------------------------------------
-library(blockcluster)
-data(iris)
-result <- coclusterContinuous(as.matrix(iris[, -5]), nbcocluster = c(3, 2))
-
-## ----ext2---------------------------------------------------------------------
-sil_mode1 <- softSilhouette(
-  prob_matrix = result@rowposteriorprob,
-  method = "pac",
-  print.summary = FALSE
-)
-sil_mode2 <- softSilhouette(
-  prob_matrix = result@colposteriorprob,
-  method = "pac",
-  print.summary = FALSE
-)
-
-## ----ext3---------------------------------------------------------------------
-ext_sil <- extSilhouette(
-  sil_list = list(sil_mode1, sil_mode2),
-  dim_names = c("Rows", "Columns"),
-  print.summary = TRUE
-)
-
 ## ----calSil1------------------------------------------------------------------
 library(ppclust)
 data(iris)
@@ -282,7 +258,7 @@ summary_result <- calSilhouette(
 )
 
 # View the results
-print(summary_result)
+head(summary_result)
 
 ## ----calSil2------------------------------------------------------------------
 # Perform clustering first
@@ -298,7 +274,7 @@ summary_direct <- calSilhouette(
 )
 
 # Access specific results
-summary_direct
+head(summary_direct)
 
 ## ----calSil3------------------------------------------------------------------
 # Compare FCM and FCM2 algorithms
@@ -328,7 +304,8 @@ comparison <- data.frame(
   FCM_Crisp = fcm_summary$Crisp,
   FCM2_Crisp = fcm2_summary$Crisp,
   FCM_Fuzzy = fcm_summary$Fuzzy,
-  FCM2_Fuzzy = fcm2_summary$Fuzzy
+  FCM2_Fuzzy = fcm2_summary$Fuzzy,
+  stringsAsFactors = FALSE
 )
 
 print(comparison)
@@ -349,14 +326,18 @@ comparison_long <- tidyr::pivot_longer(
 ggplot(comparison_long, aes(x = Method, y = Silhouette_Width, fill = Algorithm_Type)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    legend.position = "bottom"
+  ) +
   labs(
     title = "Comparison of Silhouette Methods: FCM vs FCM2",
     x = "Silhouette Method",
     y = "Average Silhouette Width",
     fill = "Algorithm & Type"
   ) +
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set2") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40")
 
 ## ----calSil5, fig.width=8, fig.height=5, fig.alt = "fig7.2"-------------------
 # Compute silhouette summaries for k = 2 to 6
@@ -384,26 +365,118 @@ plot(k_range, pac_widths,
   xlab = "Number of Clusters (k)",
   ylab = "Average Silhouette Width (PAC method)",
   main = "Optimal Cluster Selection using calSilhouette()",
-  col = "steelblue", lwd = 2
+  col = "steelblue", lwd = 2,
+  ylim = c(min(pac_widths) * 0.95, max(pac_widths) * 1.05)
 )
 grid()
+abline(h = max(pac_widths), lty = 2, col = "red")
+text(k_range[which.max(pac_widths)], max(pac_widths), 
+     labels = paste("Optimal k =", k_range[which.max(pac_widths)]), 
+     pos = 3, col = "red")
 
 ## ----calSil6------------------------------------------------------------------
 # Get all pac-based methods
 pac_methods <- summary_result[grep("pac", summary_result$Method), ]
-print("PAC-based methods:")
-print(pac_methods)
+cat("PAC-based methods:\n")
+print(pac_methods, row.names = FALSE)
 
 # Get all medoid-based methods
 medoid_methods <- summary_result[grep("medoid", summary_result$Method), ]
-print("Medoid-based methods:")
-print(medoid_methods)
+cat("\nMedoid-based methods:\n")
+print(medoid_methods, row.names = FALSE)
+
+# Get probability-based methods (cer, db)
+prob_methods <- summary_result[summary_result$Method %in% c("cer", "db"), ]
+cat("\nProbability-based methods (cer, db):\n")
+print(prob_methods, row.names = FALSE)
 
 # Compare crisp vs fuzzy vs median averaging
-cat("\nBest method by crisp averaging:", 
-    summary_result$Method[which.max(summary_result$Crisp)], "\n")
+cat("\n=== Best Methods by Averaging Type ===\n")
+cat("Best method by crisp averaging:", 
+    summary_result$Method[which.max(summary_result$Crisp)], 
+    "(", round(max(summary_result$Crisp, na.rm = TRUE), 4), ")\n")
 cat("Best method by fuzzy averaging:", 
-    summary_result$Method[which.max(summary_result$Fuzzy)], "\n")
+    summary_result$Method[which.max(summary_result$Fuzzy)], 
+    "(", round(max(summary_result$Fuzzy, na.rm = TRUE), 4), ")\n")
 cat("Best method by median averaging:", 
-    summary_result$Method[which.max(summary_result$Median)], "\n")
+    summary_result$Method[which.max(summary_result$Median)], 
+    "(", round(max(summary_result$Median, na.rm = TRUE), 4), ")\n")
+
+## ----calSil7------------------------------------------------------------------
+library(proxy)
+data(iris)
+
+# K-means clustering (crisp clustering)
+km <- kmeans(iris[, -5], centers = 3)
+
+# Compute distance matrix
+dist_matrix <- proxy::dist(iris[, -5], km$centers)
+
+# Compute only proximity-based silhouettes (medoid and pac)
+crisp_summary <- calSilhouette(
+  prox_matrix = dist_matrix,
+  proximity_type = "dissimilarity",
+  print.summary = TRUE
+)
+
+# View results (note: no Fuzzy column since prob_matrix not provided)
+print(crisp_summary)
+
+## ----calSil8, fig.width=8, fig.height=6, fig.alt = "fig7.3"-------------------
+library(ggplot2)
+library(tidyr)
+
+# Reshape data for heatmap
+heatmap_data <- tidyr::pivot_longer(
+  summary_result,
+  cols = c(Crisp, Fuzzy, Median),
+  names_to = "Average_Type",
+  values_to = "Silhouette_Width"
+)
+
+# Create heatmap
+ggplot(heatmap_data, aes(x = Average_Type, y = Method, fill = Silhouette_Width)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(Silhouette_Width, 3)), color = "black", size = 3) +
+  scale_fill_gradient2(
+    low = "red", mid = "yellow", high = "green",
+    midpoint = median(heatmap_data$Silhouette_Width, na.rm = TRUE),
+    na.value = "gray90"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    axis.text.y = element_text(size = 10),
+    legend.position = "right"
+  ) +
+  labs(
+    title = "Silhouette Width Heatmap Across Methods and Averaging Types",
+    x = "Averaging Type",
+    y = "Silhouette Method",
+    fill = "Silhouette\nWidth"
+  )
+
+## ----ext1---------------------------------------------------------------------
+library(blockcluster)
+data(iris)
+result <- coclusterContinuous(as.matrix(iris[, -5]), nbcocluster = c(3, 2))
+
+## ----ext2---------------------------------------------------------------------
+sil_mode1 <- softSilhouette(
+  prob_matrix = result@rowposteriorprob,
+  method = "pac",
+  print.summary = FALSE
+)
+sil_mode2 <- softSilhouette(
+  prob_matrix = result@colposteriorprob,
+  method = "pac",
+  print.summary = FALSE
+)
+
+## ----ext3---------------------------------------------------------------------
+ext_sil <- extSilhouette(
+  sil_list = list(sil_mode1, sil_mode2),
+  dim_names = c("Rows", "Columns"),
+  print.summary = TRUE
+)
 
