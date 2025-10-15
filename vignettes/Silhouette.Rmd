@@ -807,7 +807,9 @@ ggplot(heatmap_data, aes(x = Average_Type, y = Method, fill = Silhouette_Width))
 
 **Summary:**
 
-`calSilhouette()` provides a powerful, unified interface for comprehensive silhouette analysis, enabling researchers to evaluate clustering solutions from multiple perspectives simultaneously. This function streamlines comparative studies, supports robust cluster validation, and facilitates reproducible clustering diagnostics across different algorithms and parameter settings. Its integration with the package's visualization capabilities makes it an essential tool for thorough clustering quality assessment in both crisp and soft clustering contexts.## 7. Extended Silhouette Analysis for Multi-Way Clustering
+`calSilhouette()` provides a powerful, unified interface for comprehensive silhouette analysis, enabling researchers to evaluate clustering solutions from multiple perspectives simultaneously. This function streamlines comparative studies, supports robust cluster validation, and facilitates reproducible clustering diagnostics across different algorithms and parameter settings. Its integration with the package's visualization capabilities makes it an essential tool for thorough clustering quality assessment in both crisp and soft clustering contexts.
+
+## 7. Extended Silhouette Analysis for Multi-Way Clustering
 
 The `extSilhouette()` function enables silhouette-based evaluation for multi-way clustering scenarios, such as biclustering or tensor clustering, by aggregating silhouette indices from each mode (e.g., rows, columns) into a single summary metric.
 This approach allows you to rigorously assess the overall clustering structure when partitioning data along multiple dimensions.
