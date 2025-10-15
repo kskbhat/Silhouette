@@ -13,7 +13,7 @@ bibentry(
            comment = c(ORCID = "0000-0001-9655-702X"))
   ),
   year = 2025,
-  note = "R package version 0.9.5",
+  note = "R package version 0.9.6",
   doi = "10.32614/CRAN.package.Silhouette",
   url = "https://kskbhat.github.io/Silhouette/"
 )
