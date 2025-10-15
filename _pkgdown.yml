@@ -64,4 +64,4 @@ reference:
 
 navbar:
   structure:
-    right: [search,lightswitch]
+    right: [search,github,lightswitch]

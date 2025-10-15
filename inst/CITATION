@@ -1,7 +1,7 @@
 citHeader("To cite the Silhouette package in publications use:")
 
-citEntry(
-  entry = "Manual",
+bibentry(
+  bibtype = "Manual",
   title = "Silhouette: Proximity Measure Based Diagnostics for Standard, Soft, and Multi-Way Clustering",
   author = c(
     person(given = "Shrikrishna", family = "Bhat K",
@@ -15,5 +15,5 @@ citEntry(
   year = 2025,
   note = "R package version 0.9.5",
   doi = "10.32614/CRAN.package.Silhouette",
-  url = "https://kskbhat.github.io/Silhouette"
+  url = "https://kskbhat.github.io/Silhouette/"
 )
