@@ -65,7 +65,7 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'Silhouette'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  summary.legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -75,7 +75,7 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'Silhouette'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, print.summary <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, print.summary <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -241,18 +241,26 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">proxy</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">proxy</span><span class="fu">::</span><span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">silh_out</span> <span class="op">&lt;-</span> <span class="fu">Silhouette</span><span class="op">(</span><span class="va">dist</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">silh_out</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">silh_out</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Install 'proxy': install.packages('ppclust')"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘proxy’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as.dist, dist</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:base’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as.matrix</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Average crisp dissimilarity medoid silhouette: 0.6664</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   38        0.5950</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   50        0.8592</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   62        0.5546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   50        0.8592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   62        0.5546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   38        0.5950</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-plt img"><img src="Silhouette-1.png" alt="" width="700" height="433"></span>
@@ -272,9 +280,9 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-in"><span>      average <span class="op">=</span> <span class="st">"fuzzy"</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="co"># Compute average silhouette width from widths</span></span></span>
-<span class="r-in"><span>    <span class="va">avg_sil_width</span><span class="op">[</span><span class="va">k</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">avg.width</span></span></span>
+<span class="r-in"><span>    <span class="va">avg_sil_width</span><span class="op">[</span><span class="va">k</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">avg.width</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">avg_sil_width</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">avg_sil_width</span>,</span></span>
 <span class="r-in"><span>    type <span class="op">=</span> <span class="st">"o"</span>,</span></span>
 <span class="r-in"><span>    ylab <span class="op">=</span> <span class="st">"Overall Silhouette Width"</span>,</span></span>
 <span class="r-in"><span>    xlab <span class="op">=</span> <span class="st">"Number of Clusters"</span>,</span></span>

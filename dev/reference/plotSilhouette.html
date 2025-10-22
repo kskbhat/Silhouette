@@ -129,6 +129,14 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span>  <span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'proxy'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:stats':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as.dist, dist</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:base':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as.matrix</span>
 <span class="r-plt img"><img src="plotSilhouette-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#' # Fuzzy Silhouette with ppclust::fcm</span></span></span>
@@ -204,35 +212,35 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span>  <span class="fu">plotSilhouette</span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">cl.silhouette</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘drclust’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:cluster’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'drclust'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:cluster':</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     silhouette</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`aes_string()` was deprecated in ggplot2 3.0.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> See also `vignette("ggplot2-in-packages")` for more information.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">factoextra</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/kassambara/factoextra/issues&gt;</span>.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;</span><a href="https://github.com/kassambara/factoextra/issues" class="external-link"><span style="color: #0000BB; font-style: italic;">https://github.com/kassambara/factoextra/issues</span></a><span style="color: #0000BB; font-style: italic;">&gt;</span>.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    cluster size ave.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1   17          0.16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2   16          0.35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3   14          0.06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4   10          0.15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5    9         -0.09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6    9          0.11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7    8          0.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8    8         -0.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9    7          0.23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10    7          0.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      11    7          0.08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      12    6          0.41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      13    6         -0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14      14    6          0.09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15      15    5          0.31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16      16    4          0.08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17      17    4          0.45</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18      18    3          0.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19      19    3          0.31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1   20          0.17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2   16          0.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3   12          0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4   11          0.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5    9          0.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6    9          0.23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7    8          0.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8    8          0.12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9    8          0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10    6          0.38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      11    6         -0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      12    6          0.23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      13    5          0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      14    5         -0.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      15    5          0.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      16    4          0.26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17      17    4          0.19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18      18    4         -0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19      19    3          0.28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20      20    1          0.00</span>
 <span class="r-plt img"><img src="plotSilhouette-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

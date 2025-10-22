@@ -1,11 +1,13 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://kskbhat.github.io/Silhouette/404.html</loc></url>
-<url><loc>https://kskbhat.github.io/Silhouette/articles/index.html</loc></url>
+<url><loc>https://kskbhat.github.io/Silhouette/LICENSE-text.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/articles/Silhouette.html</loc></url>
+<url><loc>https://kskbhat.github.io/Silhouette/articles/index.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/authors.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/index.html</loc></url>
-<url><loc>https://kskbhat.github.io/Silhouette/LICENSE-text.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/news/index.html</loc></url>
+<url><loc>https://kskbhat.github.io/Silhouette/reference/Silhouette-package.html</loc></url>
+<url><loc>https://kskbhat.github.io/Silhouette/reference/Silhouette.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/reference/calSilhouette.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/reference/cerSilhouette.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/reference/dbSilhouette.html</loc></url>
@@ -14,8 +16,6 @@
 <url><loc>https://kskbhat.github.io/Silhouette/reference/index.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/reference/is.Silhouette.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/reference/plotSilhouette.html</loc></url>
-<url><loc>https://kskbhat.github.io/Silhouette/reference/Silhouette-package.html</loc></url>
-<url><loc>https://kskbhat.github.io/Silhouette/reference/Silhouette.html</loc></url>
 <url><loc>https://kskbhat.github.io/Silhouette/reference/softSilhouette.html</loc></url>
 </urlset>
 

@@ -82,7 +82,7 @@
 <p><strong>Note:</strong> This package does not use the classical <a href="https://doi.org/10.1016/0377-0427(87)90125-7" class="external-link">Rousseeuw (1987)</a> calculation directly.</p>
 <hr>
 <div class="section level2">
-<h2 id="white_check_mark-why-this-package">✅ Why This Package?<a class="anchor" aria-label="anchor" href="#white_check_mark-why-this-package"></a>
+<h2 id="id_-why-this-package">✅ Why This Package?<a class="anchor" aria-label="anchor" href="#id_-why-this-package"></a>
 </h2>
 <ul>
 <li>
@@ -111,7 +111,7 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Install from GitHub</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kskbhat/Silhouette"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kskbhat/Silhouette"</span><span class="op">)</span></span></code></pre></div>
 <p>From CRAN, install via:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"Silhouette"</span><span class="op">)</span></span></code></pre></div>
@@ -142,7 +142,33 @@
   </main><aside class="col-md-3"><div class="downloads">
 <h2 data-toc-skip>Downloads</h2>
 <ul class="list-unstyled">
-<li><p><a href="https://kskbhat.r-universe.dev/Silhouette" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=brightgreen" alt="CRAN monthly downloads"></a> <a href="https://r-pkg.org/pkg/Silhouette" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue" alt="CRAN downloads"></a></p></li>
+<li>
+<p>
+<b>Monthly Downloads:</b> <span id="monthly">Loading…</span><br><b>Total Downloads:</b> <span id="total">Loading…</span>
+</p>
+<script>
+  // Fetch live download counts from CRANlogs API
+  fetch("https://cranlogs.r-pkg.org/downloads/total/last-month/Silhouette")
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("monthly").textContent =
+        d.downloads.toLocaleString();
+    });
+  fetch("https://cranlogs.r-pkg.org/downloads/total/1900-01-01:2100-01-01/Silhouette")
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("total").textContent =
+        d.downloads.toLocaleString();
+    });
+</script>
+</li>
+</ul>
+</div>
+
+<div class="in-views">
+<h2 data-toc-skip>In Views</h2>
+<ul class="list-unstyled">
+<li><p><a href="https://CRAN.R-project.org/view=Cluster" class="external-link">CRAN Task View: Cluster</a></p></li>
 </ul>
 </div>
 
@@ -152,7 +178,6 @@
 <li><a href="https://cloud.r-project.org/package=Silhouette" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/kskbhat/Silhouette/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/kskbhat/Silhouette/issues" class="external-link">Report a bug</a></li>
-<li><a href="https://CRAN.R-project.org/view=Cluster" class="external-link">CRAN Task View: Cluster</a></li>
 </ul>
 </div>
 
@@ -180,6 +205,8 @@
 <a href="https://www.pondiuni.edu.in/faculy_profiles/dr-kiruthika/" class="external-link">Kiruthika C</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9655-702X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
+
+
 
   </aside>
 </div>
