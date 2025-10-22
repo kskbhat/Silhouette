@@ -142,33 +142,14 @@
   </main><aside class="col-md-3"><div class="downloads">
 <h2 data-toc-skip>Downloads</h2>
 <ul class="list-unstyled">
-<li>
-<p>
-<b>Monthly Downloads:</b> <span id="monthly">Loading…</span><br><b>Total Downloads:</b> <span id="total">Loading…</span>
-</p>
-<script>
-  // Fetch live download counts from CRANlogs API
-  fetch("https://cranlogs.r-pkg.org/downloads/total/last-month/Silhouette")
-    .then(r => r.json())
-    .then(d => {
-      document.getElementById("monthly").textContent =
-        d.downloads.toLocaleString();
-    });
-  fetch("https://cranlogs.r-pkg.org/downloads/total/1900-01-01:2100-01-01/Silhouette")
-    .then(r => r.json())
-    .then(d => {
-      document.getElementById("total").textContent =
-        d.downloads.toLocaleString();
-    });
-</script>
-</li>
+<li><p><a href="https://kskbhat.r-universe.dev/Silhouette" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=brightgreen" alt="CRAN monthly downloads"></a> <a href="https://r-pkg.org/pkg/Silhouette" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue" alt="CRAN total downloads"></a></p></li>
 </ul>
 </div>
 
 <div class="in-views">
 <h2 data-toc-skip>In Views</h2>
 <ul class="list-unstyled">
-<li><p><a href="https://CRAN.R-project.org/view=Cluster" class="external-link">CRAN Task View: Cluster</a></p></li>
+<li><p><a href="https://CRAN.R-project.org/view=Cluster" class="external-link"><img src="https://img.shields.io/badge/CRAN%20Task%20View-Cluster-orange" alt="CRAN Task View: Cluster"></a></p></li>
 </ul>
 </div>
 

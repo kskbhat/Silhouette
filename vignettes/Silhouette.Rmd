@@ -75,7 +75,7 @@ This vignette demonstrates the essential features of the package using the well-
 
 **`cerSilhouette()`**: Computes certainty silhouette widths for soft clustering, using the maximum posterior probabilities as silhouette values.
 
-- **`calSilhouette()`**  
+**`calSilhouette()`**  
   Computes all available silhouette indices from the package functions and returns a comparative summary data frame. Automatically calculates crisp, fuzzy, and median silhouette values across different methods including proximity-based (medoid, pac), soft silhouette variations (pp_pac, pp_medoid, nlpp_pac, nlpp_medoid, pd_pac, pd_medoid), and probability-based methods (cer, db). Supports direct matrix input or clustering function output for streamlined comparative analysis.
 
 **`getSilhouette()`**: Constructs a Silhouette class object directly from user-provided components (e.g., cluster assignments, neighbor clusters, silhouette widths).

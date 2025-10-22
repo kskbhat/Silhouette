@@ -7,10 +7,6 @@ template:
     border-radius: 0.5rem
     btn-border-radius: 0.25rem
     danger: "#A6081A"
-  includes:
-    # in_header: |
-    #   <script defer data-domain="kskbhat.github.io,Silhouette" src="https://plausible.io/js/plausible.js"></script>
-    #   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 
 development:
   mode: auto
@@ -32,30 +28,12 @@ home:
       downloads:
         title: "Downloads"
         text: |
-          <p>
-            <b>Monthly Downloads:</b> <span id="monthly">Loading...</span><br>
-            <b>Total Downloads:</b> <span id="total">Loading...</span>
-          </p>
-          <script>
-            // Fetch live download counts from CRANlogs API
-            fetch("https://cranlogs.r-pkg.org/downloads/total/last-month/Silhouette")
-              .then(r => r.json())
-              .then(d => {
-                document.getElementById("monthly").textContent =
-                  d.downloads.toLocaleString();
-              });
-            fetch("https://cranlogs.r-pkg.org/downloads/total/1900-01-01:2100-01-01/Silhouette")
-              .then(r => r.json())
-              .then(d => {
-                document.getElementById("total").textContent =
-                  d.downloads.toLocaleString();
-              });
-          </script>
-
+          [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=brightgreen)](https://kskbhat.r-universe.dev/Silhouette)
+          [![CRAN total downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)
       inviews:
         title: "In Views"
         text: |
-          [CRAN Task View: Cluster](https://CRAN.R-project.org/view=Cluster)
+          [![CRAN Task View: Cluster](https://img.shields.io/badge/CRAN%20Task%20View-Cluster-orange)](https://CRAN.R-project.org/view=Cluster)
 
 authors:
   Shrikrishna Bhat K:
