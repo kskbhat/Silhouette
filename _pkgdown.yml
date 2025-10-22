@@ -26,20 +26,36 @@ search: true
 
 home:
   title: Silhouette Package
-  links:
-  - text: "CRAN Task View: Cluster"
-    href: https://CRAN.R-project.org/view=Cluster
-  # - text: <img src="https://img.shields.io/badge/CRAN%20Task%20View-Cluster-orange" alt="CRAN Task View">
-  #   href: https://CRAN.R-project.org/view=Cluster
   sidebar:
-    structure: [downloads, links, license, community, citation, authors]
+    structure: [downloads, inviews, links, license, community, citation, authors, dev]
     components:
       downloads:
         title: "Downloads"
         text: |
-            [![CRAN monthly downloads](https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=brightgreen)](https://kskbhat.r-universe.dev/Silhouette)
-            [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue)](https://r-pkg.org/pkg/Silhouette)
+          <p>
+            <b>Monthly Downloads:</b> <span id="monthly">Loading...</span><br>
+            <b>Total Downloads:</b> <span id="total">Loading...</span>
+          </p>
+          <script>
+            // Fetch live download counts from CRANlogs API
+            fetch("https://cranlogs.r-pkg.org/downloads/total/last-month/Silhouette")
+              .then(r => r.json())
+              .then(d => {
+                document.getElementById("monthly").textContent =
+                  d.downloads.toLocaleString();
+              });
+            fetch("https://cranlogs.r-pkg.org/downloads/total/1900-01-01:2100-01-01/Silhouette")
+              .then(r => r.json())
+              .then(d => {
+                document.getElementById("total").textContent =
+                  d.downloads.toLocaleString();
+              });
+          </script>
 
+      inviews:
+        title: "In Views"
+        text: |
+          [CRAN Task View: Cluster](https://CRAN.R-project.org/view=Cluster)
 
 authors:
   Shrikrishna Bhat K:
@@ -64,4 +80,4 @@ reference:
 
 navbar:
   structure:
-    right: [search,github,lightswitch]
+    right: [search, github, lightswitch]

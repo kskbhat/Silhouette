@@ -142,7 +142,33 @@
   </main><aside class="col-md-3"><div class="downloads">
 <h2 data-toc-skip>Downloads</h2>
 <ul class="list-unstyled">
-<li><p><a href="https://kskbhat.r-universe.dev/Silhouette" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/last-month/Silhouette?color=brightgreen" alt="CRAN monthly downloads"></a> <a href="https://r-pkg.org/pkg/Silhouette" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/Silhouette?color=blue" alt="CRAN downloads"></a></p></li>
+<li>
+<p>
+<b>Monthly Downloads:</b> <span id="monthly">Loading…</span><br><b>Total Downloads:</b> <span id="total">Loading…</span>
+</p>
+<script>
+  // Fetch live download counts from CRANlogs API
+  fetch("https://cranlogs.r-pkg.org/downloads/total/last-month/Silhouette")
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("monthly").textContent =
+        d.downloads.toLocaleString();
+    });
+  fetch("https://cranlogs.r-pkg.org/downloads/total/1900-01-01:2100-01-01/Silhouette")
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("total").textContent =
+        d.downloads.toLocaleString();
+    });
+</script>
+</li>
+</ul>
+</div>
+
+<div class="in-views">
+<h2 data-toc-skip>In Views</h2>
+<ul class="list-unstyled">
+<li><p><a href="https://CRAN.R-project.org/view=Cluster" class="external-link">CRAN Task View: Cluster</a></p></li>
 </ul>
 </div>
 
@@ -152,7 +178,6 @@
 <li><a href="https://cloud.r-project.org/package=Silhouette" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/kskbhat/Silhouette/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/kskbhat/Silhouette/issues" class="external-link">Report a bug</a></li>
-<li><a href="https://CRAN.R-project.org/view=Cluster" class="external-link">CRAN Task View: Cluster</a></li>
 </ul>
 </div>
 
@@ -180,6 +205,8 @@
 <a href="https://www.pondiuni.edu.in/faculy_profiles/dr-kiruthika/" class="external-link">Kiruthika C</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9655-702X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
+
+
 
   </aside>
 </div>
