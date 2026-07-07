@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Plot Silhouette Analysis Results — plotSilhouette"><meta name="description" content="Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:description" content="Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Plot Silhouette Analysis Results — plotSilhouette"><meta name="description" content="Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:description" content="Creates a silhouette plot for visualizing the silhouette widths of clustering results, with bars colored by cluster and an optional summary of cluster statistics in legend."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,9 +84,9 @@
 <dt id="arg-linetype">linetype<a class="anchor" aria-label="anchor" href="#arg-linetype"></a></dt>
 <dd><p>Character or numeric value specifying the type of line
 to be used for the horizontal reference line indicating the average
-silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li><p>Character: <code>"solid"</code>, <code>"dashed"</code>, <code>"dotted"</code>, <code>"dotdash"</code>, <code>"longdash"</code>, <code>"twodash"</code>.</p></li>
+silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li><p>Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, `"twodash"`.</p></li>
 <li><p>Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.</p></li>
-</ul><p>Defaults to <code>"dashed"</code>.</p></dd>
+</ul><p>Defaults to `"dashed"`.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -106,7 +106,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <li><p><code>"clara"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/clara.html" class="external-link">clara</a></code> from the <span class="pkg">cluster</span> package.</p></li>
 <li><p><code>"fanny"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/fanny.html" class="external-link">fanny</a></code> from the <span class="pkg">cluster</span> package.</p></li>
 <li><p><code>"silhouette"</code>: Produced by <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">silhouette</a></code> from the <span class="pkg">cluster</span> package or <code>silhouette</code> from the <span class="pkg">drclust</span> package.</p></li>
-</ul><p>For these classes (<code>"eclust"</code>, <code>"hcut"</code>, <code>"pam"</code>, <code>"clara"</code>, <code>"fanny"</code>, <code>"silhouette"</code>), users should explicitly call <code>plotSilhouette()</code> (e.g., <code>plotSilhouette(pam_result)</code>) to ensure the correct method is used, as the generic <code><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot()</a></code> may not dispatch to this function for these objects.</p>
+</ul><p>For these classes (<code>"eclust"</code>, <code>"hcut"</code>, <code>"pam"</code>, <code>"clara"</code>, <code>"fanny"</code>, <code>"silhouette"</code>), users should explicitly call <code>plotSilhouette()</code> (e.g., <code>plotSilhouette(pam_result)</code>) to ensure the correct method is used, as the generic <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> may not dispatch to this function for these objects.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -127,7 +127,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"proxy"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">proxy</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">dist</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">out</span><span class="op">$</span><span class="va">centers</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="Silhouette.html">Silhouette</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="plotSilhouette-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -143,7 +143,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span>    centers <span class="op">=</span> <span class="fl">3</span>,</span></span>
 <span class="r-in"><span>    sort <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_fuzzy</span>, summary.legend <span class="op">=</span> <span class="cn">FALSE</span>, grayscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_fuzzy</span>, summary.legend <span class="op">=</span> <span class="cn">FALSE</span>, grayscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Install 'ppclust': install.packages('ppclust')"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
@@ -180,12 +180,13 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Silhouette plot for eclust clustering</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"factoextra"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.sthda.com/english/rpkgs/factoextra" class="external-link">factoextra</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kassambara/factoextra" class="external-link">factoextra</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">eclust_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/factoextra/man/eclust.html" class="external-link">eclust</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="st">"kmeans"</span>, k <span class="op">=</span> <span class="fl">3</span>, graph <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">plotSilhouette</span><span class="op">(</span><span class="va">eclust_result</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: ggplot2</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Welcome to factoextra!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Want to learn more? See two factoextra-related books at https://www.datanovia.com/en/product/practical-guide-to-principal-component-methods-in-r/</span>
 <span class="r-plt img"><img src="plotSilhouette-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Silhouette plot for hcut clustering</span></span></span>
@@ -208,31 +209,26 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:cluster’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     silhouette</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`aes_string()` was deprecated in ggplot2 3.0.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> See also `vignette("ggplot2-in-packages")` for more information.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">factoextra</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/kassambara/factoextra/issues&gt;</span>.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    cluster size ave.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1   17          0.16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2   16          0.35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3   14          0.06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4   10          0.15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5    9         -0.09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6    9          0.11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7    8          0.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8    8         -0.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9    7          0.23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10    7          0.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      11    7          0.08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      12    6          0.41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      13    6         -0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14      14    6          0.09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15      15    5          0.31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16      16    4          0.08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17      17    4          0.45</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18      18    3          0.28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19      19    3          0.31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1   20          0.17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2   16          0.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3   12         -0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4   12          0.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5   11          0.21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6   10          0.14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7    9          0.23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8    8          0.40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9    8          0.16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10    7          0.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      11    6          0.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      12    5          0.18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      13    5          0.09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      14    5         -0.14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      15    4          0.26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      16    4          0.19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17      17    3         -0.35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18      18    3          0.29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19      19    1          0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20      20    1          0.00</span>
 <span class="r-plt img"><img src="plotSilhouette-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
@@ -247,7 +243,7 @@ silhouette width. Accepts standard ggplot2 linetype values, such as:</p><ul><li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

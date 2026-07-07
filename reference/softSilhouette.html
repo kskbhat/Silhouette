@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate Silhouette Width for Soft Clustering Algorithms — softSilhouette"><meta name="description" content="Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:description" content="Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate Silhouette Width for Soft Clustering Algorithms — softSilhouette"><meta name="description" content="Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:description" content="Computes silhouette widths for soft clustering results by interpreting cluster membership probabilities (or their transformations) as proximity measures. Although originally designed for evaluating clustering quality within a method, this adaptation allows heuristic comparison across soft clustering algorithms using average silhouette widths."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,10 +76,10 @@
 <dd><p>Character string specifying the type transformation of membership matrix considered as proximity matrix in <code>prob_matrix</code>. Options are:</p><dl><dt><code>"pp"</code></dt>
 <dd><p>Posterior probabilities \([\gamma_{ik}]_{n \times K}\) (non-negative, typically summing to 1 per row), treated as similarities</p></dd>
 
-<dt><code>"nlpp"</code></dt>
+  <dt><code>"nlpp"</code></dt>
 <dd><p>Negative log of posterior probabilities \([-\ln\gamma_{ik}]_{n \times K}\) (non-positive), treated as dissimilarities.</p></dd>
 
-<dt><code>"pd"</code></dt>
+  <dt><code>"pd"</code></dt>
 <dd><p>Probability distribution \([\gamma_{ik}/\pi_{k}]_{n \times K}\) (normalized posterior probabilities relative to cluster proportions \(\pi_{k}\)), treated as similarities.</p></dd>
 
 
@@ -123,10 +123,10 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
     <p>A data frame of class <code>"Silhouette"</code> containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:</p><dl><dt>proximity_type</dt>
 <dd><p>The proximity type used (<code>"similarity"</code> or <code>"dissimilarity"</code>).</p></dd>
 
-<dt>method</dt>
+  <dt>method</dt>
 <dd><p>The silhouette calculation method used (<code>"medoid"</code> or <code>"pac"</code>).</p></dd>
 
-<dt>average</dt>
+  <dt>average</dt>
 <dd><p>Character — the averaging method: <code>"crisp"</code>, <code>"fuzzy"</code>, or <code>"median"</code>.</p></dd>
 
 
@@ -136,19 +136,19 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
     <p>Although the silhouette method was originally developed for evaluating clustering structure within a single result, this implementation allows leveraging cluster membership probabilities from soft clustering methods to construct proximity-based silhouettes. These silhouette widths can be compared heuristically across different algorithms to assess clustering quality.</p>
 <p>See <a href="https://doi.org/10.1080/23737484.2024.2408534" class="external-link">doi:10.1080/23737484.2024.2408534</a>
  for more details.</p>
-<p>#' If <code>average = "crisp"</code>, the <strong>crisp silhouette index</strong> is calculated as (\(CS\)) is:
+<p>#' If `average = "crisp"`, the **crisp silhouette index** is calculated as (\(CS\)) is:
 $$
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 $$
 summarizing overall clustering quality.</p>
-<p>If <code>average = "fuzzy"</code> and <code>prob_matrix</code> is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
+<p>If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
 with \(\gamma_{ik}\) representing the probability of observation \(i\) belonging to cluster \(k\),
-the <strong>fuzzy silhouette index</strong> (\(FS\)) is calculated as:
+the **fuzzy silhouette index** (\(FS\)) is calculated as:
 $$
   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 $$
-where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}\) is <code>weight</code> and \(\alpha\) (the <code>a</code> argument) controls the emphasis on confident assignments.</p>
-<p>If <code>average = "median"</code> then median Silhouette is Calculated</p>
+where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}\) is `weight` and \(\alpha\) (the `a` argument) controls the emphasis on confident assignments.</p>
+<p>If `average = "median"` then median Silhouette is Calculated</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -169,8 +169,8 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">fcm_result</span> <span class="op">&lt;-</span> <span class="fu">ppclust</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ppclust/man/fcm.html" class="external-link">fcm</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">out_fcm</span> <span class="op">&lt;-</span> <span class="fu">softSilhouette</span><span class="op">(</span>prob_matrix <span class="op">=</span> <span class="va">fcm_result</span><span class="op">$</span><span class="va">u</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_fcm</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">sfcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out_fcm</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_fcm</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">sfcm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out_fcm</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Install 'ppclust' to run this example: install.packages('ppclust')"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
@@ -179,16 +179,16 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   50        0.9507</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   40        0.7005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   40        0.7005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   50        0.9507</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   60        0.6261</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">fcm2_result</span> <span class="op">&lt;-</span> <span class="fu">ppclust</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ppclust/man/fcm2.html" class="external-link">fcm2</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">out_fcm2</span> <span class="op">&lt;-</span> <span class="fu">softSilhouette</span><span class="op">(</span>prob_matrix <span class="op">=</span> <span class="va">fcm2_result</span><span class="op">$</span><span class="va">u</span>,print.summary <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_fcm2</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">sfcm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/blockcluster/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out_fcm2</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">out_fcm2</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">sfcm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out_fcm2</span>, print.summary <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Install 'ppclust' to run this example: install.packages('ppclust')"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
@@ -197,9 +197,9 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -----------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   60        0.2666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   65        0.5636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   25        0.3623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   25        0.3623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   60        0.2666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   65        0.5636</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="co"># Compare average silhouette widths of fcm and fcm2</span></span></span>
@@ -221,7 +221,7 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

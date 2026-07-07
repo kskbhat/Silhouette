@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Certainty Silhouette Width (Cer) for Soft Clustering — cerSilhouette"><meta name="description" content="Computes silhouette widths using maximum of posterior probabilities as Silhouette."><meta property="og:description" content="Computes silhouette widths using maximum of posterior probabilities as Silhouette."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Certainty Silhouette Width (Cer) for Soft Clustering — cerSilhouette"><meta name="description" content="Computes silhouette widths using maximum of posterior probabilities as Silhouette."><meta property="og:description" content="Computes silhouette widths using maximum of posterior probabilities as Silhouette."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,10 +103,10 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
     <p>A data frame of class <code>"Silhouette"</code> containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:</p><dl><dt>proximity_type</dt>
 <dd><p>The proximity type used i.e., <code>"similarity"</code>.</p></dd>
 
-<dt>method</dt>
+  <dt>method</dt>
 <dd><p>The silhouette calculation method used i.e., <code>"certainty"</code>.</p></dd>
 
-<dt>average</dt>
+  <dt>average</dt>
 <dd><p>Character — the averaging method: <code>"crisp"</code>, <code>"fuzzy"</code>, or <code>"median"</code>.</p></dd>
 
 
@@ -115,23 +115,23 @@ Options are:</p><ul><li><p><code>"crisp"</code> – unweighted (simple) average.
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Let the posterior probability matrix or cluster membership matrix as
 $$\Gamma = [\gamma_{ik}]_{n \times K},$$
-The <strong>certainty silhouette width</strong> for observation \(i\) is:
+The **certainty silhouette width** for observation \(i\) is:
 $$
 \mathrm{Cer}_i = \max_{k=1,\dots,K} \gamma_{ik}
 $$</p>
-<p>#' If <code>average = "crisp"</code>, the <strong>crisp silhouette index</strong> is calculated as (\(CS\)) is:
+<p>#' If `average = "crisp"`, the **crisp silhouette index** is calculated as (\(CS\)) is:
 $$
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 $$
 summarizing overall clustering quality.</p>
-<p>If <code>average = "fuzzy"</code> and <code>prob_matrix</code> is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
+<p>If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \(\Gamma = [\gamma_{ik}]_{n \times K}\),
 with \(\gamma_{ik}\) representing the probability of observation \(i\) belonging to cluster \(k\),
-the <strong>fuzzy silhouette index</strong> (\(FS\)) is calculated as:
+the **fuzzy silhouette index** (\(FS\)) is calculated as:
 $$
   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 $$
-where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}\) is <code>weight</code> and \(\alpha\) (the <code>a</code> argument) controls the emphasis on confident assignments.</p>
-<p>If <code>average = "median"</code> then median Silhouette is Calculated</p>
+where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}\) is `weight` and \(\alpha\) (the `a` argument) controls the emphasis on confident assignments.</p>
+<p>If `average = "median"` then median Silhouette is Calculated</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -161,9 +161,9 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ----------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   60        0.7826</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   50        0.9645</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   40        0.8351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   50        0.9645</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   40        0.8351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   60        0.7826</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ppclust"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
@@ -179,9 +179,9 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ----------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cluster size avg.sil.width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   60        0.5371</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1   25        0.5974</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       2   65        0.7135</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   25        0.5974</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       3   60        0.5371</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Available attributes: names, class, row.names, proximity_type, method, average</span>
 <span class="r-in"><span><span class="co"># Compare average silhouette widths of fcm and fcm2</span></span></span>
@@ -203,7 +203,7 @@ where \(w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
