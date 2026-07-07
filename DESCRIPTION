@@ -1,7 +1,8 @@
 Package: Silhouette
 Type: Package
-Title: Proximity Measure Based Diagnostics for Standard, Soft, and Multi-Way Clustering
-Version: 0.9.6
+Title: Proximity Measure Based Diagnostics for Standard, Soft, and
+        Multi-Way Clustering
+Version: 0.9.7
 Depends: R (>= 4.2.0)
 Language: en-US
 Authors@R: c(person(given = "Shrikrishna",
@@ -19,26 +20,17 @@ License: GPL-2
 URL: https://kskbhat.github.io/Silhouette/
 BugReports: https://github.com/kskbhat/Silhouette/issues
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
-Imports: 
-    dplyr,
-    ggplot2,
-    ggpubr,
-    lifecycle,
-    methods,
-    stats
-Suggests: 
-    proxy,
-    ppclust,
-    blockcluster,
-    cluster,
-    factoextra,
-    drclust,
-    tidyr,
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+Imports: dplyr, ggplot2, ggpubr, lifecycle, methods, stats
+Suggests: proxy, ppclust, cluster, factoextra, drclust,
+        tidyr, knitr, rmarkdown, testthat (>= 3.0.0)
 RdMacros: lifecycle
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2025-10-15 06:37:05 UTC; Gubbi
+Author: Shrikrishna Bhat K [aut, cre, cph] (ORCID:
+    <https://orcid.org/0009-0000-6180-5783>),
+  Kiruthika C [aut] (ORCID: <https://orcid.org/0000-0001-9655-702X>)
+Repository: CRAN
+Date/Publication: 2025-10-15 08:10:09 UTC
+Config/roxygen2/version: 8.0.0

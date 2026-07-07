@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Shrikrishna Bhat K \email{skbhat.in@gmail.com} (\href{https://orcid.org/0009-0000-6180-5783}{ORCID}) [copyright holder]
   \item Kiruthika C (\href{https://orcid.org/0000-0001-9655-702X}{ORCID})
 }
 

@@ -32,9 +32,9 @@ getSilhouette(
 \value{
 A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 \describe{
-\item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
-\item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
-\item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+  \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
+  \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+  \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 }
 \description{

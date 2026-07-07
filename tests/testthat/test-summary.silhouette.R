@@ -47,17 +47,17 @@ test_that("summary.Silhouette() works with different average methods", {
 })
 
 ## 2. Error handling tests
-# test_that("summary.Silhouette() errors with invalid object", {
-#   invalid_sil <- structure(list(), class = "Silhouette")
-#   expect_error(summary(invalid_sil), "object must be of class 'Silhouette'")
-# })
+test_that("summary.Silhouette() errors with invalid object", {
+  invalid_sil <- structure(list(), class = "Silhouette")
+  expect_error(summary(invalid_sil), "object must be of class 'Silhouette'")
+  expect_error(summary.Silhouette(iris), "object must be of class 'Silhouette'")
+})
 
 ## 3. Output validation tests
 test_that("summary.Silhouette() returns correct structure", {
   data(iris)
   fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
   sil <- softSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
-
   result <- summary(sil, print.summary = FALSE)
 
   # Check clus.avg.widths
@@ -99,12 +99,6 @@ test_that("summary.Silhouette() works with different proximity types and methods
 })
 
 ## 4. Edge case tests
-# test_that("summary.Silhouette() works with single cluster", {
-#   # This test might be challenging to set up, so we'll skip it for now
-#   # as it would require a special case in the Silhouette function
-#   skip("Single cluster case not implemented")
-# })
-
 test_that("summary.Silhouette() works with large number of clusters", {
   data(iris)
   # Use a larger number of centers if possible
@@ -126,4 +120,21 @@ test_that("summary.Silhouette() returns invisible result", {
   # Capture the result to check if it's invisible
   result <- capture.output(summary(sil, print.summary = FALSE))
   expect_true(length(result) == 0) # Should be empty because result is invisible
+})
+
+test_that("summary.Silhouette() prints summary when print.summary = TRUE", {
+  data(iris)
+  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
+  
+  # 1. Test crisp average summary printing
+  sil_crisp <- softSilhouette(prob_matrix = fcm_out$u, average = "crisp", print.summary = FALSE)
+  expect_message(summary(sil_crisp, print.summary = TRUE), "silhouette")
+  
+  # 2. Test fuzzy average summary printing
+  sil_fuzzy <- softSilhouette(prob_matrix = fcm_out$u, average = "fuzzy", print.summary = FALSE)
+  expect_message(summary(sil_fuzzy, print.summary = TRUE), "silhouette")
+  
+  # 3. Test median average summary printing
+  sil_median <- softSilhouette(prob_matrix = fcm_out$u, average = "median", print.summary = FALSE)
+  expect_message(summary(sil_median, print.summary = TRUE), "silhouette")
 })

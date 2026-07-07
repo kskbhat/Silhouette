@@ -25,17 +25,17 @@ from the "Silhouette" class.
 
 When \code{strict = TRUE}, the function additionally validates:
 \itemize{
-\item Object is a data frame
-\item Has required columns: cluster, neighbor, sil_width
-\item Has required attributes: proximity_type, method, average
-\item Column types are appropriate (integer for cluster/neighbor, numeric for sil_width)
+  \item Object is a data frame
+  \item Has required columns: cluster, neighbor, sil_width
+  \item Has required attributes: proximity_type, method, average
+  \item Column types are appropriate (integer for cluster/neighbor, numeric for sil_width)
 }
 
 The Silhouette object attributes are validated as follows:
 \itemize{
-\item \code{proximity_type}: Must be one of "dissimilarity" or "similarity"
-\item \code{average}: Must be one of "crisp", "fuzzy", or "median"
-\item \code{method}: Can be NULL or any string
+  \item \code{proximity_type}: Must be one of "dissimilarity" or "similarity"
+  \item \code{average}: Must be one of "crisp", "fuzzy", or "median"
+  \item \code{method}: Can be NULL or any string
 }
 }
 \examples{

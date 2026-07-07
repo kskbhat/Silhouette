@@ -26,10 +26,10 @@ plotSilhouette(
 to be used for the horizontal reference line indicating the average
 silhouette width. Accepts standard ggplot2 linetype values, such as:
 \itemize{
-\item Character: \code{"solid"}, \code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, \code{"twodash"}.
-\item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+  \item Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, `"twodash"`.
+  \item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
 }
-Defaults to \code{"dashed"}.}
+Defaults to `"dashed"`.}
 
 \item{...}{Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}).}
 }
@@ -44,12 +44,12 @@ The Silhouette plot displays the silhouette width (\code{sil_width}) for each ob
 
 This function replica of S3 method for objects of class \code{"Silhouette"}, typically produced by the \code{\link{Silhouette}}, \code{\link{softSilhouette}}, , \code{\link{dbSilhouette}} or , \code{\link{cerSilhouette}} functions in this package. It also supports objects of the following classes, with silhouette information extracted from their respective component:
 \itemize{
-\item \code{"eclust"}: Produced by \code{\link[factoextra]{eclust}} from the \pkg{factoextra} package.
-\item \code{"hcut"}: Produced by \code{\link[factoextra]{hcut}} from the \pkg{factoextra} package.
-\item \code{"pam"}: Produced by \code{\link[cluster]{pam}} from the \pkg{cluster} package.
-\item \code{"clara"}: Produced by \code{\link[cluster]{clara}} from the \pkg{cluster} package.
-\item \code{"fanny"}: Produced by \code{\link[cluster]{fanny}} from the \pkg{cluster} package.
-\item \code{"silhouette"}: Produced by \code{\link[cluster]{silhouette}} from the \pkg{cluster} package or \code{\link[drclust]{silhouette}} from the \pkg{drclust} package.
+  \item \code{"eclust"}: Produced by \code{\link[factoextra]{eclust}} from the \pkg{factoextra} package.
+  \item \code{"hcut"}: Produced by \code{\link[factoextra]{hcut}} from the \pkg{factoextra} package.
+  \item \code{"pam"}: Produced by \code{\link[cluster]{pam}} from the \pkg{cluster} package.
+  \item \code{"clara"}: Produced by \code{\link[cluster]{clara}} from the \pkg{cluster} package.
+  \item \code{"fanny"}: Produced by \code{\link[cluster]{fanny}} from the \pkg{cluster} package.
+  \item \code{"silhouette"}: Produced by \code{\link[cluster]{silhouette}} from the \pkg{cluster} package or \code{\link[drclust]{silhouette}} from the \pkg{drclust} package.
 }
 For these classes (\code{"eclust"}, \code{"hcut"}, \code{"pam"}, \code{"clara"}, \code{"fanny"}, \code{"silhouette"}), users should explicitly call \code{plotSilhouette()} (e.g., \code{plotSilhouette(pam_result)}) to ensure the correct method is used, as the generic \code{plot()} may not dispatch to this function for these objects.
 }

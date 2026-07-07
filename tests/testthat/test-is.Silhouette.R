@@ -370,3 +370,14 @@ test_that("is.Silhouette() handles edge cases gracefully", {
   )
   expect_true(is.Silhouette(na_sil, strict = TRUE))
 })
+
+test_that("is.Silhouette() handles errors by returning FALSE", {
+  # Define a class that throws an error when any element is accessed via `$`
+  `$.error_class` <- function(x, name) {
+    stop("Forced error on member access")
+  }
+  err_obj <- structure(list(), class = c("error_class", "Silhouette"))
+  
+  # This should trigger the tryCatch error block in is.Silhouette
+  expect_false(is.Silhouette(err_obj, strict = TRUE))
+})

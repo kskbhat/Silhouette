@@ -141,21 +141,22 @@ cerSilhouette <- function(prob_matrix,
 
   average <- match.arg(average)
 
-  maxn <- function(x, n) order(x, decreasing = TRUE)[n]
+  n_row <- nrow(prob_matrix)
+  row_idx <- seq_len(n_row)
 
-  cluster <- apply(prob_matrix, 1, maxn, n = 1)
-  neighbor <- apply(prob_matrix, 1, maxn, n = 2)
+  cluster <- max.col(prob_matrix, ties.method = "first")
+  prob_masked <- prob_matrix
+  prob_masked[cbind(row_idx, cluster)] <- -Inf
+  neighbor <- max.col(prob_masked, ties.method = "first")
 
-  # Initialize silhouette width vector
-  sil_width <- numeric(nrow(prob_matrix))
-  weight <- numeric(nrow(prob_matrix))
+  prob_cluster <- prob_matrix[cbind(row_idx, cluster)]
+  prob_neighbor <- prob_matrix[cbind(row_idx, neighbor)]
 
-  # Calculate silhouette width and weights
-  for (i in seq_len(nrow(prob_matrix))) {
-    sil_width[i] <- prob_matrix[i, cluster[i]]
-    if (average == "fuzzy") {
-      weight[i] <- (prob_matrix[i, cluster[i]] - prob_matrix[i, neighbor[i]])^a # weight
-    }
+  sil_width <- prob_cluster
+  if (average == "fuzzy") {
+    weight <- (prob_cluster - prob_neighbor)^a
+  } else {
+    weight <- numeric(n_row)
   }
 
   if (average == "fuzzy") {

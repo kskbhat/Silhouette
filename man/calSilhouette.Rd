@@ -36,10 +36,10 @@ Defaults to \code{NULL}.}
 \value{
 A data frame with the following columns:
 \describe{
-\item{Method}{Character vector of method names}
-\item{Crisp_Silhouette}{Numeric vector of crisp (unweighted) average silhouette values}
-\item{Fuzzy_Silhouette}{Numeric vector of fuzzy (weighted) average silhouette values (NA if \code{prob_matrix} is not available for the method)}
-\item{Median_Silhouette}{Numeric vector of median silhouette values}
+  \item{Method}{Character vector of method names}
+  \item{Crisp_Silhouette}{Numeric vector of crisp (unweighted) average silhouette values}
+  \item{Fuzzy_Silhouette}{Numeric vector of fuzzy (weighted) average silhouette values (NA if \code{prob_matrix} is not available for the method)}
+  \item{Median_Silhouette}{Numeric vector of median silhouette values}
 }
 }
 \description{
@@ -48,22 +48,22 @@ Computes all possible silhouette indices from available functions in the package
 \details{
 This function computes all available silhouette methods from the package and returns a comparative summary. The methods included depend on the available input matrices:
 
-\strong{If \code{prox_matrix} is available:}
+**If \code{prox_matrix} is available:**
 \itemize{
-\item \code{medoid} - Medoid-based silhouette using \code{\link{Silhouette}}
-\item \code{pac} - PAC-based silhouette using \code{\link{Silhouette}}
+  \item \code{medoid} - Medoid-based silhouette using \code{\link{Silhouette}}
+  \item \code{pac} - PAC-based silhouette using \code{\link{Silhouette}}
 }
 
-\strong{If \code{prob_matrix} is available:}
+**If \code{prob_matrix} is available:**
 \itemize{
-\item \code{pp_pac} - Posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
-\item \code{pp_medoid} - Posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
-\item \code{nlpp_pac} - Negative log posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
-\item \code{nlpp_medoid} - Negative log posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
-\item \code{pd_pac} - Probability distribution silhouette with PAC method using \code{\link{softSilhouette}}
-\item \code{pd_medoid} - Probability distribution silhouette with Medoid method using \code{\link{softSilhouette}}
-\item \code{cer} - Certainty-based silhouette using \code{\link{cerSilhouette}}
-\item \code{db} - Density-based silhouette using \code{\link{dbSilhouette}}
+  \item \code{pp_pac} - Posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
+  \item \code{pp_medoid} - Posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
+  \item \code{nlpp_pac} - Negative log posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
+  \item \code{nlpp_medoid} - Negative log posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
+  \item \code{pd_pac} - Probability distribution silhouette with PAC method using \code{\link{softSilhouette}}
+  \item \code{pd_medoid} - Probability distribution silhouette with Medoid method using \code{\link{softSilhouette}}
+  \item \code{cer} - Certainty-based silhouette using \code{\link{cerSilhouette}}
+  \item \code{db} - Density-based silhouette using \code{\link{dbSilhouette}}
 }
 
 At least one of \code{prox_matrix} or \code{prob_matrix} must be provided.

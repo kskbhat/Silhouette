@@ -21,9 +21,9 @@ softSilhouette(
 
 \item{prob_type}{Character string specifying the type transformation of membership matrix considered as proximity matrix in \code{prob_matrix}. Options are:
 \describe{
-\item{\code{"pp"}}{Posterior probabilities \eqn{[\gamma_{ik}]_{n \times K}} (non-negative, typically summing to 1 per row), treated as similarities}
-\item{\code{"nlpp"}}{Negative log of posterior probabilities \eqn{[-\ln\gamma_{ik}]_{n \times K}} (non-positive), treated as dissimilarities.}
-\item{\code{"pd"}}{Probability distribution \eqn{[\gamma_{ik}/\pi_{k}]_{n \times K}} (normalized posterior probabilities relative to cluster proportions \eqn{\pi_{k}}), treated as similarities.}
+  \item{\code{"pp"}}{Posterior probabilities \eqn{[\gamma_{ik}]_{n \times K}} (non-negative, typically summing to 1 per row), treated as similarities}
+  \item{\code{"nlpp"}}{Negative log of posterior probabilities \eqn{[-\ln\gamma_{ik}]_{n \times K}} (non-positive), treated as dissimilarities.}
+  \item{\code{"pd"}}{Probability distribution \eqn{[\gamma_{ik}/\pi_{k}]_{n \times K}} (normalized posterior probabilities relative to cluster proportions \eqn{\pi_{k}}), treated as similarities.}
 }
 Defaults to \code{"pp"}.}
 
@@ -32,9 +32,9 @@ Defaults to \code{"pp"}.}
 \item{average}{Character string specifying the method for computing the average silhouette width.
 Options are:
 \itemize{
-\item \code{"crisp"} – unweighted (simple) average.
-\item \code{"fuzzy"} – weighted average based on membership probability differences.
-\item \code{"median"} – median silhouette width across observations.
+  \item \code{"crisp"} – unweighted (simple) average.
+  \item \code{"fuzzy"} – weighted average based on membership probability differences.
+  \item \code{"median"} – median silhouette width across observations.
 }
 Defaults to \code{"crisp"}.}
 
@@ -51,9 +51,9 @@ Defaults to \code{"crisp"}.}
 \value{
 A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 \describe{
-\item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
-\item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
-\item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+  \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
+  \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+  \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 }
 \description{
@@ -64,21 +64,21 @@ Although the silhouette method was originally developed for evaluating clusterin
 
 See \doi{10.1080/23737484.2024.2408534} for more details.
 
-#' If \code{average = "crisp"}, the \strong{crisp silhouette index} is calculated as (\eqn{CS}) is:
+#' If `average = "crisp"`, the **crisp silhouette index** is calculated as (\eqn{CS}) is:
 \deqn{
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 }
 summarizing overall clustering quality.
 
-If \code{average = "fuzzy"} and \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
 with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
-the \strong{fuzzy silhouette index} (\eqn{FS}) is calculated as:
+the **fuzzy silhouette index** (\eqn{FS}) is calculated as:
 \deqn{
   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 }
-where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is \code{weight} and \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
+where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is `weight` and \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
 
-If \code{average = "median"} then median Silhouette is Calculated
+If `average = "median"` then median Silhouette is Calculated
 }
 \examples{
 \donttest{

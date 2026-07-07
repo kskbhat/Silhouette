@@ -178,31 +178,31 @@ test_that("getSilhouette() validates input types", {
   )
 })
 
-# test_that("getSilhouette() validates sil_width range", {
-#   expect_error(
-#     getSilhouette(
-#       cluster = cluster_assignments,
-#       neighbor = neighbor_clusters,
-#       sil_width = c(0.8, 0.7, 0.6, 0.9, 0.5, 1.5),  # Value > 1
-#       proximity_type = "dissimilarity",
-#       method = "medoid",
-#       average = "crisp"
-#     ),
-#     "'sil_width' values must be between -1 and +1"
-#   )
-#
-#   expect_error(
-#     getSilhouette(
-#       cluster = cluster_assignments,
-#       neighbor = neighbor_clusters,
-#       sil_width = c(0.8, 0.7, 0.6, 0.9, 0.5, -1.5),  # Value < -1
-#       proximity_type = "dissimilarity",
-#       method = "medoid",
-#       average = "crisp"
-#     ),
-#     "'sil_width' values must be between -1 and +1"
-#   )
-# })
+test_that("getSilhouette() validates sil_width range", {
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = c(0.8, 0.7, 0.6, 0.9, 0.5, 1.5),  # Value > 1
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "crisp"
+    ),
+    "'sil_width' values must be between -1 and \\+1"
+  )
+
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = c(0.8, 0.7, 0.6, 0.9, 0.5, -1.5),  # Value < -1
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "crisp"
+    ),
+    "'sil_width' values must be between -1 and \\+1"
+  )
+})
 
 test_that("getSilhouette() validates weight range when provided", {
   expect_error(
@@ -229,6 +229,76 @@ test_that("getSilhouette() validates weight range when provided", {
       average = "fuzzy"
     ),
     "between 0 and 1"
+  )
+  
+  # weight wrong length in fuzzy averaging
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = silhouette_widths,
+      weight = c(0.9, 0.8),  # Wrong length
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "fuzzy"
+    ),
+    "same length as 'cluster'"
+  )
+  
+  # weight not numeric in fuzzy averaging
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = silhouette_widths,
+      weight = c("a", "b", "c", "d", "e", "f"),  # Not numeric
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "fuzzy"
+    ),
+    "must be numeric"
+  )
+
+  # weight wrong length in non-fuzzy averaging
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = silhouette_widths,
+      weight = c(0.9, 0.8),  # Wrong length
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "crisp"
+    ),
+    "same length as 'cluster'"
+  )
+
+  # weight not numeric in non-fuzzy averaging
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = silhouette_widths,
+      weight = c("a", "b", "c", "d", "e", "f"),  # Not numeric
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "crisp"
+    ),
+    "must be numeric"
+  )
+
+  # weight out of bounds in non-fuzzy averaging
+  expect_error(
+    getSilhouette(
+      cluster = cluster_assignments,
+      neighbor = neighbor_clusters,
+      sil_width = silhouette_widths,
+      weight = c(0.9, 0.8, 0.7, 0.95, 0.6, 1.5),  # Out of bounds
+      proximity_type = "dissimilarity",
+      method = "medoid",
+      average = "crisp"
+    ),
+    "values must be between 0 and 1"
   )
 })
 

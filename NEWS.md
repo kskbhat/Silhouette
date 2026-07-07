@@ -1,3 +1,12 @@
+# Silhouette 0.9.7 (June 2026)
+
+**Performance Optimizations**
+
+- Fully vectorized core silhouette computation algorithms (`Silhouette`, `dbSilhouette`, `cerSilhouette`).
+- Replaced slow row-wise `apply()` and `order()` sorting routines with highly optimized, C-implemented `max.col()` and matrix-based masking.
+- Replaced row-wise `for` loops for calculating silhouette widths and weights with vectorized matrix-index extraction and element-wise arithmetic, yielding dramatic speedups for large datasets.
+- Verified 100% regression-free behavior across all 257 package unit tests.
+
 # Silhouette 0.9.6 (October 2025)
 
 **New Features**

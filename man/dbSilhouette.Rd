@@ -20,9 +20,9 @@ dbSilhouette(
 \item{average}{Character string specifying the method for computing the average silhouette width.
 Options are:
 \itemize{
-\item \code{"crisp"} – unweighted (simple) average.
-\item \code{"fuzzy"} – weighted average based on membership probability differences.
-\item \code{"median"} – median silhouette width across observations.
+  \item \code{"crisp"} – unweighted (simple) average.
+  \item \code{"fuzzy"} – weighted average based on membership probability differences.
+  \item \code{"median"} – median silhouette width across observations.
 }
 Defaults to \code{"median"}.}
 
@@ -39,9 +39,9 @@ Defaults to \code{"median"}.}
 \value{
 A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 \describe{
-\item{proximity_type}{The proximity type used i.e., \code{"similarity"}.}
-\item{method}{The silhouette calculation method used i.e., \code{"db"}.}
-\item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+  \item{proximity_type}{The proximity type used i.e., \code{"similarity"}.}
+  \item{method}{The silhouette calculation method used i.e., \code{"db"}.}
+  \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 }
 \description{
@@ -51,28 +51,28 @@ Computes silhouette widths based on Menardi (2011) density-based method using lo
 Let the posterior probability matrix or cluster membership matrix as
 \deqn{\Gamma = [\gamma_{ik}]_{n \times K},}
 
-The \strong{density-based silhouette width} for observation \eqn{i} is:
+The **density-based silhouette width** for observation \eqn{i} is:
 \deqn{
 \mathrm{DBS}_i =
 \frac{\log\left( \frac{\gamma_{ik}}{\max_{k' \neq k} \gamma_{ik'}} \right)}
 {\max_{j=1,\dots,n} \left| \log\left( \frac{\gamma_{jk}}{\max_{k' \neq k} \gamma_{jk'}} \right) \right|}
 }
 
-#' If \code{average = "crisp"}, the \strong{crisp silhouette index} is calculated as (\eqn{CS}) is:
+#' If `average = "crisp"`, the **crisp silhouette index** is calculated as (\eqn{CS}) is:
 \deqn{
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 }
 summarizing overall clustering quality.
 
-If \code{average = "fuzzy"} and \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
 with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
-the \strong{fuzzy silhouette index} (\eqn{FS}) is calculated as:
+the **fuzzy silhouette index** (\eqn{FS}) is calculated as:
 \deqn{
   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 }
-where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is \code{weight} and \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
+where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is `weight` and \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
 
-If \code{average = "median"} then median Silhouette is Calculated
+If `average = "median"` then median Silhouette is Calculated
 }
 \examples{
 \donttest{

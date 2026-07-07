@@ -41,9 +41,9 @@ Silhouette(
 \item{average}{Character string specifying the method for computing the average silhouette width.
 Options are:
 \itemize{
-\item \code{"crisp"} – unweighted (simple) average.
-\item \code{"fuzzy"} – weighted average based on membership probability differences.
-\item \code{"median"} – median silhouette width across observations.
+  \item \code{"crisp"} – unweighted (simple) average.
+  \item \code{"fuzzy"} – weighted average based on membership probability differences.
+  \item \code{"median"} – median silhouette width across observations.
 }
 Defaults to \code{"crisp"}.}
 
@@ -77,33 +77,33 @@ probabilities. Defaults to \code{NULL}.}
 to be used for the horizontal reference line indicating the average
 silhouette width. Accepts standard ggplot2 linetype values, such as:
 \itemize{
-\item Character: \code{"solid"}, \code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, \code{"twodash"}.
-\item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+  \item Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, `"twodash"`.
+  \item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
 }
-Defaults to \code{"dashed"}.}
+Defaults to `"dashed"`.}
 
 \item{object}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}},  \code{\link{dbSilhouette}}, and  \code{\link{cerSilhouette}} function.}
 }
 \value{
 A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 \describe{
-\item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
-\item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
-\item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
+  \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
+  \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+  \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 }
 
 Further,  \code{summary} returns a list containing:
 \itemize{
-\item \code{clus.avg.widths}: A named numeric vector of average silhouette widths per cluster.
-\item \code{avg.width}: The overall average silhouette width.
-\item \code{sil.sum}: A data frame with columns \code{cluster}, \code{size}, and \code{avg.sil.width} summarizing cluster sizes and average silhouette widths.
+  \item \code{clus.avg.widths}: A named numeric vector of average silhouette widths per cluster.
+  \item \code{avg.width}: The overall average silhouette width.
+  \item \code{sil.sum}: A data frame with columns \code{cluster}, \code{size}, and \code{avg.sil.width} summarizing cluster sizes and average silhouette widths.
 }
 }
 \description{
 Computes the silhouette width for each observation based on clustering results, measuring how similar an observation is to its own cluster compared to nearest neighbor cluster. The silhouette width ranges from -1 to 1, where higher values indicate better cluster cohesion and separation.
 }
 \details{
-The \code{Silhouette} function implements the Simplified Silhouette method introduced by Van der Laan, Pollard, & Bryan (2003), which adapts and generalizes the classic silhouette method of Rousseeuw (1987).
+The `Silhouette` function implements the Simplified Silhouette method introduced by Van der Laan, Pollard, & Bryan (2003), which adapts and generalizes the classic silhouette method of Rousseeuw (1987).
 
 Clustering quality is evaluated using a proximity matrix, denoted as
 \eqn{\Delta = [\delta_{ik}]_{n \times K}} for dissimilarity measures or
@@ -114,49 +114,43 @@ while \eqn{\delta'_{ik}} represents similarity values.
 
 The silhouette width \eqn{S(x_i)} for observation \eqn{i} depends on the proximity type:
 
-For \strong{dissimilarity} measures:
+For **dissimilarity** measures:
 \deqn{
   S(x_i) = \frac{ \min_{k' \neq k} \delta_{ik'} - \delta_{ik} }{ N(x_i) }
 }
-For \strong{similarity} measures:
+For **similarity** measures:
 \deqn{
   S(x_i) = \frac{ \delta'_{ik} - \max_{k' \neq k} \delta'_{ik'} }{ N(x_i) }
 }
 where \eqn{N(x_i)} is a normalizing factor defined by the method.
 
-\strong{Choice of method:}
-The normalizer \eqn{N(x_i)} is selected according to the \code{method} argument. The method names reference their origins but may be used with any proximity matrix, not exclusively certain clustering algorithms:
-\itemize{
-\item For \code{medoid} (Van der Laan et al., 2003):
-\itemize{
-\item Dissimilarity: \eqn{\max(\delta_{ik}, \min_{k' \neq k} \delta_{ik'})}
-\item Similarity:    \eqn{\max(\delta'_{ik}, \max_{k' \neq k} \delta'_{ik'})}
-}
-\item For \code{pac} (Raymaekers & Rousseeuw, 2022):
-\itemize{
-\item Dissimilarity: \eqn{\delta_{ik} + \min_{k' \neq k} \delta_{ik'}}
-\item Similarity:    \eqn{\delta'_{ik} + \max_{k' \neq k} \delta'_{ik'}}
-}
-}
+**Choice of method:**
+The normalizer \eqn{N(x_i)} is selected according to the `method` argument. The method names reference their origins but may be used with any proximity matrix, not exclusively certain clustering algorithms:
+- For `medoid` (Van der Laan et al., 2003):
+  - Dissimilarity: \eqn{\max(\delta_{ik}, \min_{k' \neq k} \delta_{ik'})}
+  - Similarity:    \eqn{\max(\delta'_{ik}, \max_{k' \neq k} \delta'_{ik'})}
+- For `pac` (Raymaekers & Rousseeuw, 2022):
+  - Dissimilarity: \eqn{\delta_{ik} + \min_{k' \neq k} \delta_{ik'}}
+  - Similarity:    \eqn{\delta'_{ik} + \max_{k' \neq k} \delta'_{ik'}}
 
-\strong{Note:}
-The \code{"medoid"} and \code{"pac"} options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from \strong{classification algorithms}. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.
+**Note:**
+The `"medoid"` and `"pac"` options reflect the normalization formula—not a requirement to use the PAM algorithm or posterior/ensemble methods—and are general scoring approaches. These methods can be applied to any suitable proximity matrix, including proximity, similarity, or dissimilarity matrices derived from **classification algorithms**. This flexibility means silhouette indices may be computed to assess group separation when clusters or groups are formed from classification-derived proximities, not only from unsupervised clustering.
 
-If \code{average = "crisp"}, the \strong{crisp silhouette index} is calculated as (\eqn{CS}) is:
+If `average = "crisp"`, the **crisp silhouette index** is calculated as (\eqn{CS}) is:
 \deqn{
   CS = \frac{1}{n} \sum_{i=1}^{n} S(x_i)
 }
 summarizing overall clustering quality.
 
-If \code{average = "fuzzy"} and \code{prob_matrix} is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
+If `average = "fuzzy"` and `prob_matrix` is provided, denoted as \eqn{\Gamma = [\gamma_{ik}]_{n \times K}},
 with \eqn{\gamma_{ik}} representing the probability of observation \eqn{i} belonging to cluster \eqn{k},
-the \strong{fuzzy silhouette index} (\eqn{FS}) is calculated as:
+the **fuzzy silhouette index** (\eqn{FS}) is calculated as:
 \deqn{
   FS = \frac{\sum_{i=1}^{n}  w_i  S(x_i) }{\sum_{i=1}^{n}  w_i}
 }
-where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is \code{weight} and \eqn{\alpha} (the \code{a} argument) controls the emphasis on confident assignments.
+where \eqn{w_i = \sum_{i=1}^{n} \left( \gamma_{ik} - \max_{k' \neq k} \gamma_{ik'} \right)^{\alpha}} is `weight` and \eqn{\alpha} (the `a` argument) controls the emphasis on confident assignments.
 
-If \code{average = "median"} then median Silhouette is Calculated
+If `average = "median"` then median Silhouette is Calculated
 }
 \examples{
 # Standard silhouette with k-means on iris dataset

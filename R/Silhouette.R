@@ -221,48 +221,52 @@ Silhouette <- function(prox_matrix,
     stop("a must be a positive numeric value.")
   }
 
-  maxn <- function(x, n) order(x, decreasing = TRUE)[n]
-  minn <- function(x, n) order(x, decreasing = FALSE)[n]
-
-  if(is.null(prob_matrix)){
-    if (proximity_type == "similarity") {
-      cluster <- apply(prox_matrix, 1, maxn, n = 1)
-      neighbor <- apply(prox_matrix, 1, maxn, n = 2)
-    } else {
-      cluster <- apply(prox_matrix, 1, minn, n = 1)
-      neighbor <- apply(prox_matrix, 1, minn, n = 2)
-    }
-  } else {
-    cluster <- apply(prob_matrix, 1, maxn, n = 1)
-    neighbor <- apply(prob_matrix, 1, maxn, n = 2)
-  }
-
-  sil_width <- numeric(nrow(prox_matrix))
-  weight <- numeric(nrow(prox_matrix))
-
-  for (i in seq_len(nrow(prox_matrix))) {
-    if (proximity_type == "similarity") {
-      if (method == "pac") {
-        sil_width[i] <- (prox_matrix[i, cluster[i]] - prox_matrix[i, neighbor[i]]) / (prox_matrix[i, cluster[i]] + prox_matrix[i, neighbor[i]])
-      } else {
-        sil_width[i] <- (prox_matrix[i, cluster[i]] - prox_matrix[i, neighbor[i]]) / max(prox_matrix[i, cluster[i]], prox_matrix[i, neighbor[i]])
-      }
-    } else {
-      if (method == "pac") {
-        sil_width[i] <- (prox_matrix[i, neighbor[i]] - prox_matrix[i, cluster[i]]) / (prox_matrix[i, cluster[i]] + prox_matrix[i, neighbor[i]])
-      } else {
-        sil_width[i] <- (prox_matrix[i, neighbor[i]] - prox_matrix[i, cluster[i]]) / max(prox_matrix[i, cluster[i]], prox_matrix[i, neighbor[i]])
-      }
-    }
-    if (!is.null(prob_matrix)) {
-      weight[i] <- (prob_matrix[i, cluster[i]] - prob_matrix[i, neighbor[i]])^a
-    }
-  }
+  n_row <- nrow(prox_matrix)
+  row_idx <- seq_len(n_row)
 
   if (is.null(prob_matrix)) {
-    widths <- data.frame(cluster = cluster, neighbor = neighbor, sil_width = sil_width)
+    if (proximity_type == "similarity") {
+      cluster <- max.col(prox_matrix, ties.method = "first")
+      prox_masked <- prox_matrix
+      prox_masked[cbind(row_idx, cluster)] <- -Inf
+      neighbor <- max.col(prox_masked, ties.method = "first")
+    } else {
+      cluster <- max.col(-prox_matrix, ties.method = "first")
+      prox_masked <- prox_matrix
+      prox_masked[cbind(row_idx, cluster)] <- Inf
+      neighbor <- max.col(-prox_masked, ties.method = "first")
+    }
   } else {
+    cluster <- max.col(prob_matrix, ties.method = "first")
+    prob_masked <- prob_matrix
+    prob_masked[cbind(row_idx, cluster)] <- -Inf
+    neighbor <- max.col(prob_masked, ties.method = "first")
+  }
+
+  val_cluster <- prox_matrix[cbind(row_idx, cluster)]
+  val_neighbor <- prox_matrix[cbind(row_idx, neighbor)]
+
+  if (proximity_type == "similarity") {
+    if (method == "pac") {
+      sil_width <- (val_cluster - val_neighbor) / (val_cluster + val_neighbor)
+    } else {
+      sil_width <- (val_cluster - val_neighbor) / pmax(val_cluster, val_neighbor)
+    }
+  } else {
+    if (method == "pac") {
+      sil_width <- (val_neighbor - val_cluster) / (val_cluster + val_neighbor)
+    } else {
+      sil_width <- (val_neighbor - val_cluster) / pmax(val_cluster, val_neighbor)
+    }
+  }
+
+  if (!is.null(prob_matrix)) {
+    prob_cluster <- prob_matrix[cbind(row_idx, cluster)]
+    prob_neighbor <- prob_matrix[cbind(row_idx, neighbor)]
+    weight <- (prob_cluster - prob_neighbor)^a
     widths <- data.frame(cluster = cluster, neighbor = neighbor, weight = weight, sil_width = sil_width)
+  } else {
+    widths <- data.frame(cluster = cluster, neighbor = neighbor, sil_width = sil_width)
   }
 
   original_name <- NULL

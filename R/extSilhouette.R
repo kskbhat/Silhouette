@@ -1,8 +1,6 @@
 #' Calculate Extended Silhouette Width for Multi-Way Clustering
 #'
 #' @description
-#' `r lifecycle::badge('experimental')`
-#'
 #' Computes an extended silhouette width for multi-way clustering (e.g., biclustering, triclustering, or n-mode tensor clustering) by combining silhouette widths from a list of Silhouette objects, each representing one mode of clustering. The extended silhouette width is the weighted average of the average silhouette widths from each mode, weighted by the number of observations in each mode's silhouette analysis. The output is an object of class \code{extSilhouette}.
 #'
 #' @param sil_list A list of objects of class \code{"Silhouette"}, typically the output of \code{\link{Silhouette}} or \code{\link{softSilhouette}}, where each object represents the silhouette analysis for one mode of multi-way clustering (e.g., rows, columns, or other dimensions in biclustering or tensor clustering).
@@ -29,31 +27,23 @@
 #' Bhat Kapu, S., & Kiruthika, C. (2025). Block Probabilistic Distance Clustering: A Unified Framework and Evaluation. PREPRINT (Version 1) available at Research Square. \doi{10.21203/rs.3.rs-6973596/v1}
 #'
 #' @examples
-#' # Example using iris dataset with two modes
+#' # Example using iris dataset
 #' data(iris)
-#' \donttest{
-#' if (requireNamespace("blockcluster", quietly = TRUE)) {
-#'   library(blockcluster)
-#'   result <- coclusterContinuous(
-#'     as.matrix(iris[, -5]),
-#'     nbcocluster = c(3, 2)
-#'   )
-#' } else {
-#'   message("Install 'blockcluster': install.packages('blockcluster')")
-#' }
+#' if (requireNamespace("mclust", quietly = TRUE)) {
+#'   library(mclust)
 #'
-#' if (requireNamespace("blockcluster", quietly = TRUE)) {
-#'   sil_mode1 <- softSilhouette(
-#'     prob_matrix = result@rowposteriorprob,
-#'     method = "pac")
-#'   sil_mode2 <- softSilhouette(
-#'     prob_matrix = result@colposteriorprob,
-#'     method = "pac"
-#'     )
+#'   # Mode 1: Cluster rows (150 observations) into 3 clusters
+#'   row_clus <- mclust::Mclust(iris[, -5], G = 3, verbose = FALSE)
+#'   sil_row <- softSilhouette(prob_matrix = row_clus$z, method = "pac")
 #'
-#'   # Extended silhouette
-#'   ext_sil <- extSilhouette(list(sil_mode1, sil_mode2),print.summary = TRUE)
-#' }
+#'   # Mode 2: Cluster columns/variables (4 dimensions) into 2 clusters
+#'   col_clus <- mclust::Mclust(t(iris[, -5]), G = 2, verbose = FALSE)
+#'   sil_col <- softSilhouette(prob_matrix = col_clus$z, method = "pac")
+#'
+#'   # Compute Extended silhouette across both modes
+#'   ext_sil <- extSilhouette(list(sil_row, sil_col),
+#'                            dim_names = c("Rows", "Columns"),
+#'                            print.summary = TRUE)
 #' }
 #' @import lifecycle
 #' @export

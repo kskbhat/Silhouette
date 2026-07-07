@@ -16,12 +16,12 @@ extSilhouette(sil_list, dim_names = NULL, print.summary = FALSE)
 \value{
 A list of class \code{"extSilhouette"} with the following components:
 \describe{
-\item{ext_sil_width}{A numeric scalar representing the extended silhouette width.}
-\item{dim_table}{A data frame with columns \code{dimension} (e.g., "Mode 1", "Mode 2"), \code{n_obs} (number of observations), and \code{avg_sil_width} (average silhouette width for each mode).}
+  \item{ext_sil_width}{A numeric scalar representing the extended silhouette width.}
+  \item{dim_table}{A data frame with columns \code{dimension} (e.g., "Mode 1", "Mode 2"), \code{n_obs} (number of observations), and \code{avg_sil_width} (average silhouette width for each mode).}
 }
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+`r lifecycle::badge('experimental')`
 
 Computes an extended silhouette width for multi-way clustering (e.g., biclustering, triclustering, or n-mode tensor clustering) by combining silhouette widths from a list of Silhouette objects, each representing one mode of clustering. The extended silhouette width is the weighted average of the average silhouette widths from each mode, weighted by the number of observations in each mode's silhouette analysis. The output is an object of class \code{extSilhouette}.
 }
@@ -29,35 +29,24 @@ Computes an extended silhouette width for multi-way clustering (e.g., biclusteri
 The extended silhouette width is computed as:
 \deqn{ ExS = \frac{ \sum (n_i \cdot w_i) }{ \sum n_i } }
 where \eqn{n_i} is the number of observations in mode \eqn{i} (derived from \code{nrow(x$widths)}), and \eqn{w_i} is the average silhouette width for that mode (from \code{x$avg.width}).
-Each \code{Silhouette} object in \code{sil_list} must contain a non-empty \code{widths} data frame and a numeric \code{avg.width} value. Modes with zero observations (\eqn{n_i = 0}) are not allowed, as they would result in an undefined weighted average. For consistency make sure all \code{Silhouette} objects derived from same \code{method} and arguments.
+Each \code{Silhouette} object in \code{sil_list} must contain a non-empty \code{widths} data frame and a numeric \code{avg.width} value. Modes with zero observations (\eqn{n_i = 0}) are not allowed, as they would result in an undefined weighted average. For consistency make sure all \code{Silhouette} objects derived from same `method` and arguments.
 }
 \examples{
-# Example using iris dataset with two modes
-data(iris)
-\donttest{
-if (requireNamespace("blockcluster", quietly = TRUE)) {
-  library(blockcluster)
-  result <- coclusterContinuous(
-    as.matrix(iris[, -5]),
-    nbcocluster = c(3, 2)
-  )
-} else {
-  message("Install 'blockcluster': install.packages('blockcluster')")
-}
+# Example using mock two-mode cluster membership matrices
+# Mode 1: 150 observations, 3 clusters
+set.seed(123)
+prob_mode1 <- matrix(runif(150 * 3), nrow = 150, ncol = 3)
+prob_mode1 <- prob_mode1 / rowSums(prob_mode1)
 
-if (requireNamespace("blockcluster", quietly = TRUE)) {
-  sil_mode1 <- softSilhouette(
-    prob_matrix = result@rowposteriorprob,
-    method = "pac")
-  sil_mode2 <- softSilhouette(
-    prob_matrix = result@colposteriorprob,
-    method = "pac"
-    )
+# Mode 2: 4 variables, 2 clusters
+prob_mode2 <- matrix(runif(4 * 2), nrow = 4, ncol = 2)
+prob_mode2 <- prob_mode2 / rowSums(prob_mode2)
 
-  # Extended silhouette
-  ext_sil <- extSilhouette(list(sil_mode1, sil_mode2),print.summary = TRUE)
-}
-}
+sil_mode1 <- softSilhouette(prob_matrix = prob_mode1, method = "pac")
+sil_mode2 <- softSilhouette(prob_matrix = prob_mode2, method = "pac")
+
+# Compute Extended silhouette
+ext_sil <- extSilhouette(list(sil_mode1, sil_mode2), print.summary = TRUE)
 }
 \references{
 Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \doi{10.1007/s00357-008-9005-9}
