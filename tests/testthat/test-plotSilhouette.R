@@ -142,3 +142,34 @@ test_that("plotSilhouette() works with additional ggplot parameters", {
   p <- plotSilhouette(sil, title = "Custom Title", xlab = "Custom X Label")
   expect_s3_class(p, "ggplot")
 })
+
+test_that("plotSilhouette() works with fuzzy and median Silhouette objects", {
+  data(iris)
+  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
+  
+  # Fuzzy silhouette plot
+  sil_fuzzy <- softSilhouette(prob_matrix = fcm_out$u, average = "fuzzy", print.summary = FALSE)
+  p_fuzzy <- plotSilhouette(sil_fuzzy)
+  expect_s3_class(p_fuzzy, "ggplot")
+  
+  # Median silhouette plot
+  sil_median <- softSilhouette(prob_matrix = fcm_out$u, average = "median", print.summary = FALSE)
+  p_median <- plotSilhouette(sil_median)
+  expect_s3_class(p_median, "ggplot")
+})
+
+test_that("plotSilhouette() checks for invalid 'silhouette' class objects", {
+  # 1. Test when silhouette object is not a matrix or data frame
+  invalid_sil_obj <- structure(list(a = 1, b = 2), class = "silhouette")
+  expect_error(
+    plotSilhouette(invalid_sil_obj),
+    "silhouette object must be a matrix or data.frame"
+  )
+  
+  # 2. Test when silhouette object has fewer than 3 columns
+  small_sil_obj <- structure(matrix(1:4, ncol = 2), class = "silhouette")
+  expect_error(
+    plotSilhouette(small_sil_obj),
+    "silhouette object must have at least 3 columns"
+  )
+})

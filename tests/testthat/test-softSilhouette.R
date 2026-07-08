@@ -224,7 +224,6 @@ test_that("softSilhouette() works with a = 1", {
   expect_s3_class(result, "Silhouette")
 })
 
-# FIXME
 test_that("softSilhouette() works with a = 10", {
   data(iris)
   fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
@@ -237,4 +236,78 @@ test_that("softSilhouette() works with a = 10", {
     print.summary = FALSE
   )
   expect_s3_class(result, "Silhouette")
+})
+
+test_that("softSilhouette() works with print.summary = TRUE for all average methods", {
+  data(iris)
+  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
+  
+  # Crisp average
+  expect_message(
+    softSilhouette(prob_matrix = fcm_out$u, average = "crisp", print.summary = TRUE),
+    "Average crisp similarity pac silhouette"
+  )
+  
+  # Fuzzy average
+  expect_message(
+    softSilhouette(prob_matrix = fcm_out$u, average = "fuzzy", print.summary = TRUE),
+    "Average fuzzy similarity pac silhouette"
+  )
+  
+  # Median average
+  expect_message(
+    softSilhouette(prob_matrix = fcm_out$u, average = "median", print.summary = TRUE),
+    "Median similarity pac silhouette"
+  )
+})
+
+test_that("softSilhouette() clust_fun extraction and validations", {
+  df_dummy <- data.frame(x = rnorm(10), y = rnorm(10))
+  
+  # S3 function error
+  expect_error(
+    softSilhouette("u", clust_fun = function(data) { stop("Clustering failed") }, data = df_dummy),
+    "Error in clustering function"
+  )
+  
+  # Extracted not numeric/matrix
+  expect_error(
+    softSilhouette("u", clust_fun = function(data) { list(u = "not_numeric") }, data = df_dummy),
+    "Extracted prob_matrix must be a numeric matrix"
+  )
+  
+  # Extracted < 2 columns
+  expect_error(
+    softSilhouette("u", clust_fun = function(data) { list(u = matrix(1:10, ncol = 1)) }, data = df_dummy),
+    "Extracted prob_matrix must have at least two columns"
+  )
+  
+  # S4 slot missing and present
+  setClass("MockClustS4Soft", slots = list(u = "matrix"))
+  mock_s4_fun <- function(data) { new("MockClustS4Soft", u = matrix(runif(20), ncol = 2)) }
+  expect_error(
+    softSilhouette("missing_slot", clust_fun = mock_s4_fun, data = df_dummy),
+    "Slot 'missing_slot' not found"
+  )
+  
+  # Column sums in prob_matrix must be non-zero for pd
+  zero_col_mat <- matrix(c(1, 1, 0, 0), nrow = 2, ncol = 2) # row sums are 1, second column sum is 0
+  expect_error(
+    softSilhouette(prob_matrix = zero_col_mat, prob_type = "pd"),
+    "Column sums in prob_matrix must be non-zero"
+  )
+})
+
+test_that("softSilhouette() S4 slot success and generic fallback", {
+  # Successful S4 slot lookup (hits line 129 slot extraction branch)
+  setClass("MockClustS4SuccessSoft", slots = list(u = "matrix"))
+  mock_s4_success <- function(data) { new("MockClustS4SuccessSoft", u = matrix(c(0.7, 0.3, 0.2, 0.8), ncol = 2, byrow = TRUE)) }
+  res <- softSilhouette("u", clust_fun = mock_s4_success, data = iris)
+  expect_s3_class(res, "Silhouette")
+  
+  # Generic fallback (hits line 121)
+  expect_error(
+    softSilhouette("u", clust_fun = "show", object = matrix(1:4, 2, 2)),
+    "not found"
+  )
 })

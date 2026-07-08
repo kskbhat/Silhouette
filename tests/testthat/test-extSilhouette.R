@@ -47,13 +47,6 @@ test_that("extSilhouette() errors with non-Silhouette objects", {
   expect_error(extSilhouette(list(1:3, 4:6)), "class 'Silhouette'")
 })
 
-
-# test_that("extSilhouette() errors with zero observations", {
-#   # Create empty Silhouette objects
-#   empty_sil <- structure(data.frame(), class = c("Silhouette", "data.frame"))
-#   expect_error(extSilhouette(list(empty_sil, empty_sil)), "No observations found")
-# })
-
 test_that("extSilhouette() errors with mismatched dim_names length", {
   data(iris)
   fcm_out1 <- ppclust::fcm(iris[, -5], centers = 3)
@@ -66,6 +59,58 @@ test_that("extSilhouette() errors with mismatched dim_names length", {
     extSilhouette(list(sil1, sil2), dim_names = c("OnlyOneName")),
     "Length of dim_names must match the length of sil_list"
   )
+})
+
+test_that("extSilhouette() errors with non-finite average silhouette widths", {
+  # Create a Silhouette object and then modify it to have NaN average width
+  na_sil <- getSilhouette(
+    cluster = c(1, 1),
+    neighbor = c(2, 2),
+    sil_width = c(0.5, 0.5),
+    proximity_type = "dissimilarity",
+    method = "medoid",
+    average = "crisp"
+  )
+  na_sil$sil_width <- c(NaN, NaN)
+  expect_error(
+    extSilhouette(list(na_sil)),
+    "non-finite average silhouette widths"
+  )
+})
+
+test_that("extSilhouette() errors with zero observations", {
+  # Define a subclass and a custom summary method that returns a finite average width
+  # for an empty data frame to bypass the summary.Silhouette NaN calculation
+  summary.EmptySilMock <- function(object, ...) {
+    list(avg.width = 0.5)
+  }
+  registerS3method("summary", "EmptySilMock", summary.EmptySilMock)
+  
+  empty_sil <- structure(
+    data.frame(cluster = integer(0), neighbor = integer(0), sil_width = numeric(0)),
+    class = c("EmptySilMock", "Silhouette", "data.frame"),
+    proximity_type = "dissimilarity",
+    method = "medoid",
+    average = "crisp"
+  )
+  
+  expect_error(
+    extSilhouette(list(empty_sil)),
+    "No observations found in any Silhouette object"
+  )
+})
+
+test_that("extSilhouette() works with print.summary = TRUE", {
+  data(iris)
+  fcm_out1 <- ppclust::fcm(iris[, -5], centers = 3)
+  fcm_out2 <- ppclust::fcm(iris[, -5], centers = 2)
+  sil1 <- softSilhouette(prob_matrix = fcm_out1$u, print.summary = FALSE)
+  sil2 <- softSilhouette(prob_matrix = fcm_out2$u, print.summary = FALSE)
+  
+  # Capture output and check if it printed
+  output <- capture.output(extSilhouette(list(sil1, sil2), print.summary = TRUE))
+  expect_true(length(output) > 0)
+  expect_true(any(grepl("Extended silhouette", output)))
 })
 
 ## 3. Edge case tests

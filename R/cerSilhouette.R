@@ -110,8 +110,6 @@ cerSilhouette <- function(prob_matrix,
     if (is.character(clust_fun)) {
       if (exists(clust_fun, mode = "function", envir = parent.frame())) {
         clust_fun <- get(clust_fun, mode = "function", envir = parent.frame())
-      } else if (isGeneric(clust_fun)) {
-        clust_fun <- getMethod(clust_fun, "ANY")
       } else {
         stop("Function '", clust_fun, "' not found")
       }

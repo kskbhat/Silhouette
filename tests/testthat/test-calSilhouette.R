@@ -139,3 +139,36 @@ test_that("calSilhouette() works with S4 clustering outputs", {
   expect_error(calSilhouette(prob_matrix = "missing_slot", clust_fun = mock_clust_s4, data = df_dummy, k = 2),
                "Slot 'missing_slot' not found")
 })
+
+test_that("calSilhouette() error handling, fallbacks, and safe_compute paths", {
+  # Save original functions
+  orig_db <- Silhouette::dbSilhouette
+  orig_cer <- Silhouette::cerSilhouette
+  
+  # 1. Mock dbSilhouette to return non-Silhouette object (hits line 147)
+  assignInNamespace("dbSilhouette", function(...) "not_a_silhouette", ns = "Silhouette")
+  
+  data(iris)
+  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
+  res <- calSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
+  expect_true(!"db" %in% colnames(res))
+  
+  # 2. Mock dbSilhouette to throw an error with print.summary = TRUE (hits line 151)
+  assignInNamespace("dbSilhouette", function(...) stop("Mock DB error"), ns = "Silhouette")
+  expect_warning(
+    calSilhouette(prob_matrix = fcm_out$u, print.summary = TRUE),
+    "Error computing silhouette: Mock DB error"
+  )
+  
+  # Restore original functions
+  assignInNamespace("dbSilhouette", orig_db, ns = "Silhouette")
+  assignInNamespace("cerSilhouette", orig_cer, ns = "Silhouette")
+})
+
+test_that("calSilhouette() S4 generic fallback", {
+  # Using "show" S4 generic
+  expect_error(
+    calSilhouette("missing_slot", clust_fun = "show", object = matrix(1:4, 2, 2)),
+    "not found"
+  )
+})

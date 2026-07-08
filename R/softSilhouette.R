@@ -117,8 +117,6 @@ softSilhouette <- function(prob_matrix,
     if (is.character(clust_fun)) {
       if (exists(clust_fun, mode = "function", envir = parent.frame())) {
         clust_fun <- get(clust_fun, mode = "function", envir = parent.frame())
-      } else if (isGeneric(clust_fun)) {
-        clust_fun <- getMethod(clust_fun, "ANY")
       } else {
         stop("Function '", clust_fun, "' not found")
       }
@@ -164,8 +162,6 @@ softSilhouette <- function(prob_matrix,
       stop("Column sums in prob_matrix must be non-zero for prob_type = 'pd'.")
     }
     prox_matrix <- prob_matrix / pm_den
-  } else {
-    stop("Unknown prob_type")
   }
 
   sil_args <- list(

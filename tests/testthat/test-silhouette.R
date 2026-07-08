@@ -263,3 +263,94 @@ test_that("Silhouette() falls back to crisp when average = 'fuzzy' but no prob_m
   expect_s3_class(result, "Silhouette")
   expect_equal(attr(result, "average"), "crisp")
 })
+
+test_that("Silhouette() works with print.summary = TRUE for all average methods", {
+  data(iris)
+  km <- kmeans(iris[, -5], centers = 3)
+  dist_mat <- proxy::dist(iris[, -5], km$centers)
+  prob_mat <- matrix(runif(nrow(iris) * 3), nrow = nrow(iris), ncol = 3)
+  prob_mat <- prob_mat / rowSums(prob_mat)
+  
+  # Crisp average
+  expect_message(
+    Silhouette(prox_matrix = dist_mat, average = "crisp", print.summary = TRUE),
+    "Average crisp dissimilarity medoid silhouette"
+  )
+  
+  # Fuzzy average
+  expect_message(
+    Silhouette(prox_matrix = dist_mat, prob_matrix = prob_mat, average = "fuzzy", print.summary = TRUE),
+    "Average fuzzy dissimilarity medoid silhouette"
+  )
+  
+  # Median average
+  expect_message(
+    Silhouette(prox_matrix = dist_mat, average = "median", print.summary = TRUE),
+    "Median dissimilarity medoid silhouette"
+  )
+})
+
+test_that("Silhouette() clust_fun extraction and validations", {
+  df_dummy <- data.frame(x = rnorm(10), y = rnorm(10))
+  
+  # S3 function error
+  expect_error(
+    Silhouette("d", clust_fun = function(data) { stop("Clustering failed") }, data = df_dummy),
+    "Error in clustering function"
+  )
+  
+  # Extracted not numeric/matrix
+  expect_error(
+    Silhouette("d", clust_fun = function(data) { list(d = "not_numeric") }, data = df_dummy),
+    "Extracted prox_matrix must be a numeric matrix"
+  )
+  
+  # Extracted < 2 columns
+  expect_error(
+    Silhouette("d", clust_fun = function(data) { list(d = matrix(1:10, ncol = 1)) }, data = df_dummy),
+    "Extracted prox_matrix must have at least two columns"
+  )
+  
+  # S4 slot missing and present
+  setClass("MockClustS4Sil", slots = list(d = "matrix", u = "matrix"))
+  mock_s4_fun <- function(data) { 
+    new("MockClustS4Sil", 
+        d = matrix(runif(20), ncol = 2),
+        u = matrix(runif(20), ncol = 2)) 
+  }
+  expect_error(
+    Silhouette("missing_slot", clust_fun = mock_s4_fun, data = df_dummy),
+    "Slot 'missing_slot' not found"
+  )
+  expect_error(
+    Silhouette("d", prob_matrix = "missing_slot", clust_fun = mock_s4_fun, data = df_dummy),
+    "Slot 'missing_slot' not found"
+  )
+  
+  # S3 slot missing and present
+  mock_s3_fun <- function(data) {
+    list(d = matrix(runif(20), ncol = 2), u = matrix(runif(20), ncol = 2))
+  }
+  expect_error(
+    Silhouette("d", prob_matrix = "missing_component", clust_fun = mock_s3_fun, data = df_dummy),
+    "Component 'missing_component' not found"
+  )
+})
+
+test_that("Silhouette() S4 slot success and generic fallback", {
+  # Successful S4 slot lookup (hits lines 180 and 186 slot extraction branches)
+  setClass("MockClustS4SuccessSil", slots = list(d = "matrix", u = "matrix"))
+  mock_s4_success <- function(data) { 
+    new("MockClustS4SuccessSil", 
+        d = matrix(runif(20, 0, 1), ncol = 2),
+        u = matrix(c(0.7, 0.3, 0.2, 0.8, 0.6, 0.4, 0.1, 0.9, 0.5, 0.5, 0.3, 0.7, 0.8, 0.2, 0.9, 0.1, 0.4, 0.6, 0.2, 0.8), ncol = 2, byrow = TRUE)) 
+  }
+  res <- Silhouette("d", prob_matrix = "u", clust_fun = mock_s4_success, data = iris, average = "fuzzy", print.summary = FALSE)
+  expect_s3_class(res, "Silhouette")
+  
+  # Generic fallback (hits line 172)
+  expect_error(
+    Silhouette("d", clust_fun = "show", object = matrix(1:4, 2, 2)),
+    "not found"
+  )
+})

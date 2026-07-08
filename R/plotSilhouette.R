@@ -126,12 +126,6 @@ plotSilhouette <- function(x,
   cluster <- sil_width <- original_name <- name <- NULL
 
   if (is.Silhouette(x, strict = TRUE)) {
-    if (!is.matrix(x) && !is.data.frame(x)) {
-      stop("Silhouette object must be a matrix or data.frame")
-    }
-    if (ncol(x) < 3) {
-      stop("Silhouette object must have at least 3 columns")
-    }
     df <- as.data.frame(x, stringsAsFactors = TRUE)
     summary_stats <- summary(x, print.summary = FALSE)
     clus.avg.widths <- summary_stats$clus.avg.widths
@@ -156,12 +150,6 @@ plotSilhouette <- function(x,
     avg.width <- mean(df$sil_width, na.rm = TRUE)
     average <- "crisp"
     method <- NA
-  } else if (inherits(x, c("eclust", "hcut", "pam", "clara", "fanny"))) {
-    df <- as.data.frame(x$silinfo$widths, stringsAsFactors = TRUE)
-    clus.avg.widths <- x$silinfo$clus.avg.widths
-    avg.width <- x$silinfo$avg.width
-    average <- "crisp"
-    method <- class(x)[1]
   } else {
     stop("Don't support an object of class ", paste(class(x), collapse = " "))
   }

@@ -166,3 +166,70 @@ test_that("dbSilhouette() works with a = 10", {
   )
   expect_s3_class(result, "Silhouette")
 })
+
+test_that("dbSilhouette() works with print.summary = TRUE for all average methods", {
+  data(iris)
+  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
+  
+  # Crisp average
+  expect_message(
+    dbSilhouette(prob_matrix = fcm_out$u, average = "crisp", print.summary = TRUE),
+    "Average crisp similarity db silhouette"
+  )
+  
+  # Fuzzy average
+  expect_message(
+    dbSilhouette(prob_matrix = fcm_out$u, average = "fuzzy", print.summary = TRUE),
+    "Average fuzzy similarity db silhouette"
+  )
+  
+  # Median average
+  expect_message(
+    dbSilhouette(prob_matrix = fcm_out$u, average = "median", print.summary = TRUE),
+    "Median similarity db silhouette"
+  )
+})
+
+test_that("dbSilhouette() clust_fun extraction and validations", {
+  df_dummy <- data.frame(x = rnorm(10), y = rnorm(10))
+  
+  # S3 function error
+  expect_error(
+    dbSilhouette("u", clust_fun = function(data) { stop("Clustering failed") }, data = df_dummy),
+    "Error in clustering function"
+  )
+  
+  # Extracted not numeric/matrix
+  expect_error(
+    dbSilhouette("u", clust_fun = function(data) { list(u = "not_numeric") }, data = df_dummy),
+    "Extracted prob_matrix must be a numeric matrix"
+  )
+  
+  # Extracted < 2 columns
+  expect_error(
+    dbSilhouette("u", clust_fun = function(data) { list(u = matrix(1:10, ncol = 1)) }, data = df_dummy),
+    "Extracted prob_matrix must have at least two columns"
+  )
+  
+  # S4 slot missing
+  setClass("MockClustS4Db", slots = list(u = "matrix"))
+  mock_s4_fun <- function(data) { new("MockClustS4Db", u = matrix(runif(20), ncol = 2)) }
+  expect_error(
+    dbSilhouette("missing_slot", clust_fun = mock_s4_fun, data = df_dummy),
+    "Slot 'missing_slot' not found"
+  )
+})
+
+test_that("dbSilhouette() S4 slot success and generic fallback", {
+  # Successful S4 slot lookup (hits line 125 slot extraction branch)
+  setClass("MockClustS4SuccessDb", slots = list(u = "matrix"))
+  mock_s4_success <- function(data) { new("MockClustS4SuccessDb", u = matrix(c(0.7, 0.3, 0.2, 0.8), ncol = 2, byrow = TRUE)) }
+  res <- dbSilhouette("u", clust_fun = mock_s4_success, data = iris)
+  expect_s3_class(res, "Silhouette")
+  
+  # Generic fallback (hits line 117)
+  expect_error(
+    dbSilhouette("u", clust_fun = "show", object = matrix(1:4, 2, 2)),
+    "not found"
+  )
+})
