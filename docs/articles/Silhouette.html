@@ -1347,6 +1347,217 @@ insufficient.</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="comparison-with-existing-r-packages">Comparison with Existing R Packages<a class="anchor" aria-label="anchor" href="#comparison-with-existing-r-packages"></a>
+</h2>
+<p>The table below contrasts the <code>Silhouette</code> package with
+the closest CRAN alternatives, focusing on key algorithmic, statistical,
+and software features. While the classical silhouette is implemented by
+the <code>cluster</code> package (with visualization extensions in
+<code>factoextra</code>), the <code>Silhouette</code> package is unique
+in providing a unified framework for soft/fuzzy, density-based,
+certainty, and multi-way silhouettes with highly scalable <span class="math inline">\(O(nK)\)</span> algorithms.</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">Feature</th>
+<th align="center"><code>cluster</code></th>
+<th align="center"><code>factoextra</code></th>
+<th align="center"><code>fclust</code></th>
+<th align="center"><code>Silhouette</code></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Classical Rousseeuw (<span class="math inline">\(O(n^2)\)</span>)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="even">
+<td align="left">Simplified (medoid) (<span class="math inline">\(O(nK)\)</span>)</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="odd">
+<td align="left">PAC Normaliser</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="even">
+<td align="left">Soft/Fuzzy Silhouette</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="odd">
+<td align="left">Density-Based Silhouette</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="even">
+<td align="left">Certainty Silhouette</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="odd">
+<td align="left">Multi-way aggregation</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="even">
+<td align="left">Linear <span class="math inline">\(O(nK)\)</span>
+memory/time</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="odd">
+<td align="left">S3 class dispatch</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+<tr class="even">
+<td align="left">Unified <code>ggplot2</code> plots</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr class="odd">
+<td align="left">Clustering bridge</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="center">✓</td>
+</tr>
+</tbody>
+</table>
+<div class="section level3">
+<h3 id="key-differences">Key Differences<a class="anchor" aria-label="anchor" href="#key-differences"></a>
+</h3>
+<ul>
+<li>
+<strong>Input Proximity Representation</strong>: The
+<code>Silhouette</code> package consumes an <span class="math inline">\(n \times K\)</span> proximity matrix rather than
+the <span class="math inline">\(n \times n\)</span> <code>dist</code>
+object used by <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette()</a></code>. This reduces memory
+overhead by a factor of <span class="math inline">\(n / K\)</span>.</li>
+<li>
+<strong>Soft Partition Support</strong>: Unlike <code>cluster</code>
+and <code>factoextra</code> (which only support hard partitions), and
+<code>fclust</code> (which does not natively expose soft silhouette
+variants), our package supports four distinct soft silhouette
+variants.</li>
+<li>
+<strong>Unified Plotting</strong>: Every producer function returns a
+customizable <code>ggplot2</code> object.</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="computational-considerations-benchmarks">Computational Considerations &amp; Benchmarks<a class="anchor" aria-label="anchor" href="#computational-considerations-benchmarks"></a>
+</h2>
+<p>The asymptotic complexity of the <code>Silhouette</code> package
+follows from its <span class="math inline">\(n \times K\)</span>
+representation. Every computation scales linearly at <strong><span class="math inline">\(O(nK)\)</span></strong> in both time and memory.
+In contrast, the classical Rousseeuw silhouette requires calculating and
+storing the full <span class="math inline">\(n \times n\)</span>
+dissimilarity matrix, scaling quadratically at <strong><span class="math inline">\(O(n^2)\)</span></strong>.</p>
+<p>To evaluate these scaling claims empirically, we benchmark the
+implementations on synthetic Gaussian data with <span class="math inline">\(K = 5\)</span> clusters and sample sizes scaling
+up to <span class="math inline">\(n = 100,000\)</span>.</p>
+<div class="section level3">
+<h3 id="performance-memory-scaling">Performance &amp; Memory Scaling<a class="anchor" aria-label="anchor" href="#performance-memory-scaling"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+</colgroup>
+<thead><tr class="header">
+<th align="center">Sample Size (<span class="math inline">\(n\)</span>)</th>
+<th align="center">
+<code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette()</a></code> Time (s)</th>
+<th align="center">
+<code><a href="../reference/Silhouette.html">Silhouette()</a></code> Time (s)</th>
+<th align="center">
+<code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette()</a></code> Memory</th>
+<th align="center">
+<code><a href="../reference/Silhouette.html">Silhouette()</a></code> Memory</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="center">1,000</td>
+<td align="center">0.01s</td>
+<td align="center">0.00s</td>
+<td align="center">4.0 MB</td>
+<td align="center">40 KB</td>
+</tr>
+<tr class="even">
+<td align="center">5,000</td>
+<td align="center">0.43s</td>
+<td align="center">0.00s</td>
+<td align="center">100.0 MB</td>
+<td align="center">200 KB</td>
+</tr>
+<tr class="odd">
+<td align="center">10,000</td>
+<td align="center">1.62s</td>
+<td align="center">0.00s</td>
+<td align="center">400.0 MB</td>
+<td align="center">400 KB</td>
+</tr>
+<tr class="even">
+<td align="center">25,000</td>
+<td align="center">OOM</td>
+<td align="center">0.02s</td>
+<td align="center">2.5 GB</td>
+<td align="center">1.0 MB</td>
+</tr>
+<tr class="odd">
+<td align="center">50,000</td>
+<td align="center">OOM</td>
+<td align="center">0.02s</td>
+<td align="center">10.0 GB</td>
+<td align="center">2.0 MB</td>
+</tr>
+<tr class="even">
+<td align="center">100,000</td>
+<td align="center">OOM</td>
+<td align="center">0.01s</td>
+<td align="center">40.0 GB</td>
+<td align="center">4.0 MB</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: <code>OOM</code> indicates that the execution failed due to
+memory exhaustion (Out of Memory).</em></p>
+<p>As shown in the benchmark results, <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette()</a></code>
+fails to compute when <span class="math inline">\(n \ge 25,000\)</span>
+due to the quadratic memory scaling (<span class="math inline">\(O(n^2)\)</span>). The <code>Silhouette</code>
+package, running at <span class="math inline">\(O(nK)\)</span>,
+processes <span class="math inline">\(n=100,000\)</span> observations in
+<strong>less than 0.02 seconds</strong> using only <strong>4.0 MB of
+memory</strong>, resolving the computational bottleneck entirely.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
