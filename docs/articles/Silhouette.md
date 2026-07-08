@@ -29,11 +29,12 @@ methodology as follows:
   needs.
 - Supports multi-way clustering evaluation via extSilhouette() (Schepers
   et al. 2008), enabling silhouette analysis for biclustering or
-  higher-order tensor clustering. Offers customizable and informative
-  visualization with plotSilhouette(), including grayscale options and
-  detailed cluster legends. The package also integrates with clustering
-  results from popular R packages such as cluster (silhouette, pam,
-  clara, fanny) and factoextra (eclust, hcut).
+  higher-order tensor clustering.
+- Offers customizable and informative visualization with
+  plotSilhouette(), including grayscale options and detailed cluster
+  legends. The package also integrates with clustering results from
+  popular R packages such as cluster (silhouette, pam, clara, fanny) and
+  factoextra (eclust, hcut).
 - Includes utility functions for creating and validating Silhouette
   objects directly from components.
 
@@ -96,9 +97,9 @@ such as biclustering or tensor clustering.
 #### a. When the Proximity Matrix is Unknown but Centers of Clusters Are Known
 
 This example demonstrates how to compute silhouette widths for a
-clustering result when you have the proximity (distance) matrix between
-observations and cluster centres unknown. The workflow uses the classic
-`iris` dataset and k-means clustering.
+clustering result when the proximity (distance) matrix between
+observations and cluster centers is unknown. The workflow uses the
+classic `iris` dataset and k-means clustering.
 
 **Steps:**
 
@@ -622,11 +623,11 @@ width versus the number of clusters considered. The integrated use of
 [`Silhouette()`](https://kskbhat.github.io/Silhouette/reference/Silhouette.md),
 [`softSilhouette()`](https://kskbhat.github.io/Silhouette/reference/softSilhouette.md),
 [`cerSilhouette()`](https://kskbhat.github.io/Silhouette/reference/cerSilhouette.md),
-[`dbSilhouette()`](https://kskbhat.github.io/Silhouette/reference/dbSilhouette.md)
-use of `clust_fun` and summary functions makes this analysis
-straightforward and efficient for both crisp and fuzzy clustering
-frameworks. This method encourages a reproducible, objective approach to
-cluster selection in unsupervised analysis.
+[`dbSilhouette()`](https://kskbhat.github.io/Silhouette/reference/dbSilhouette.md),
+`clust_fun`, and summary functions makes this analysis straightforward
+and efficient for both crisp and fuzzy clustering frameworks. This
+method encourages a reproducible, objective approach to cluster
+selection in unsupervised analysis.
 
 ### 4. Visualizing Silhouette Analysis Results with `plotSilhouette()`
 
@@ -1298,8 +1299,9 @@ comparative studies, supports robust cluster validation, and facilitates
 reproducible clustering diagnostics across different algorithms and
 parameter settings. Its integration with the package’s visualization
 capabilities makes it an essential tool for thorough clustering quality
-assessment in both crisp and soft clustering contexts.## 7. Extended
-Silhouette Analysis for Multi-Way Clustering
+assessment in both crisp and soft clustering contexts.
+
+### 7. Extended Silhouette Analysis for Multi-Way Clustering
 
 The
 [`extSilhouette()`](https://kskbhat.github.io/Silhouette/reference/extSilhouette.md)
@@ -1380,10 +1382,12 @@ ext_sil <- extSilhouette(
 **Summary:**  
 The
 [`extSilhouette()`](https://kskbhat.github.io/Silhouette/reference/extSilhouette.md)
-function returns: - The overall extended silhouette width—a weighted
-average summarizing clustering quality across all modes. - A dimension
-statistics table, reporting the number of observations and average
-silhouette width for each mode (e.g., rows, columns).
+function returns:
+
+- The overall extended silhouette width—a weighted average summarizing
+  clustering quality across all modes.
+- A dimension statistics table, reporting the number of observations and
+  average silhouette width for each mode (e.g., rows, columns).
 
 *Note:*  If a distance matrix is available from the output of a
 biclustering algorithm, you can compute individual mode silhouettes

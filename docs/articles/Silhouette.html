@@ -105,12 +105,12 @@ evaluation <span class="citation">(Menardi 2011)</span>.</li>
 allowing flexible averaging methods to suit different clustering
 needs.</li>
 <li>Supports multi-way clustering evaluation via extSilhouette() <span class="citation">(Schepers et al. 2008)</span>, enabling silhouette
-analysis for biclustering or higher-order tensor clustering. Offers
-customizable and informative visualization with plotSilhouette(),
-including grayscale options and detailed cluster legends. The package
-also integrates with clustering results from popular R packages such as
-cluster (silhouette, pam, clara, fanny) and factoextra (eclust,
-hcut).</li>
+analysis for biclustering or higher-order tensor clustering.</li>
+<li>Offers customizable and informative visualization with
+plotSilhouette(), including grayscale options and detailed cluster
+legends. The package also integrates with clustering results from
+popular R packages such as cluster (silhouette, pam, clara, fanny) and
+factoextra (eclust, hcut).</li>
 <li>Includes utility functions for creating and validating Silhouette
 objects directly from components.</li>
 </ul>
@@ -172,9 +172,9 @@ biclustering or tensor clustering.</p>
 Known<a class="anchor" aria-label="anchor" href="#a--when-the-proximity-matrix-is-unknown-but-centers-of-clusters-are-known"></a>
 </h4>
 <p>This example demonstrates how to compute silhouette widths for a
-clustering result when you have the proximity (distance) matrix between
-observations and cluster centres unknown. The workflow uses the classic
-<code>iris</code> dataset and k-means clustering.</p>
+clustering result when the proximity (distance) matrix between
+observations and cluster centers is unknown. The workflow uses the
+classic <code>iris</code> dataset and k-means clustering.</p>
 <p><strong>Steps:</strong></p>
 <ul>
 <li>
@@ -643,8 +643,8 @@ The scree plot provides an intuitive graphical summary to assist in
 choosing the optimal number of clusters by plotting average silhouette
 width versus the number of clusters considered. The integrated use of
 <code><a href="../reference/Silhouette.html">Silhouette()</a></code>, <code><a href="../reference/softSilhouette.html">softSilhouette()</a></code>,
-<code><a href="../reference/cerSilhouette.html">cerSilhouette()</a></code>, <code><a href="../reference/dbSilhouette.html">dbSilhouette()</a></code> use of
-<code>clust_fun</code> and summary functions makes this analysis
+<code><a href="../reference/cerSilhouette.html">cerSilhouette()</a></code>, <code><a href="../reference/dbSilhouette.html">dbSilhouette()</a></code>,
+<code>clust_fun</code>, and summary functions makes this analysis
 straightforward and efficient for both crisp and fuzzy clustering
 frameworks. This method encourages a reproducible, objective approach to
 cluster selection in unsupervised analysis.</p>
@@ -1252,7 +1252,12 @@ validation, and facilitates reproducible clustering diagnostics across
 different algorithms and parameter settings. Its integration with the
 package’s visualization capabilities makes it an essential tool for
 thorough clustering quality assessment in both crisp and soft clustering
-contexts.## 7. Extended Silhouette Analysis for Multi-Way Clustering</p>
+contexts.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="extended-silhouette-analysis-for-multi-way-clustering">7. Extended Silhouette Analysis for Multi-Way Clustering<a class="anchor" aria-label="anchor" href="#extended-silhouette-analysis-for-multi-way-clustering"></a>
+</h3>
 <p>The <code><a href="../reference/extSilhouette.html">extSilhouette()</a></code> function enables silhouette-based
 evaluation for multi-way clustering scenarios, such as biclustering or
 tensor clustering, by aggregating silhouette indices from each mode
@@ -1323,11 +1328,13 @@ dimension names:</li>
 <span><span class="co">#&gt; Available components:</span></span>
 <span><span class="co">#&gt; [1] "ext_sil_width" "dim_table"</span></span></code></pre></div>
 <p><strong>Summary:</strong><br>
-The <code><a href="../reference/extSilhouette.html">extSilhouette()</a></code> function returns: - The overall
-extended silhouette width—a weighted average summarizing clustering
-quality across all modes. - A dimension statistics table, reporting the
-number of observations and average silhouette width for each mode (e.g.,
-rows, columns).</p>
+The <code><a href="../reference/extSilhouette.html">extSilhouette()</a></code> function returns:</p>
+<ul>
+<li>The overall extended silhouette width—a weighted average summarizing
+clustering quality across all modes.</li>
+<li>A dimension statistics table, reporting the number of observations
+and average silhouette width for each mode (e.g., rows, columns).</li>
+</ul>
 <p><em>Note:</em>  If a distance matrix is available from the output of
 a biclustering algorithm, you can compute individual mode silhouettes
 using <code><a href="../reference/Silhouette.html">Silhouette()</a></code>.</p>
@@ -1337,7 +1344,6 @@ biclustering algorithms, facilitating objective model assessment <span class="ci
 <p>This methodology provides a concise and interpretable assessment for
 complex clustering models where conventional one-dimensional indices are
 insufficient.</p>
-</div>
 </div>
 </div>
 <div class="section level2">
