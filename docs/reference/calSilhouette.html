@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Compute Calculate of All Possible Silhouette Methods — calSilhouette"><meta name="description" content="Computes all possible silhouette indices from available functions in the package and returns a summary data frame comparing crisp, fuzzy, and median silhouette values across different methods."><meta property="og:description" content="Computes all possible silhouette indices from available functions in the package and returns a summary data frame comparing crisp, fuzzy, and median silhouette values across different methods."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Compute Calculate of All Possible Silhouette Methods — calSilhouette"><meta name="description" content="Computes all possible silhouette indices from available functions in the package and returns a summary data frame comparing crisp, fuzzy, and median silhouette values across different methods."><meta property="og:description" content="Computes all possible silhouette indices from available functions in the package and returns a summary data frame comparing crisp, fuzzy, and median silhouette values across different methods."><meta property="og:image" content="https://kskbhat.github.io/Silhouette/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Silhouette</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.9.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,13 +103,13 @@ Defaults to <code>NULL</code>.</p></dd>
     <p>A data frame with the following columns:</p><dl><dt>Method</dt>
 <dd><p>Character vector of method names</p></dd>
 
-<dt>Crisp_Silhouette</dt>
+  <dt>Crisp_Silhouette</dt>
 <dd><p>Numeric vector of crisp (unweighted) average silhouette values</p></dd>
 
-<dt>Fuzzy_Silhouette</dt>
+  <dt>Fuzzy_Silhouette</dt>
 <dd><p>Numeric vector of fuzzy (weighted) average silhouette values (NA if <code>prob_matrix</code> is not available for the method)</p></dd>
 
-<dt>Median_Silhouette</dt>
+  <dt>Median_Silhouette</dt>
 <dd><p>Numeric vector of median silhouette values</p></dd>
 
 
@@ -117,9 +117,9 @@ Defaults to <code>NULL</code>.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function computes all available silhouette methods from the package and returns a comparative summary. The methods included depend on the available input matrices:</p>
-<p><strong>If <code>prox_matrix</code> is available:</strong></p><ul><li><p><code>medoid</code> - Medoid-based silhouette using <code><a href="Silhouette.html">Silhouette</a></code></p></li>
+<p>**If <code>prox_matrix</code> is available:**</p><ul><li><p><code>medoid</code> - Medoid-based silhouette using <code><a href="Silhouette.html">Silhouette</a></code></p></li>
 <li><p><code>pac</code> - PAC-based silhouette using <code><a href="Silhouette.html">Silhouette</a></code></p></li>
-</ul><p><strong>If <code>prob_matrix</code> is available:</strong></p><ul><li><p><code>pp_pac</code> - Posterior probabilities silhouette with PAC method using <code><a href="softSilhouette.html">softSilhouette</a></code></p></li>
+</ul><p>**If <code>prob_matrix</code> is available:**</p><ul><li><p><code>pp_pac</code> - Posterior probabilities silhouette with PAC method using <code><a href="softSilhouette.html">softSilhouette</a></code></p></li>
 <li><p><code>pp_medoid</code> - Posterior probabilities silhouette with Medoid method using <code><a href="softSilhouette.html">softSilhouette</a></code></p></li>
 <li><p><code>nlpp_pac</code> - Negative log posterior probabilities silhouette with PAC method using <code><a href="softSilhouette.html">softSilhouette</a></code></p></li>
 <li><p><code>nlpp_medoid</code> - Negative log posterior probabilities silhouette with Medoid method using <code><a href="softSilhouette.html">softSilhouette</a></code></p></li>
@@ -202,7 +202,7 @@ Defaults to <code>NULL</code>.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
