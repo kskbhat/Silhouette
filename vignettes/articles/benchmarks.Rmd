@@ -74,9 +74,14 @@ well-separated components; `cl` was the k-means partition, `C` its centers and
 `U` memberships of fuzzy c-means form. Times are medians over 10 repetitions
 for $n \le 10\,000$ and 3 above, measured with **bench** on one core of an
 Intel Xeon processor at `r sub(".*@ *([0-9.]+) *GHz.*", "\\1", sess$cpu)` GHz
-with 8 GB of memory, running `r sess$R`.
+with 8 GB of memory, running `r sess$R` on
+`r sub('^PRETTY_NAME="?([^"]*)"?$', "\\1", attr(b7, "environment")$os_release)`
+with the reference BLAS and LAPACK. Both versions were timed on the same machine;
+the results store `sessionInfo()`, the BLAS and LAPACK libraries and the tested
+source. The timings are conditional on this design and machine: they show how
+the costs grow with $n$, not a general ranking of the packages.
 
-```{r fig-time, fig.alt = "Log-log line chart of time against n from 1,000 to 200,000. Silhouette 0.9.7 and bluster stay below about 0.2 seconds; Silhouette 0.9.6 rises linearly to about 13 seconds; cluster::silhouette rises quadratically to several seconds at n = 20,000; fclust is the slowest."}
+```{r fig-time, fig.alt = "Log-log line chart of time against n from 1,000 to 200,000. Silhouette 0.9.7 and bluster stay below about 0.2 seconds; Silhouette 0.9.6 rises linearly to about 14 seconds; cluster::silhouette rises quadratically to about 2 seconds at n = 10,000; fclust is the slowest."}
 lab <- c(simplified_crisp = "Silhouette() 0.9.7", approx_bluster = "bluster::approxSilhouette()",
          rousseeuw_cluster = "cluster::silhouette()", fuzzy_fclust = "fclust::SIL.F()")
 d7 <- b7[b7$method %in% names(lab), ]
@@ -114,7 +119,7 @@ process and recording the increase in its peak resident memory. The classical
 computation was attempted at every size in this way.
 
 ```{r tab-time}
-tn <- c(1000, 5000, 10000, 25000, 50000, 1e5, 2e5)
+tn <- c(1000, 5000, 10000, 20000, 25000, 50000, 1e5, 2e5)
 ft <- function(x) ifelse(is.na(x), "", ifelse(x < 0.01, sprintf("%.3f", x),
                   ifelse(x < 1, sprintf("%.2f", x), ifelse(x < 10, sprintf("%.1f", x), sprintf("%.0f", x)))))
 fm <- function(x) ifelse(is.na(x), "", ifelse(x < 1, "<1 MB",
@@ -152,7 +157,8 @@ knitr::kable(data.frame(
 "<1 MB" means that the increase was absorbed by memory the R process had
 already reserved. The last two columns give the size of the input each approach
 stores. On the 8 GB test machine, the classical computation was killed by the
-operating system at $n = 25\,000$, after R had built the 2.5 GB `dist` object;
+operating system at $n = 20\,000$ and $25\,000$, after R had built the 1.6 GB
+and 2.5 GB `dist` objects;
 from $n = 50\,000$ R could not allocate the `dist` object at all. Its storage
 grows with $n^2$, so each doubling of $n$ quadruples it; the size at which it
 fails depends on the machine, but not the growth.
@@ -181,7 +187,8 @@ pct <- function(x) sprintf("%.0f%%", 100 * x)
 ```
 
 We simulated `r reps` data sets for each of six settings with **MixSim**:
-$n = 500$, four Gaussian components, dimension $p \in \{2, 5\}$ and average
+$n = 500$, four elliptical Gaussian components with equal mixing proportions,
+dimension $p \in \{2, 5\}$ and average
 overlap $\bar\omega \in \{0.001, 0.01, 0.05\}$. For each data set we fitted
 k-means for $K = 2, \dots, 8$ and computed the classical average width from
 all pairwise distances, the medoid and PAC averages of `Silhouette()` from the
@@ -230,6 +237,36 @@ classical one, and the
 same $K$ in `r pct(rsb[1])` to `r pct(rsb[2])` of data sets. It achieves this by
 accounting for the spread of each cluster, which the distance to a
 representative ignores.
+
+With `r reps` data sets per setting, these shares carry Monte Carlo error: the
+95% interval around 92% runs from about 81% to 97%, so differences of a few
+points between settings or methods are within simulation variability.
+
+Three further settings, each with `r reps` data sets at overlap 0.01, check less
+regular data: unequal cluster sizes (smallest mixing proportion 0.05), $p = 10$,
+and 5% outliers.
+
+```{r tab-agree-extra}
+ax <- readRDS("data/agreement_extra.rds")
+ax$same_med <- ax$k_rousseeuw == ax$k_medoid
+ax$same_pac <- ax$k_rousseeuw == ax$k_pac
+ax$same_bl <- ax$k_rousseeuw == ax$k_bluster
+axg <- aggregate(cbind(cor_widths, cor_bluster, same_med, same_pac, same_bl) ~ setting,
+                 data = ax, FUN = mean)
+axg <- axg[match(c("unequal", "p10", "outliers"), axg$setting), ]
+knitr::kable(data.frame(
+  setting = c("unequal sizes", "p = 10", "5% outliers"),
+  r_med = sprintf("%.3f", axg$cor_widths), r_bl = sprintf("%.3f", axg$cor_bluster),
+  s_med = pct(axg$same_med), s_pac = pct(axg$same_pac), s_bl = pct(axg$same_bl)),
+  align = "r", col.names = c("setting", "r, medoid", "r, bluster",
+                             "same K, medoid", "same K, PAC", "same K, bluster"),
+  caption = "Agreement with the classical silhouette in the three further settings.")
+```
+
+The conclusions carry over, although agreement on $K$ is lowest for the PAC
+average with outliers. They are limited to what was simulated: Gaussian
+mixtures with four components, $n = 500$, at most ten dimensions, k-means
+partitions and Euclidean distances.
 
 No index recovered the true $K = 4$ reliably in these settings: the classical
 average did so in `r pct(rec["classical"])` of data sets, the medoid and PAC

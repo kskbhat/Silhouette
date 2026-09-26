@@ -5,6 +5,9 @@
 # Usage: Rscript benchmark.R <lib_for_Silhouette> <label> <outfile>
 #   lib_for_Silhouette: library path holding the Silhouette version to test
 #                       ("default" = normal library path)
+# Set the environment variable SILHOUETTE_SOURCE to describe the tested source
+# (for example the git commit), which is stored with the results together with
+# sessionInfo(), the operating system and the BLAS/LAPACK libraries.
 
 args <- commandArgs(trailingOnly = TRUE)
 lib <- if (length(args) >= 1) args[1] else "default"
@@ -80,7 +83,7 @@ out <- do.call(rbind, res)
 # one end-to-end computation, including the classical silhouette above the
 # in-process limit, where it may fail for lack of memory.
 if (label == "0.9.7") {
-  probe_ns <- c(1000, 5000, 10000, 25000, 50000, 1e5, 2e5)
+  probe_ns <- c(1000, 5000, 10000, 20000, 25000, 50000, 1e5, 2e5)
   pr <- list()
   for (n in probe_ns) for (m in c("classical", "silhouette", "bluster")) {
     o <- suppressWarnings(system2("timeout", c("1200", "Rscript", file.path(here, "probe.R"), m, n),
@@ -102,6 +105,15 @@ if (label == "0.9.7") {
     saveRDS(do.call(rbind, pr), sub("\\.rds$", "_probe.rds", outfile))
   }
 }
+# Full record of the computing environment, for reproducibility
+os_release <- if (file.exists("/etc/os-release")) readLines("/etc/os-release") else NA
+attr(out, "session_info") <- sessionInfo()
+attr(out, "environment") <- list(
+  sys_info = Sys.info()[c("sysname", "release", "machine")],
+  os_release = grep("^PRETTY_NAME", os_release, value = TRUE),
+  blas = extSoftVersion()[["BLAS"]], lapack = La_library(), lapack_version = La_version(),
+  silhouette_source = Sys.getenv("SILHOUETTE_SOURCE", unset = NA),
+  date = format(Sys.time(), tz = "UTC", usetz = TRUE))
 attr(out, "session") <- list(R = R.version.string,
                              cpu = system("lscpu | grep 'Model name'", intern = TRUE),
                              ncores = parallel::detectCores(),
