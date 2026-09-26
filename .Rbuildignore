@@ -20,3 +20,5 @@
 ^news$
 ^deps$
 ^tests/testthat/_snaps$
+^vignettes/articles$
+^data-raw$

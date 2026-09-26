@@ -1,0 +1,246 @@
+---
+title: "Silhouettes for soft and model-based clustering"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Silhouettes for soft and model-based clustering}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: references.bib
+---
+
+```{r setup, include = FALSE}
+pkgs <- c("proxy", "ppclust", "mclust")
+ok <- all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE))
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", eval = ok,
+  fig.width = 6.5, fig.height = 3.6, dpi = 96, out.width = "100%"
+)
+```
+
+```{r not-available, echo = FALSE, results = "asis", eval = !ok}
+cat("This vignette needs the suggested packages",
+    paste0("'", pkgs, "'", collapse = ", "),
+    "to run its code. Install them to see the output.")
+```
+
+Soft clustering methods, such as fuzzy c-means, probabilistic distance
+clustering and finite mixture models, give each observation a membership
+probability for every cluster. This vignette shows how **Silhouette** turns
+those probabilities into silhouette widths, how the different widths relate to
+one another, and which comparisons they support.
+
+```{r library}
+library(Silhouette)
+suppressPackageStartupMessages(library(mclust))  # Mclust() needs mclust attached
+X <- as.matrix(iris[, 1:4])
+set.seed(1)
+fm <- ppclust::fcm(X, centers = 3, nstart = 5)   # fuzzy c-means
+gm <- Mclust(X, G = 3, verbose = FALSE)          # Gaussian mixture
+```
+
+# Widths from membership probabilities
+
+Write $\gamma_{ik}$ for the membership of observation $i$ in cluster $k$, with
+$\sum_k \gamma_{ik} = 1$. Each observation is assigned to the cluster $c_i$ with
+the largest membership, and its neighbor $\nu_i$ is the cluster with the second
+largest. `softSilhouette()` treats a transformation of the memberships as a
+proximity matrix and applies the medoid or PAC width to it
+[@bhatkapu2024density]:
+
+| `prob_type` | Proximity | Type |
+|:---|:---|:---|
+| `"pp"` (default) | $\gamma_{ik}$ | similarity |
+| `"nlpp"` | $-\log \gamma_{ik}$ | dissimilarity |
+| `"pd"` | $\gamma_{ik} / \hat\pi_k$, with $\hat\pi_k = n^{-1} \sum_i \gamma_{ik}$ | similarity |
+
+The `"pd"` form divides by the estimated size of each cluster, so it favors
+small clusters. Two further widths use the memberships directly:
+
+- `cerSilhouette()`: the certainty width $\max_k \gamma_{ik}$, which lies
+  between $1/K$ and 1.
+- `dbSilhouette()`: the density-based width of @menardi2011density,
+  $R_i / \max_j |R_j|$ with $R_i = \log(\gamma_{ic_i} / \gamma_{i\nu_i})$. It lies
+  between 0 and 1, and the most confidently assigned observation in the sample
+  always has width 1.
+
+```{r widths}
+avg <- function(s) summary(s, print.summary = FALSE)$avg.width
+c(pp   = avg(softSilhouette(gm$z)),
+  nlpp = avg(softSilhouette(gm$z, prob_type = "nlpp")),
+  pd   = avg(softSilhouette(gm$z, prob_type = "pd")),
+  cer  = avg(cerSilhouette(gm$z)),
+  db   = avg(dbSilhouette(gm$z, average = "crisp")))
+```
+
+These are different indices on different scales. Compare each one across fits,
+never one index with another.
+
+# Fuzzy c-means: soft and distance-based widths coincide
+
+For fuzzy c-means with fuzzifier $m$ and squared Euclidean distances $d_{ik}$
+to the prototypes, the memberships are
+$u_{ik} = t_{ik}^{-1} / \sum_j t_{ij}^{-1}$ with $t_{ik} = d_{ik}^{1/(m-1)}$
+[@bezdek1981]. The ratio of two memberships is therefore the inverse ratio of
+the corresponding $t_{ik}$:
+
+$$
+\frac{u_{i\nu_i}}{u_{ic_i}} = \frac{t_{ic_i}}{t_{i\nu_i}},
+\qquad\text{so}\qquad
+1 - \frac{u_{i\nu_i}}{u_{ic_i}} = \frac{t_{i\nu_i} - t_{ic_i}}{t_{i\nu_i}}.
+$$
+
+The left-hand side is the `"pp"` medoid width and the right-hand side is the
+distance-based medoid width on the matrix $T = [t_{ik}]$. The same argument
+holds for the PAC width. With the default $m = 2$, $T$ is exactly the matrix `d`
+that `ppclust::fcm()` returns:
+
+```{r identity}
+all.equal(softSilhouette(fm$u, method = "medoid")$sil_width,
+          Silhouette(fm$d)$sil_width)
+```
+
+For fuzzy c-means, then, the membership-based and distance-based widths are the
+same evidence, and the rows of `calSilhouette()` that look independent are not.
+With $m = 3$, $T$ holds Euclidean distances, and the `"pp"` widths reproduce
+the simplified silhouette of @vanderlaan2003pam.
+
+# Averaging and the exponent `a`
+
+Every width function offers three averages. `average = "crisp"` is the plain
+mean and `average = "median"` the median. `average = "fuzzy"` is the weighted
+mean of @campello2006fuzzy, with weights
+$w_i = (\gamma_{ic_i} - \gamma_{i\nu_i})^a$, so observations whose two largest
+memberships are close count for less. The exponent `a` controls how strongly:
+
+```{r exponent}
+sapply(c(a0.5 = 0.5, a1 = 1, a2 = 2, a4 = 4), function(a)
+  avg(softSilhouette(fm$u, average = "fuzzy", a = a)))
+```
+
+Larger exponents shift weight toward decisively assigned observations and raise
+the average, so fuzzy averages are comparable only at the same `a`.
+
+# Comparing soft clustering algorithms
+
+To compare algorithms fitted to the same data with the same number of clusters,
+compute each width for every fit. Pass the memberships to `Silhouette()` as
+`prob_matrix` so that each observation keeps the cluster the algorithm assigned.
+
+```{r compare}
+P_fcm <- sqrt(fm$d)                                        # Euclidean distances
+P_gmm <- as.matrix(proxy::dist(X, t(gm$parameters$mean)))  # to the component means
+data.frame(
+  algorithm = c("fuzzy c-means", "Gaussian mixture"),
+  distance_medoid = c(avg(Silhouette(P_fcm, prob_matrix = fm$u)),
+                      avg(Silhouette(P_gmm, prob_matrix = gm$z))),
+  membership_pp = c(avg(softSilhouette(fm$u)), avg(softSilhouette(gm$z))),
+  ARI_species = c(adjustedRandIndex(max.col(fm$u), iris$Species),
+                  adjustedRandIndex(max.col(gm$z), iris$Species)))
+```
+
+The two families disagree. Distances to cluster means reward the spherical,
+equal-spread clusters that fuzzy c-means looks for, so the distance-based width
+prefers fuzzy c-means. Posterior probabilities reward decisive assignments, which
+the mixture makes, so the membership-based width prefers the mixture. Here the
+mixture also agrees better with the species (the adjusted Rand index is shown
+only as a check, since labels are rarely available). Neither family is a
+substitute for deciding what kind of cluster the analysis is after.
+
+# Choosing the number of clusters
+
+Posterior-based widths measure how decisively observations are assigned, and a
+model with fewer components usually assigns more decisively. Consider four
+well-separated groups of different spread:
+
+```{r choose-k, fig.alt = "Line chart of average width against the number of clusters from 2 to 7 for four simulated groups. The k-means medoid width peaks at 4 clusters; the posterior-based pp width from Gaussian mixtures peaks at 3 clusters and falls sharply from 5 clusters on."}
+set.seed(42)
+mu <- rbind(c(0, 0), c(6, 0), c(0, 6), c(6, 6))
+sds <- c(0.8, 1.2, 1, 1.5)
+id <- rep(1:4, c(120, 80, 100, 60))
+Y <- mu[id, ] + matrix(rnorm(2 * length(id)), ncol = 2) * sds[id]
+
+res <- t(sapply(2:7, function(k) {
+  g <- Mclust(Y, G = k, modelNames = "VVV", verbose = FALSE)
+  set.seed(k)
+  km <- kmeans(Y, k, nstart = 20)
+  c(k = k,
+    medoid_kmeans = avg(Silhouette(proxy::dist(Y, km$centers))),
+    pp_mixture = avg(softSilhouette(g$z)),
+    bic = g$bic)
+}))
+round(res, 3)
+matplot(res[, "k"], res[, c("medoid_kmeans", "pp_mixture")], type = "b",
+        pch = c(19, 17), lty = 1, col = c("#2a78d6", "#eb6834"),
+        xlab = "Number of clusters", ylab = "Average width")
+legend("bottomleft", c("medoid (k-means)", "pp (mixture)"),
+       pch = c(19, 17), col = c("#2a78d6", "#eb6834"), bty = "n")
+```
+
+```{r choose-k-values, include = FALSE}
+best <- apply(res[, -1], 2, function(v) res[which.max(v), "k"])
+```
+
+`r if (best["medoid_kmeans"] == best["bic"]) sprintf("The distance-based width and BIC both pick $K = %d$, the number of simulated groups,", best["bic"]) else sprintf("The distance-based width picks $K = %d$ and BIC picks $K = %d$,", best["medoid_kmeans"], best["bic"])`
+while the posterior-based width peaks at $K = `r best["pp_mixture"]`$. Use posterior-based widths to compare fits with
+the same $K$, or to find uncertain observations within one fit, and not on
+their own to choose $K$. For the same reason, the certainty width, which cannot
+fall below $1/K$, should not be compared across different $K$.
+
+# Pitfalls
+
+**`calSilhouette()` and assigned clusters.** When `prob_matrix` is supplied,
+the fuzzy distance-based rows of `calSilhouette()` use the membership labels,
+but its crisp and median distance-based rows reassign every observation to the
+nearest cluster center. For a mixture, the most probable component and the
+nearest mean can differ:
+
+```{r relabel}
+sum(max.col(gm$z) != max.col(-P_gmm))
+```
+
+To score the partition the algorithm produced, call `Silhouette()` with
+`prob_matrix`, as in the comparison above.
+
+**The `"pd"` transformation labels by averaging method.** With crisp or median
+averaging, observations are assigned to the cluster with the largest
+$\gamma_{ik} / \hat\pi_k$; with fuzzy averaging, to the largest membership. When
+cluster sizes differ, the two assignments differ, and observations on which they
+disagree get negative widths under fuzzy averaging:
+
+```{r pd}
+set.seed(4)
+z <- c(rnorm(270, 0), rnorm(30, 2.5))
+g2 <- Mclust(z, G = 2, modelNames = "E", verbose = FALSE)
+pd_crisp <- softSilhouette(g2$z, prob_type = "pd")
+pd_fuzzy <- softSilhouette(g2$z, prob_type = "pd", average = "fuzzy")
+c(relabelled = sum(pd_crisp$cluster != max.col(g2$z)),
+  negative_fuzzy = sum(pd_fuzzy$sil_width < 0))
+```
+
+**Zero probabilities and the density-based width.** If any neighboring
+probability is exactly zero, its log ratio is infinite, the scaling in
+`dbSilhouette()` becomes infinite, and every other width becomes zero. Mixture
+posteriors often underflow to zero for well-separated data. Bound them away
+from zero first:
+
+```{r db-zero}
+data(thyroid, package = "mclust")
+gt <- Mclust(scale(thyroid[, -1]), G = 3, verbose = FALSE)
+c(raw = avg(dbSilhouette(gt$z, average = "crisp")),
+  bounded = avg(dbSilhouette(pmax(gt$z, 1e-300), average = "crisp")))
+```
+
+The bounded widths are finite, but the bounded observations keep the largest
+log ratios and set the scale, so the average stays small. The individual widths
+still rank observations by how decisively they are assigned; the average should
+not be compared with that of a fit without zero probabilities.
+
+# Session information
+
+```{r session, eval = TRUE}
+sessionInfo()
+```
+
+# References

@@ -1,0 +1,176 @@
+---
+title: "Interpreting silhouette widths"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Interpreting silhouette widths}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: references.bib
+---
+
+```{r setup, include = FALSE}
+pkgs <- c("proxy", "cluster", "mclust")
+ok <- all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE))
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", eval = ok,
+  fig.width = 6.5, fig.height = 3.6, dpi = 96, out.width = "100%"
+)
+```
+
+```{r not-available, echo = FALSE, results = "asis", eval = !ok}
+cat("This vignette needs the suggested packages",
+    paste0("'", pkgs, "'", collapse = ", "),
+    "to run its code. Install them to see the output.")
+```
+
+Silhouette widths look alike but mean different things depending on how they
+were computed. This vignette explains how the widths in **Silhouette** relate to
+the classical silhouette, what ranges they take, and which comparisons between
+them are valid.
+
+```{r library}
+library(Silhouette)
+X <- as.matrix(iris[, 1:4])
+set.seed(1)
+km <- kmeans(X, centers = 3, nstart = 20)
+P <- as.matrix(proxy::dist(X, km$centers))   # distances to the 3 centers
+```
+
+# Classical and simplified widths
+
+The classical width of @rousseeuw1987silhouettes compares the *average*
+dissimilarity of observation $i$ to the other members of its cluster, $a_i$,
+with the smallest average dissimilarity to the members of another cluster,
+$b_i$:
+$$
+s_i = \frac{b_i - a_i}{\max(a_i, b_i)}.
+$$
+It needs all $n(n-1)/2$ pairwise dissimilarities. The simplified silhouette of
+@vanderlaan2003pam replaces the two averages by the dissimilarities between
+$x_i$ and a representative of each cluster, such as its centroid or medoid, so
+it needs only an $n \times K$ matrix. That is what `Silhouette()` computes.
+
+The two are related but not equal:
+
+```{r classical}
+s_simple <- Silhouette(P)$sil_width
+s_classic <- cluster::silhouette(km$cluster, dist(X))[, "sil_width"]
+c(correlation = cor(s_simple, s_classic),
+  mean_simplified = mean(s_simple),
+  mean_simplified_pac = mean(Silhouette(P, method = "pac")$sil_width),
+  mean_classical = mean(s_classic))
+```
+
+The simplified widths rank observations much as the classical ones do, but the
+simplified average (medoid normalization) is higher, because the distance to a
+centroid is smaller than the average distance to all members of a cluster. The
+PAC average is usually closer to the classical level. Thresholds published for
+the classical average, such as "above 0.5 is reasonable structure", therefore do
+not transfer to the simplified average. If you need a fast approximation of the
+classical width itself for a crisp partition, `approxSilhouette()` in the
+Bioconductor package **bluster** [@bluster] is designed for that; the strengths
+of **Silhouette** are soft and model-based clusterings, arbitrary cluster-level
+proximities, and multi-way partitions.
+
+# Three properties of the simplified widths
+
+Write $a_i$ and $b_i$ for the proximities to the assigned and neighboring
+clusters, and $r_i = a_i / b_i$ for dissimilarities.
+
+**1. The widths are not negative.** `Silhouette()` assigns each observation to
+its nearest cluster, so $a_i \le b_i$ and the medoid width $1 - r_i$ lies in
+$[0, 1]$. Unlike the classical silhouette, where a negative width flags an
+observation that is closer on average to another cluster, poorly placed
+observations show up here as widths near zero.
+
+```{r nonnegative}
+min(s_simple)
+```
+
+**2. PAC is a monotone shrinkage of the medoid width.** The PAC width is
+$(1 - r_i)/(1 + r_i) = s_i / (2 - s_i)$. It orders observations exactly as the
+medoid width does and is never larger (a medoid width of 0.5 becomes 1/3), so
+the choice between them changes the level of the average, not which
+observations look poorly clustered.
+
+**3. Squared distances inflate the widths.** Replacing every distance by its
+square replaces $r_i$ by $r_i^2$, and the width by $1 - r_i^2 = s_i(2 - s_i)$.
+Some functions, such as `ppclust::fcm()`, return squared distances, so check the
+scale of the matrix you pass.
+
+```{r squared}
+all.equal(Silhouette(P^2)$sil_width, s_simple * (2 - s_simple))
+```
+
+# Where the cluster labels come from
+
+`Silhouette()` and `softSilhouette()` derive the assigned cluster from the
+matrix they are given: the nearest cluster for dissimilarities, the largest
+value for similarities and memberships. They have no argument for an external
+partition. For k-means at convergence, the nearest center is the assigned
+cluster, but for other methods it need not be. Scoring an average-linkage
+partition against its own centroids reassigns some observations:
+
+```{r relabel}
+hc <- cutree(hclust(dist(X), method = "average"), k = 3)
+centers <- apply(X, 2, function(v) tapply(v, hc, mean))
+sum(Silhouette(proxy::dist(X, centers))$cluster != hc)
+```
+
+If a membership matrix is supplied as `prob_matrix`, the labels come from the
+memberships instead. An observation whose most probable cluster is not its
+nearest center then gets a negative width, which is informative: it marks
+disagreement between the fitted model and the geometry. For a Gaussian mixture:
+
+```{r negative}
+suppressPackageStartupMessages(library(mclust))
+gm <- Mclust(X, G = 3, verbose = FALSE)
+P_gmm <- as.matrix(proxy::dist(X, t(gm$parameters$mean)))
+sum(Silhouette(P_gmm, prob_matrix = gm$z)$sil_width < 0)
+```
+
+# Ranges of the widths
+
+| Width | Function and argument | Range |
+|:---|:---|:---|
+| medoid | `Silhouette(method = "medoid")` | $[0, 1]$ with labels from the same matrix |
+| PAC | `Silhouette(method = "pac")` | $[0, 1]$ with labels from the same matrix |
+| posterior probabilities | `softSilhouette(prob_type = "pp")` | $[0, 1]$ |
+| negative log posteriors | `softSilhouette(prob_type = "nlpp")` | $[0, 1]$ |
+| size-adjusted posteriors | `softSilhouette(prob_type = "pd")` | $[0, 1]$; negative values possible with `average = "fuzzy"` |
+| certainty | `cerSilhouette()` | $[1/K, 1]$ |
+| density-based | `dbSilhouette()` | $[0, 1]$, and the maximum in each sample is always 1 |
+
+With labels supplied through `prob_matrix`, the medoid and PAC widths range over
+$[-1, 1]$.
+
+# Which comparisons are valid
+
+- **The same width across partitions of the same data.** Average widths of one
+  kind (same function, method, transformation and averaging) can be compared
+  across algorithms or numbers of clusters, keeping in mind that each width
+  favors a particular kind of cluster.
+- **Not one width against another.** The rows of `calSilhouette()` are on
+  different scales. Choosing "the best method" by the largest value compares
+  scales, not clusterings.
+- **Not simplified against classical.** See the first section.
+- **Fuzzy averages only at the same `a`.** The weights
+  $(\gamma_{ic_i} - \gamma_{i\nu_i})^a$ change with `a`, and so does the average.
+- **Certainty and density-based widths with care.** The certainty width cannot
+  fall below $1/K$, so its average is not comparable across $K$. The
+  density-based width is scaled by the most confident observation in the
+  sample, so its average depends on that one observation.
+- **Choosing $K$ by the maximum.** For silhouette averages, the preferred
+  number of clusters is where the average is largest, not an "elbow".
+  Posterior-based widths tend to favor fewer clusters; see
+  `vignette("soft-clustering", package = "Silhouette")`.
+
+# Session information
+
+```{r session, eval = TRUE}
+sessionInfo()
+```
+
+# References

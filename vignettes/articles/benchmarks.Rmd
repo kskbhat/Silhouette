@@ -1,0 +1,272 @@
+---
+title: "Performance and comparison with other packages"
+bibliography: ../references.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", echo = FALSE,
+  fig.width = 7, fig.height = 3.6, dpi = 96, out.width = "100%"
+)
+library(ggplot2)
+b7 <- readRDS("data/bench_097.rds")
+b6 <- readRDS("data/bench_096.rds")
+pr <- readRDS("data/bench_097_probe.rds")
+ag <- readRDS("data/agreement_results.rds")
+sess <- attr(b7, "session")
+bb <- rbind(b7, b6)
+tm <- function(ver, meth, nn) bb[bb$version == ver & bb$method == meth & bb$n == nn, "median_s"]
+pget <- function(m, nn, col) pr[pr$method == m & pr$n == nn, col]
+```
+
+Several R packages compute silhouette widths. This article sets out what each
+one computes, how long **Silhouette** and the alternatives take and how much
+memory they need as the number of observations grows, and how closely the
+simplified widths of **Silhouette** agree with the classical widths. The
+results are cached; the scripts that produced them are in
+[`data-raw/benchmarks`](https://github.com/kskbhat/Silhouette/tree/main/data-raw/benchmarks)
+in the package repository.
+
+# What each package computes
+
+| Capability | In **Silhouette** | In **cluster**, **factoextra**, **fclust** or **bluster** |
+|:---|:---|:---|
+| Classical widths from all pairwise dissimilarities | not computed; `plotSilhouette()` draws them | `cluster::silhouette()`, and in `pam()`, `clara()` and `fanny()`; `fclust::SIL()`; **factoextra** through **cluster** |
+| Approximate classical widths in linear time | none | `bluster::approxSilhouette()` |
+| Simplified widths from distances or similarities to each cluster | `Silhouette()`, medoid and PAC | none |
+| Widths from membership or posterior probabilities | `softSilhouette()`, `cerSilhouette()`, `dbSilhouette()` | none |
+| Membership-weighted (fuzzy) average | `average = "fuzzy"` for every width | `fclust::SIL.F()`, on classical widths |
+| Extended silhouette for multi-way partitions | `extSilhouette()` | none |
+| Silhouette plot | `plotSilhouette()` (**ggplot2**), also for results of **cluster**, **factoextra** and **drclust** | `factoextra::fviz_silhouette()` (**ggplot2**); `plot()` in **cluster** (base graphics) |
+| Input stored | an $n \times K$ matrix | $n(n-1)/2$ dissimilarities (**cluster**, **factoextra**, **fclust**); the $n \times p$ data (**bluster**) |
+
+The classical silhouette of @rousseeuw1987silhouettes compares each
+observation's average dissimilarity to the members of its own cluster with its
+average dissimilarity to the members of the nearest other cluster.
+`bluster::approxSilhouette()` [@bluster] replaces those averages with
+root-mean-squared distances, which it can compute from the cluster centroids;
+it is designed for crisp partitions of Euclidean data. **Silhouette** instead
+compares distances (or similarities) to a representative of each cluster
+[@vanderlaan2003pam], or membership probabilities, so any $n \times K$ matrix
+will do: distances to medoids under any dissimilarity, dynamic time warping
+distances to time-series prototypes, or the posterior probabilities of a
+mixture model. The widths therefore differ from the classical widths, as the
+last section shows.
+
+# Time and memory
+
+We timed each computation end to end, from the data and the fitted partition
+to the average width, so that each method pays for building its own input:
+
+```{r timed-exprs, echo = TRUE, eval = FALSE}
+# cluster: classical widths from the n x n distances
+D <- stats::dist(X); summary(cluster::silhouette(cl, D))$avg.width
+# Silhouette: simplified widths from the n x K distances to the centers C
+summary(Silhouette(proxy::dist(X, C)), print.summary = FALSE)$avg.width
+# bluster: approximate classical widths
+mean(bluster::approxSilhouette(X, cl)$width)
+# fclust: fuzzy silhouette of Campello and Hruschka on classical widths
+fclust::SIL.F(X, U, alpha = 2)
+```
+
+The data were five-dimensional Gaussian mixtures with $K = 5$
+well-separated components; `cl` was the k-means partition, `C` its centers and
+`U` memberships of fuzzy c-means form. Times are medians over 10 repetitions
+for $n \le 10\,000$ and 3 above, measured with **bench** on one core of an
+Intel Xeon processor at `r sub(".*@ *([0-9.]+) *GHz.*", "\\1", sess$cpu)` GHz
+with 8 GB of memory, running `r sess$R`.
+
+```{r fig-time, fig.alt = "Log-log line chart of time against n from 1,000 to 200,000. Silhouette 0.9.7 and bluster stay below about 0.2 seconds; Silhouette 0.9.6 rises linearly to about 13 seconds; cluster::silhouette rises quadratically to several seconds at n = 20,000; fclust is the slowest."}
+lab <- c(simplified_crisp = "Silhouette() 0.9.7", approx_bluster = "bluster::approxSilhouette()",
+         rousseeuw_cluster = "cluster::silhouette()", fuzzy_fclust = "fclust::SIL.F()")
+d7 <- b7[b7$method %in% names(lab), ]
+d7$series <- lab[d7$method]
+d6 <- b6[b6$method == "simplified_crisp", ]
+d6$series <- "Silhouette() 0.9.6"
+dd <- rbind(d7, d6)
+dd$series <- factor(dd$series, c("Silhouette() 0.9.7", "Silhouette() 0.9.6",
+                                 "bluster::approxSilhouette()", "cluster::silhouette()",
+                                 "fclust::SIL.F()"))
+ggplot(dd, aes(n, median_s, colour = series, shape = series)) +
+  geom_line(linewidth = 0.6) +
+  geom_point(size = 2) +
+  scale_x_log10(breaks = c(1e3, 1e4, 1e5), labels = c("1,000", "10,000", "100,000")) +
+  scale_y_log10(labels = function(x) format(x, scientific = FALSE, drop0trailing = TRUE, trim = TRUE)) +
+  scale_colour_manual(values = c("#2a78d6", "#8fb8ea", "#1f9d74", "#eb6834", "#b8457e"), name = NULL) +
+  scale_shape_manual(values = c(16, 17, 15, 18, 8), name = NULL) +
+  labs(x = "Number of observations n (log scale)", y = "Time (seconds, log scale)") +
+  theme_minimal(base_size = 10)
+```
+
+At $n = 10\,000$ the classical computation with **cluster** took
+`r sprintf("%.2f", tm("0.9.7", "rousseeuw_cluster", 1e4))` seconds and
+`fclust::SIL.F()` took `r sprintf("%.1f", tm("0.9.7", "fuzzy_fclust", 1e4))`
+seconds, against `r sprintf("%.3f", tm("0.9.7", "simplified_crisp", 1e4))`
+seconds for `Silhouette()`. The vectorized code of version 0.9.7 needed
+`r sprintf("%.2f", tm("0.9.7", "simplified_crisp", 2e5))` seconds at
+$n = 200\,000$, where version 0.9.6 needed
+`r sprintf("%.1f", tm("0.9.6", "simplified_crisp", 2e5))` seconds for identical
+widths. Fuzzy averaging and the widths from membership probabilities cost about
+the same as the crisp computation.
+
+Memory was measured separately, by running each computation once in a fresh R
+process and recording the increase in its peak resident memory. The classical
+computation was attempted at every size in this way.
+
+```{r tab-time}
+tn <- c(1000, 5000, 10000, 25000, 50000, 1e5, 2e5)
+ft <- function(x) ifelse(is.na(x), "", ifelse(x < 0.01, sprintf("%.3f", x),
+                  ifelse(x < 1, sprintf("%.2f", x), ifelse(x < 10, sprintf("%.1f", x), sprintf("%.0f", x)))))
+fm <- function(x) ifelse(is.na(x), "", ifelse(x < 1, "<1 MB",
+                  ifelse(x < 1000, sprintf("%.0f MB", x), sprintf("%.1f GB", x / 1024))))
+fb <- function(b) ifelse(b < 1e6, sprintf("%.0f kB", b / 1e3),
+                  ifelse(b < 1e9, sprintf("%.0f MB", b / 1e6),
+                         ifelse(b < 9.95e9, sprintf("%.1f GB", b / 1e9), sprintf("%.0f GB", b / 1e9))))
+nlab <- format(tn, big.mark = ",", scientific = FALSE, trim = TRUE)
+cls <- sapply(tn, function(nn) pget("classical", nn, "status"))
+fail <- ifelse(cls == "killed", "killed", "fails")
+t_cl <- sapply(tn, function(nn) {
+  v <- tm("0.9.7", "rousseeuw_cluster", nn); if (length(v)) v else pget("classical", nn, "elapsed_s")
+})
+knitr::kable(data.frame(
+  n = nlab,
+  cluster = ifelse(cls == "ok", ft(t_cl), fail),
+  Silhouette = ft(sapply(tn, function(nn) tm("0.9.7", "simplified_crisp", nn))),
+  bluster = ft(sapply(tn, function(nn) tm("0.9.7", "approx_bluster", nn)))),
+  align = "r", caption = "Time in seconds (medians).")
+```
+
+```{r tab-memory}
+knitr::kable(data.frame(
+  n = nlab,
+  cluster = ifelse(cls == "ok", fm(sapply(tn, function(nn) pget("classical", nn, "peak_MB"))), fail),
+  Silhouette = fm(sapply(tn, function(nn) pget("silhouette", nn, "peak_MB"))),
+  bluster = fm(sapply(tn, function(nn) pget("bluster", nn, "peak_MB"))),
+  dist = fb(tn * (tn - 1) / 2 * 8),
+  nK = fb(tn * 5 * 8)),
+  align = "r", col.names = c("n", "cluster", "Silhouette", "bluster",
+                             "size of dist object", "size of n x K matrix"),
+  caption = "Increase in peak memory, and the size of the input each approach stores.")
+```
+
+"<1 MB" means that the increase was absorbed by memory the R process had
+already reserved. The last two columns give the size of the input each approach
+stores. On the 8 GB test machine, the classical computation was killed by the
+operating system at $n = 25\,000$, after R had built the 2.5 GB `dist` object;
+from $n = 50\,000$ R could not allocate the `dist` object at all. Its storage
+grows with $n^2$, so each doubling of $n$ quadruples it; the size at which it
+fails depends on the machine, but not the growth.
+
+For crisp partitions, `Silhouette()` and `bluster::approxSilhouette()` both
+scale linearly and both run in well under a second at $n = 200\,000$, so speed
+and memory do not decide between them. What decides is the input, and how close
+the result should be to the classical widths.
+
+# Agreement with the classical silhouette
+
+```{r agree-prep}
+ag$same_med <- ag$k_rousseeuw == ag$k_medoid
+ag$same_pac <- ag$k_rousseeuw == ag$k_pac
+ag$same_bl <- ag$k_rousseeuw == ag$k_bluster
+ag$diff_med <- ag$asw_medoid - ag$asw_rousseeuw
+ag$diff_pac <- ag$asw_pac - ag$asw_rousseeuw
+ag$diff_bl <- ag$asw_bluster - ag$asw_rousseeuw
+agg <- aggregate(cbind(cor_widths, cor_bluster, diff_med, diff_pac, diff_bl,
+                       same_med, same_pac, same_bl) ~ BarOmega + p, data = ag, FUN = mean)
+agg <- agg[order(agg$p, agg$BarOmega), ]
+reps <- nrow(ag) / nrow(agg)
+rec <- c(classical = mean(ag$k_rousseeuw == ag$K), medoid = mean(ag$k_medoid == ag$K),
+         pac = mean(ag$k_pac == ag$K), bluster = mean(ag$k_bluster == ag$K))
+pct <- function(x) sprintf("%.0f%%", 100 * x)
+```
+
+We simulated `r reps` data sets for each of six settings with **MixSim**:
+$n = 500$, four Gaussian components, dimension $p \in \{2, 5\}$ and average
+overlap $\bar\omega \in \{0.001, 0.01, 0.05\}$. For each data set we fitted
+k-means for $K = 2, \dots, 8$ and computed the classical average width from
+all pairwise distances, the medoid and PAC averages of `Silhouette()` from the
+distances to the centroids, and the approximation of
+`bluster::approxSilhouette()`.
+
+```{r tab-agree}
+f3 <- function(x) sprintf("%+.3f", round(x, 3) + 0)
+setting <- data.frame(p = agg$p, overlap = format(agg$BarOmega, scientific = FALSE))
+knitr::kable(cbind(setting,
+  r_med = sprintf("%.3f", agg$cor_widths), r_bl = sprintf("%.3f", agg$cor_bluster),
+  d_med = f3(agg$diff_med), d_pac = f3(agg$diff_pac), d_bl = f3(agg$diff_bl)),
+  align = "r", col.names = c("p", "overlap", "r, medoid", "r, bluster",
+                             "difference, medoid", "difference, PAC", "difference, bluster"),
+  caption = "Correlation with the classical widths and difference from the classical average, at K = 4.")
+knitr::kable(cbind(setting,
+  s_med = pct(agg$same_med), s_pac = pct(agg$same_pac), s_bl = pct(agg$same_bl)),
+  align = "r", col.names = c("p", "overlap", "medoid", "PAC", "bluster"),
+  caption = "Share of data sets in which the average peaks at the same K as the classical average.")
+```
+
+Here *r* is the mean correlation between the individual widths and the
+classical widths at the true $K = 4$, and the difference is the mean difference
+between the average width and the classical average at $K = 4$.
+
+```{r agree-values}
+rc <- range(agg$cor_widths); rd <- range(agg$diff_med); rs <- range(agg$same_med)
+rcb <- range(agg$cor_bluster); rdb <- range(agg$diff_bl); rsb <- range(agg$same_bl)
+rsp <- range(agg$same_pac)
+```
+
+The simplified medoid widths rank observations much as the classical widths do
+(correlations `r sprintf("%.2f", rc[1])` to `r sprintf("%.2f", rc[2])`), and
+their average peaks at the same $K$ as the classical average in
+`r pct(rs[1])` to `r pct(rs[2])` of data sets (PAC: `r pct(rsp[1])` to
+`r pct(rsp[2])`). Their level is higher, by `r sprintf("%.2f", rd[1])` to
+`r sprintf("%.2f", rd[2])`, because the distance to a centroid is smaller than
+the average distance to all members of a cluster; the PAC average is close to
+the classical level. Simplified averages should therefore not be compared with
+classical averages or with thresholds published for them.
+
+The **bluster** approximation is much closer to the classical widths:
+correlations `r sprintf("%.3f", rcb[1])` to `r sprintf("%.3f", rcb[2])`, an
+average `r sprintf("%.3f", -rdb[2])` to `r sprintf("%.3f", -rdb[1])` below the
+classical one, and the
+same $K$ in `r pct(rsb[1])` to `r pct(rsb[2])` of data sets. It achieves this by
+accounting for the spread of each cluster, which the distance to a
+representative ignores.
+
+No index recovered the true $K = 4$ reliably in these settings: the classical
+average did so in `r pct(rec["classical"])` of data sets, the medoid and PAC
+averages in `r pct(rec["medoid"])` and `r pct(rec["pac"])`, and the **bluster**
+average in `r pct(rec["bluster"])`. The silhouette, simplified or not, favors
+compact, well-separated groups rather than the components of an elliptical
+mixture.
+
+# Which to use
+
+- **The classical widths of a crisp partition.** Use `cluster::silhouette()`
+  while the $n(n-1)/2$ dissimilarities fit in memory, and
+  `bluster::approxSilhouette()` for Euclidean data beyond that.
+  `plotSilhouette()` draws either result; see [Silhouette plots](plotting.html).
+- **Soft and model-based clusterings.** Use `softSilhouette()`,
+  `cerSilhouette()` or `dbSilhouette()` on the membership or posterior
+  probabilities, or `Silhouette()` with `prob_matrix` on distances to the
+  cluster centers; see `vignette("soft-clustering", package = "Silhouette")`.
+- **Proximities to cluster representatives that are not Euclidean distances to
+  centroids**, such as medoid dissimilarities or time-series distances to
+  prototypes. Use `Silhouette()`.
+- **Block and multi-way partitions.** Use `extSilhouette()` on the mode-wise
+  results; see `vignette("multiway", package = "Silhouette")`.
+- **The fuzzy silhouette of @campello2006fuzzy on classical widths.** Use
+  `fclust::SIL.F()` for moderate $n$, or `average = "fuzzy"` in **Silhouette**
+  for the same weighting of simplified widths.
+
+# Reproducing the results
+
+The scripts are in
+[`data-raw/benchmarks`](https://github.com/kskbhat/Silhouette/tree/main/data-raw/benchmarks),
+with instructions in its `README.md`. The memory probes read
+`/proc/self/status` and so need Linux. The cached results record the machine
+they ran on:
+
+```{r machine, echo = TRUE}
+str(attr(readRDS("data/bench_097.rds"), "session"))
+```
+
+# References

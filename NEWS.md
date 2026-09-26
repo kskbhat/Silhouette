@@ -7,6 +7,23 @@
 - Replaced row-wise `for` loops for calculating silhouette widths and weights with vectorized matrix-index extraction and element-wise arithmetic, yielding dramatic speedups for large datasets.
 - Verified 100% regression-free behavior across all 257 package unit tests.
 
+**Documentation**
+
+- Replaced the single long vignette with four shorter ones:
+  `vignette("Silhouette")` (getting started),
+  `vignette("soft-clustering")` (widths from membership and posterior probabilities),
+  `vignette("interpreting-widths")` (relation to the classical silhouette, ranges and valid comparisons) and
+  `vignette("multiway")` (extended silhouette for block clustering, with a worked double k-means example).
+- Added three articles to the package website: silhouette plots for results from this and other packages,
+  a case study comparing soft clusterings of thyroid patients, and a comparison with other packages that
+  includes measured timings and memory use. The scripts that produce the timings are in `data-raw/benchmarks`.
+- The vignettes now state that the number of clusters is chosen where the silhouette average is largest,
+  that the rows of `calSilhouette()` are on different scales and should not be compared with each other,
+  and that simplified averages are not comparable with classical ones or with thresholds published for them.
+- Vignettes no longer attach **proxy** (which masks `stats::dist()`), and they skip their code with a
+  message when a suggested package is not installed.
+- Removed the prebuilt vignette files from `inst/doc`.
+
 # Silhouette 0.9.6 (October 2025)
 
 **New Features**

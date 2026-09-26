@@ -1,0 +1,271 @@
+---
+title: "Case study: soft clusterings of thyroid patients"
+bibliography: ../references.bib
+---
+
+```{r setup, include = FALSE}
+pkgs <- c("proxy", "ppclust", "mclust", "FPDclustering")
+ok <- all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE))
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", eval = ok,
+  fig.width = 7, fig.height = 3.4, dpi = 96, out.width = "100%"
+)
+```
+
+```{r not-available, echo = FALSE, results = "asis", eval = !ok}
+cat("This article needs the packages",
+    paste0("'", pkgs, "'", collapse = ", "),
+    "to run its code. Install them to see the output.")
+```
+
+This article compares three soft clusterings of the same patients with the
+widths of **Silhouette**, and then uses the known diagnoses to check what the
+widths reveal. It follows the thyroid example of the package paper and shows
+the full code.
+
+The UCI thyroid data, distributed with **mclust** [@mclust2016], record five
+laboratory measurements on 215 patients whose thyroid function was diagnosed
+from their full medical record as normal, hypothyroid or hyperthyroid.
+
+```{r library}
+library(Silhouette)
+suppressPackageStartupMessages(library(mclust))
+data(thyroid, package = "mclust")
+table(thyroid$Diagnosis)
+Xt <- scale(thyroid[, -1])   # standardized laboratory measurements
+```
+
+# Three soft clusterings
+
+We fit three methods with $K = 3$: fuzzy c-means [@bezdek1981] from
+**ppclust**, a Gaussian mixture from **mclust** whose covariance structure is
+chosen by BIC, and probabilistic distance clustering adjusted for cluster size
+[PDQ, @iyigun2008] from **FPDclustering** [@fpdclustering2025]. The diagnoses
+are not used in fitting.
+
+```{r fits}
+set.seed(1)
+fc <- ppclust::fcm(Xt, centers = 3, nstart = 5)
+gm <- Mclust(Xt, G = 3, verbose = FALSE)
+pq <- FPDclustering::PDQ(Xt, k = 3)
+```
+
+For each fit we need two $215 \times 3$ matrices: the Euclidean distances from
+each patient to each cluster center, and the membership or posterior
+probabilities. `ppclust::fcm()` stores squared distances, so we take square
+roots.
+
+```{r matrices}
+fits <- list(
+  FCM = list(prox = sqrt(fc$d), prob = fc$u),
+  GMM = list(prox = as.matrix(proxy::dist(Xt, t(gm$parameters$mean))), prob = gm$z),
+  PDQ = list(prox = as.matrix(proxy::dist(Xt, pq$centers)), prob = pq$probability))
+labels <- lapply(fits, function(f) max.col(f$prob))   # the partition each method produced
+```
+
+# Average widths
+
+For the distance-based widths we pass the memberships as `prob_matrix`, so
+that every patient keeps the cluster the method assigned. For the
+probability-based widths we pass the memberships alone. The density-based width
+is computed on probabilities bounded away from zero, for the reason explained
+below.
+
+```{r averages}
+avg <- function(s) summary(s, print.summary = FALSE)$avg.width
+tab <- sapply(fits, function(f) c(
+  medoid     = avg(Silhouette(f$prox, prob_matrix = f$prob)),
+  pac        = avg(Silhouette(f$prox, prob_matrix = f$prob, method = "pac")),
+  pp_pac     = avg(softSilhouette(f$prob)),
+  nlpp_pac   = avg(softSilhouette(f$prob, prob_type = "nlpp")),
+  cer        = avg(cerSilhouette(f$prob)),
+  db         = avg(dbSilhouette(pmax(f$prob, 1e-300), average = "crisp"))))
+ari <- sapply(labels, adjustedRandIndex, thyroid$Diagnosis)
+knitr::kable(rbind(tab, ARI_with_diagnosis = ari), digits = 3)
+```
+
+```{r averages-values, include = FALSE}
+ord <- function(v) paste(names(sort(v, decreasing = TRUE)), collapse = ", ")
+```
+
+The two families of widths rank the methods differently. The distance-based
+widths rank them `r ord(tab["medoid", ])`, and the probability-based widths
+rank them `r ord(tab["pp_pac", ])`. Agreement with the diagnosis, which would
+not be available in practice, orders them `r ord(ari)`.
+
+The difference is expected. Distances to cluster means reward the spherical,
+equal-spread clusters that fuzzy c-means looks for, while the mixture (here
+with covariance model `r gm$modelName`) allows clusters of different shapes;
+posterior probabilities reward decisive assignment, which the mixture
+achieves. In this example the probability-based widths pointed to the
+partition that matches the diagnosis, but neither family is a substitute for
+knowing what kind of cluster the analysis is after.
+
+The distance-based and probability-based widths agree on PDQ: every one of them
+is lowest for it. With the default initialization, PDQ placed
+`r max(table(labels$PDQ))` of the 215 patients in one cluster; five random
+initializations gave similar partitions, all with an adjusted Rand index below
+0.05.
+
+The density-based width is the exception, and it is lowest for the mixture.
+Each density-based width is divided by the largest log ratio in the sample.
+For the patients whose neighboring posterior had to be bounded at $10^{-300}$,
+that log ratio is about `r round(-log(1e-300))`, so every other patient's width
+is divided by a very large number. The density-based average for the mixture
+therefore reflects its few most confident patients more than the partition;
+see the section on zero posteriors below.
+
+**Why not `calSilhouette()` here?** `calSilhouette()` computes its crisp and
+median distance-based rows with each patient assigned to the nearest center,
+not to the cluster of largest membership. For these fits that would move the
+following numbers of patients into a different cluster:
+
+```{r relabel}
+sapply(fits, function(f) sum(max.col(f$prob) != max.col(-f$prox)))
+```
+
+To score the partition a method produced, call `Silhouette()` with
+`prob_matrix`, as above.
+
+# Which patients are poorly clustered?
+
+The individual widths are more useful than the averages. To check them, we map
+each cluster to its majority diagnosis and mark the patients whose diagnosis
+differs.
+
+```{r misassigned}
+wrong <- lapply(labels, function(l) {
+  majority <- apply(table(l, thyroid$Diagnosis), 1, which.max)
+  levels(thyroid$Diagnosis)[majority[as.character(l)]] != as.character(thyroid$Diagnosis)
+})
+sapply(wrong, sum)
+```
+
+```{r strip, fig.alt = "Two strip charts of per-patient widths for FCM, GMM and PDQ. In the distance-based panel, patients whose cluster disagrees with the diagnosis sit mostly at low or negative widths for FCM and GMM. In the probability-based panel, GMM widths are almost all near 1, including most disagreeing patients. PDQ widths are low throughout."}
+w_med <- lapply(fits, function(f) Silhouette(f$prox, prob_matrix = f$prob)$sil_width)
+w_pp <- lapply(fits, function(f) softSilhouette(f$prob)$sil_width)
+st <- do.call(rbind, lapply(names(fits), function(nm) rbind(
+  data.frame(method = nm, panel = "distance-based (medoid)", width = w_med[[nm]],
+             wrong = wrong[[nm]]),
+  data.frame(method = nm, panel = "probability-based (pp, PAC)", width = w_pp[[nm]],
+             wrong = wrong[[nm]]))))
+st$status <- factor(ifelse(st$wrong, "disagrees with diagnosis", "agrees with diagnosis"),
+                    c("agrees with diagnosis", "disagrees with diagnosis"))
+st <- st[order(st$wrong), ]   # draw disagreeing patients on top
+
+library(ggplot2)
+set.seed(3)
+ggplot(st, aes(method, width, colour = status, shape = status)) +
+  geom_jitter(width = 0.22, height = 0, size = 1.4, alpha = 0.85) +
+  facet_wrap(~ panel) +
+  scale_colour_manual(values = c("#2a78d6", "#eb6834"), name = NULL) +
+  scale_shape_manual(values = c(16, 17), name = NULL) +
+  labs(x = NULL, y = "Silhouette width") +
+  theme_minimal(base_size = 10) +
+  theme(legend.position = "bottom")
+```
+
+Because the labels come from the memberships, a patient whose assigned cluster
+is not the nearest center has a negative medoid width. To compare the widths
+with the diagnoses, we take the tenth of patients with the smallest widths and
+compare the share of misassigned patients among them with the share among the
+rest:
+
+```{r deciles}
+low_share <- function(w, bad) {
+  low <- w <= quantile(w, 0.1)
+  c(lowest_tenth = mean(bad[low]), others = mean(bad[!low]))
+}
+round(rbind(
+  medoid_FCM = low_share(w_med$FCM, wrong$FCM),
+  medoid_GMM = low_share(w_med$GMM, wrong$GMM),
+  pp_GMM = low_share(w_pp$GMM, wrong$GMM)), 2)
+```
+
+By rank, both families point to the same patients: misassigned patients are
+concentrated among the smallest widths. In absolute terms they do not. For the
+mixture, the misassigned patients' probability-based widths are still high,
+
+```{r medians}
+c(misassigned = median(w_pp$GMM[wrong$GMM]), others = median(w_pp$GMM[!wrong$GMM]))
+```
+
+so the mixture is confidently wrong about them, whereas their medoid widths
+place them among the poorly separated patients:
+
+```{r medians-medoid}
+c(misassigned = median(w_med$GMM[wrong$GMM]), others = median(w_med$GMM[!wrong$GMM]))
+```
+
+In practice, the patients with the smallest widths are the ones to review
+first. The object keeps the rows in the order of the data, so they are easy to
+list:
+
+```{r review}
+sil_gmm <- Silhouette(fits$GMM$prox, prob_matrix = fits$GMM$prob)
+worst <- order(sil_gmm$sil_width)[1:8]
+data.frame(patient = worst, cluster = sil_gmm$cluster[worst],
+           width = round(sil_gmm$sil_width[worst], 3),
+           diagnosis = thyroid$Diagnosis[worst])
+```
+
+# The density-based width and zero posteriors
+
+The density-based width of @menardi2011density scales each log ratio
+$\log(\gamma_{ic_i}/\gamma_{i\nu_i})$ by the largest one in the sample. For
+some patients the mixture's posterior probability of the neighboring component
+underflows to exactly zero:
+
+```{r zeros}
+sum(apply(gm$z, 1, function(z) sort(z, decreasing = TRUE)[2]) == 0)
+```
+
+Their log ratios are infinite, so the scaling is infinite and every other width
+becomes zero. Bounding the probabilities away from zero gives finite widths:
+
+```{r db}
+c(raw = avg(dbSilhouette(gm$z, average = "crisp")),
+  bounded = avg(dbSilhouette(pmax(gm$z, 1e-300), average = "crisp")))
+```
+
+The bounded average is still small, because the bounded patients keep by far
+the largest log ratios and set the scale for everyone else. The individual
+density-based widths still rank the patients by how decisively they are
+assigned, but the average of a mixture with near-zero posteriors should not be
+compared with that of a method without them.
+
+# Fuzzy averaging
+
+With `average = "fuzzy"`, each width is weighted by
+$(\gamma_{ic_i} - \gamma_{i\nu_i})^a$ [@campello2006fuzzy]. For the fuzzy
+c-means memberships the average depends clearly on the exponent:
+
+```{r exponent}
+sapply(c(a0.5 = 0.5, a1 = 1, a2 = 2, a4 = 4), function(a)
+  avg(softSilhouette(fc$u, average = "fuzzy", a = a)))
+```
+
+Larger exponents shift weight toward decisively assigned patients, so fuzzy
+averages are comparable only at the same `a`.
+
+# Lessons
+
+- Compute each width for every fit and compare fits within a width, never
+  widths with each other.
+- Distance-based and probability-based widths answer different questions and
+  can rank methods differently. Report both when the methods assume different
+  cluster shapes.
+- A method that fails, like PDQ here, is flagged by the distance-based and the
+  probability-based widths alike.
+- Use the individual widths to find the observations to review, and pass the
+  memberships as `prob_matrix` so that the widths refer to the partition the
+  method produced.
+- Bound posterior probabilities away from zero before calling `dbSilhouette()`.
+
+# Session information
+
+```{r session, eval = TRUE}
+sessionInfo()
+```
+
+# References

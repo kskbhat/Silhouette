@@ -1,0 +1,200 @@
+---
+title: "Silhouette plots"
+bibliography: ../references.bib
+---
+
+```{r setup, include = FALSE}
+pkgs <- c("proxy", "cluster", "factoextra", "drclust", "mclust")
+ok <- all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE))
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", eval = ok,
+  fig.width = 7, fig.height = 3.8, dpi = 96, out.width = "100%"
+)
+```
+
+```{r not-available, echo = FALSE, results = "asis", eval = !ok}
+cat("This article needs the packages",
+    paste0("'", pkgs, "'", collapse = ", "),
+    "to run its code. Install them to see the output.")
+```
+
+A silhouette plot [@rousseeuw1987silhouettes] draws one bar per observation,
+grouped by cluster and sorted by width within each cluster, with the average
+width marked. `plotSilhouette()` draws it for any `"Silhouette"` object and for
+the silhouette results of **cluster** [@cluster], **factoextra**
+[@factoextra] and **drclust** [@drclust2025]. It returns a **ggplot2** object,
+so the plot can be changed and saved like any other.
+
+```{r library}
+library(Silhouette)
+X <- as.matrix(iris[, 1:4])
+set.seed(1)
+km <- kmeans(X, centers = 3, nstart = 20)
+sil <- Silhouette(proxy::dist(X, km$centers))
+```
+
+# The default plot
+
+`plot()` on a `"Silhouette"` object calls `plotSilhouette()`, so the two lines
+below draw the same plot.
+
+```{r default, fig.alt = "Silhouette plot of 150 iris flowers in three k-means clusters, with bars colored by cluster, a legend giving each cluster's size and average width, and a dashed red line at the overall average of about 0.67."}
+plot(sil)
+# plotSilhouette(sil)
+```
+
+The legend gives each cluster's size and average width, the subtitle gives the
+overall average, and the dashed line marks it. The axis title names the width
+(`medoid` here). When the object was computed with `average = "fuzzy"` or
+`average = "median"`, the subtitle says so and the line marks that average;
+the bars always show the individual widths.
+
+# Options
+
+`summary.legend = FALSE` reduces the legend to the cluster numbers,
+`grayscale = TRUE` switches to gray bars and a black line for print, and
+`linetype` changes the line.
+
+```{r gray, fig.alt = "The same silhouette plot in shades of gray with a solid black average line and a legend that lists only the cluster numbers."}
+plotSilhouette(sil, summary.legend = FALSE, grayscale = TRUE, linetype = "solid")
+```
+
+Any further argument goes to `ggpubr::ggpar()`, which sets titles, axis
+labels, the legend position, the color palette, font sizes and the theme:
+
+```{r ggpar, message = FALSE, fig.alt = "The silhouette plot with a custom title, the legend below the plot, and bars in blue, orange and green."}
+plotSilhouette(sil,
+  title = "k-means, K = 3", ylab = "Medoid width",
+  legend = "bottom", palette = c("#2a78d6", "#eb6834", "#1f9d74"))
+```
+
+A `palette` replaces the color scale that carries the summary legend, so the
+legend then lists only the cluster numbers.
+
+Because the result is a ggplot, layers and themes can also be added with `+`,
+and `ggplot2::ggsave()` saves it to a file:
+
+```{r save, eval = FALSE}
+p <- plotSilhouette(sil) + ggplot2::theme(legend.position = "top")
+ggplot2::ggsave("silhouette.pdf", p, width = 7, height = 4)
+```
+
+# Finding the poorly placed observations
+
+With `label = TRUE` the bars are labeled with the row index of each
+observation. This is readable for up to about 50 observations. For the
+`USArrests` data, with four k-means clusters of the standardized crime rates:
+
+```{r label, fig.height = 4.2, fig.alt = "Silhouette plot of 50 US states in four clusters with row indices under the bars. A few states have widths below 0.2."}
+Xu <- scale(USArrests)
+set.seed(1)
+km_us <- kmeans(Xu, centers = 4, nstart = 20)
+sil_us <- Silhouette(proxy::dist(Xu, km_us$centers))
+plotSilhouette(sil_us, label = TRUE)
+```
+
+The object keeps the rows in the order of the data, so the widths can be
+matched back to the observations directly:
+
+```{r label-names}
+rownames(USArrests)[sil_us$sil_width < 0.2]
+```
+
+# Negative widths
+
+When the labels come from a membership matrix passed as `prob_matrix`, an
+observation whose assigned cluster is not its nearest cluster center gets a
+negative width, and its bar points downward. For a Gaussian mixture of the iris
+data, scored against the component means:
+
+```{r negative, fig.alt = "Silhouette plot of the iris data in three Gaussian mixture components, with widths computed from distances to the component means. A handful of observations in two clusters have negative widths."}
+suppressPackageStartupMessages(library(mclust))
+gm <- Mclust(X, G = 3, verbose = FALSE)
+sil_gm <- Silhouette(proxy::dist(X, t(gm$parameters$mean)), prob_matrix = gm$z)
+plotSilhouette(sil_gm)
+```
+
+These are the observations on which the mixture and the geometry disagree; see
+`vignette("interpreting-widths", package = "Silhouette")`.
+
+# Results from other packages
+
+`plotSilhouette()` also draws the silhouette results of partitioning around
+medoids and its relatives in **cluster** (`pam()`, `clara()`, `fanny()` and
+`silhouette()`), of `eclust()` and `hcut()` in **factoextra**, and of
+`silhouette()` in **drclust**. These packages compute the classical widths from
+all pairwise distances; `plotSilhouette()` only draws them. Call
+`plotSilhouette()` explicitly for these objects, because `plot()` dispatches to
+the methods of the package that created them.
+
+```{r other, fig.height = 6.4, fig.alt = "Four silhouette plots of the iris data in a two-by-two grid, for pam, fanny, factoextra eclust with k-means, and factoextra hcut. All four show one well-separated cluster and two overlapping ones."}
+pm <- cluster::pam(X, k = 3)
+fy <- cluster::fanny(X, k = 3)
+ec <- factoextra::eclust(X, "kmeans", k = 3, graph = FALSE)
+hc <- factoextra::hcut(X, k = 3)
+small <- function(x, title) plotSilhouette(x, title = title, font.title = 10,
+                                           font.subtitle = 8, font.legend = 7)
+ggpubr::ggarrange(
+  small(pm, "cluster::pam()"),
+  small(fy, "cluster::fanny()"),
+  small(ec, "factoextra::eclust()"),
+  small(hc, "factoextra::hcut()"),
+  ncol = 2, nrow = 2)
+```
+
+For `fanny()`, the widths are those of the crisp partition obtained by assigning
+each observation to its cluster of largest membership. The same holds for
+objects returned by `cluster::silhouette()`, for example for a hierarchical
+clustering:
+
+```{r cluster-sil, fig.alt = "Silhouette plot of the iris data in three average-linkage clusters, with classical widths from cluster::silhouette."}
+hc_avg <- cutree(hclust(dist(X), method = "average"), k = 3)
+plotSilhouette(cluster::silhouette(hc_avg, dist(X)))
+```
+
+In **drclust**, `silhouette()` takes the data and a fitted model, such as the
+reduced k-means of `dpcakm()` with $K$ clusters in $Q$ components, and returns
+the classical widths in component `cl.silhouette`:
+
+```{r drclust, fig.alt = "Silhouette plot of the iris data in three clusters from drclust dpcakm, with classical widths."}
+set.seed(1)
+dp <- drclust::dpcakm(X, K = 3, Q = 2)
+d <- drclust::silhouette(X, dp)
+plotSilhouette(d$cl.silhouette)
+```
+
+`drclust::silhouette()` prints a summary table when it is called; the
+**drclust** package also masks `cluster::silhouette()` when it is attached, so
+the calls above use `::`.
+
+# Widths computed elsewhere
+
+`getSilhouette()` builds a `"Silhouette"` object from widths computed by any
+other means, so that `summary()` and `plot()` work on them. It needs the
+assigned cluster, the neighboring cluster and the width of every observation;
+`weight` is needed only for fuzzy averaging. `is.Silhouette()` checks the
+result, and with `strict = TRUE` also its columns and attributes.
+
+For example, `approxSilhouette()` in the Bioconductor package **bluster**
+[@bluster] approximates the classical widths of a crisp partition in linear
+time and returns them as a `DataFrame`:
+
+```{r bluster, eval = ok && requireNamespace("bluster", quietly = TRUE), fig.alt = "Silhouette plot of approximate classical widths from bluster for the pam partition of the iris data."}
+a <- bluster::approxSilhouette(X, pm$clustering)
+sil_bl <- getSilhouette(cluster = as.integer(a$cluster),
+                        neighbor = as.integer(a$other),
+                        sil_width = a$width)
+is.Silhouette(sil_bl, strict = TRUE)
+summary(sil_bl, print.summary = FALSE)$avg.width
+plotSilhouette(sil_bl)
+```
+
+The same pattern works for widths computed in other software and read into R.
+
+# Session information
+
+```{r session, eval = TRUE}
+sessionInfo()
+```
+
+# References

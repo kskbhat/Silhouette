@@ -42,19 +42,45 @@ authors:
     href: "https://www.pondiuni.edu.in/faculy_profiles/dr-kiruthika/"
 
 reference:
-  - title: For clustering
+  - title: Widths from distances or similarities
+    desc: >
+      Simplified silhouette widths from an n x K matrix of proximities between
+      observations and clusters, with medoid or PAC normalization.
     contents:
       - Silhouette
+  - title: Widths from membership probabilities
+    desc: >
+      Silhouette widths for soft and model-based clustering, computed from
+      membership or posterior probabilities.
+    contents:
       - softSilhouette
       - cerSilhouette
       - dbSilhouette
+  - title: All widths at once
+    contents:
       - calSilhouette
-      - getSilhouette
-      - is.Silhouette
-      - plotSilhouette
-  - title: For Block clustering/Tri-clustering/Multi-way clustering
+  - title: Block and multi-way clustering
     contents:
       - extSilhouette
+  - title: Silhouette objects and plots
+    contents:
+      - plotSilhouette
+      - getSilhouette
+      - is.Silhouette
+
+articles:
+  - title: Using Silhouette
+    navbar: Using Silhouette
+    contents:
+      - soft-clustering
+      - interpreting-widths
+      - multiway
+  - title: More
+    navbar: More
+    contents:
+      - articles/plotting
+      - articles/case-study-thyroid
+      - articles/benchmarks
 
 navbar:
   structure:

@@ -1,0 +1,170 @@
+---
+title: "Extended silhouette for block and multi-way clustering"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Extended silhouette for block and multi-way clustering}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: references.bib
+---
+
+```{r setup, include = FALSE}
+pkgs <- c("proxy", "drclust")
+ok <- all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE))
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", eval = ok,
+  fig.width = 7, fig.height = 2.9, dpi = 96, out.width = "100%"
+)
+```
+
+```{r not-available, echo = FALSE, results = "asis", eval = !ok}
+cat("This vignette needs the suggested packages",
+    paste0("'", pkgs, "'", collapse = ", "),
+    "to run its code. Install them to see the output.")
+```
+
+A block (or co-) clustering partitions more than one mode of a data array at
+once, for example the rows and the columns of a matrix. Each mode gets its own
+partition, and each partition can be scored with a silhouette.
+`extSilhouette()` combines the mode-wise results into the extended silhouette
+of @schepers2008multimode [see also @bhat2025block]. If mode $m$ has $n_m$
+objects and average width $\bar S_m$,
+$$
+\mathrm{ExS} = \frac{\sum_m n_m \bar S_m}{\sum_m n_m}.
+$$
+The weights are the numbers of objects, so a mode with many more objects than
+another dominates the combined value. This vignette shows the workflow and what
+that weighting means in practice.
+
+```{r library}
+library(Silhouette)
+library(drclust)
+```
+
+# Data with a block structure
+
+We simulate a $150 \times 24$ matrix whose rows fall into four groups and whose
+columns fall into three, so that each of the 12 blocks has its own mean.
+
+```{r data}
+set.seed(2025)
+n <- 150; p <- 24
+row_group <- sample(1:4, n, replace = TRUE)
+col_group <- sample(1:3, p, replace = TRUE)
+block_means <- matrix(c( 2, -1,  0,
+                        -2,  1,  1,
+                         0,  2, -2,
+                         1, -2,  2), nrow = 4, byrow = TRUE)
+Xb <- scale(1.5 * block_means[row_group, col_group] + matrix(rnorm(n * p), n, p))
+```
+
+# Silhouettes for a double k-means fit
+
+Double k-means [@vichi2001], implemented in `doublekm()` of **drclust**
+[@drclust2025], approximates the data matrix by $U C V^\top$, where $U$ and $V$
+are binary membership matrices for rows and columns and $C$ holds the block
+means. The prototype of row cluster $k$ is row $k$ of $C V^\top$, and the
+prototype of column cluster $q$ is column $q$ of $U C$. Each mode therefore has
+a matrix of distances to its prototypes, which `Silhouette()` accepts directly.
+We recompute $C$ by least squares from $U$ and $V$ so that the prototypes match
+the fitted memberships exactly.
+
+```{r block-fun}
+block_sil <- function(Xs, K, Q, seed) {
+  set.seed(seed)
+  fit <- doublekm(Xs, K = K, Q = Q, Rndstart = 10, prep = 0)
+  U <- fit$U
+  V <- fit$V
+  C <- solve(crossprod(U), t(U) %*% Xs %*% V) %*% solve(crossprod(V))
+  rows <- Silhouette(proxy::dist(Xs, C %*% t(V)))      # n x K distances
+  cols <- Silhouette(proxy::dist(t(Xs), t(U %*% C)))   # p x Q distances
+  extSilhouette(list(rows, cols), dim_names = c("rows", "columns"))
+}
+block_sil(Xb, K = 4, Q = 3, seed = 1)
+```
+
+The result holds the extended silhouette and a table of the number of objects
+and the average width for each mode.
+
+# Choosing the numbers of row and column clusters
+
+We fit a grid of $(K, Q)$ and record the extended silhouette together with the
+mode-wise averages.
+
+```{r grid}
+grid <- expand.grid(K = 2:5, Q = 2:4)
+fits <- lapply(seq_len(nrow(grid)),
+               function(g) block_sil(Xb, grid$K[g], grid$Q[g], seed = g))
+grid$ExS <- sapply(fits, `[[`, "ext_sil_width")
+grid$rows <- sapply(fits, function(e) e$dim_table$avg_sil_width[1])
+grid$columns <- sapply(fits, function(e) e$dim_table$avg_sil_width[2])
+grid[order(-grid$ExS), ][1:4, ]
+```
+
+```{r grid-plot, fig.alt = "Three heat maps of average width over K from 2 to 5 row clusters and Q from 2 to 4 column clusters, one each for rows, columns and the extended silhouette. The row averages barely depend on Q; the column averages are highest at Q = 3; the extended silhouette follows the row panel closely.", echo = FALSE}
+library(ggplot2)
+long <- rbind(
+  data.frame(grid[, c("K", "Q")], panel = "rows", value = grid$rows),
+  data.frame(grid[, c("K", "Q")], panel = "columns", value = grid$columns),
+  data.frame(grid[, c("K", "Q")], panel = "extended (ExS)", value = grid$ExS))
+long$panel <- factor(long$panel, c("rows", "columns", "extended (ExS)"))
+ggplot(long, aes(K, Q, fill = value)) +
+  geom_tile(colour = "white", linewidth = 0.8) +
+  geom_text(aes(label = sprintf("%.2f", value), colour = value > 0.5),
+            size = 2.8, show.legend = FALSE) +
+  scale_colour_manual(values = c(`TRUE` = "white", `FALSE` = "#0b0b0b")) +
+  scale_fill_gradient(low = "#cde2fb", high = "#104281", name = "Average width") +
+  scale_x_continuous(breaks = 2:5, expand = c(0, 0)) +
+  scale_y_continuous(breaks = 2:4, expand = c(0, 0)) +
+  facet_wrap(~ panel) +
+  labs(x = "Row clusters K", y = "Column clusters Q") +
+  theme_minimal(base_size = 10) +
+  theme(panel.grid = element_blank(), legend.position = "bottom")
+```
+
+```{r grid-values, include = FALSE}
+top <- grid[which.max(grid$ExS), ]
+w_rows <- n / (n + p)
+grid$equal <- (grid$rows + grid$columns) / 2
+top_eq <- grid[which.max(grid$equal), ]
+```
+
+The extended silhouette is largest at $(K, Q) = (`r top$K`, `r top$Q`)$, while
+the data have four row groups and three column groups. The reason is the
+weighting: with `r n` rows and `r p` columns, the rows carry
+`r sprintf("%.0f", 100 * w_rows)`% of the weight, so the extended silhouette
+largely repeats the row averages, which barely depend on $Q$ and here prefer
+fewer row clusters. The column averages carry the information about the column
+partition but can only tip close decisions.
+
+When the modes differ greatly in size, report the mode-wise averages alongside
+the extended silhouette, and consider how much weight each mode should get. In
+this example an equally weighted average of the two modes is largest at
+$(K, Q) = (`r top_eq$K`, `r top_eq$Q`)$:
+
+```{r equal-weight}
+grid$equal <- (grid$rows + grid$columns) / 2
+grid[order(-grid$equal), ][1:3, c("K", "Q", "rows", "columns", "equal")]
+```
+
+Equal weighting is not generally better; it simply answers a different
+question, one in which a column is as important as a row.
+
+# Soft block clustering
+
+Block clustering methods that return membership probabilities for rows and
+columns, such as block probabilistic distance clustering [@bhat2025block], fit
+the same workflow: compute a `"Silhouette"` object for each mode with
+`softSilhouette()` (or with `Silhouette()` on each mode's distances), and pass
+the list to `extSilhouette()`. Use the same width and averaging method for every
+mode, so that the mode-wise averages are on the same scale.
+
+# Session information
+
+```{r session, eval = TRUE}
+sessionInfo()
+```
+
+# References
