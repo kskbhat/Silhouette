@@ -76,10 +76,10 @@ avg <- function(s) summary(s, print.summary = FALSE)$avg.width
 tab <- sapply(fits, function(f) c(
   medoid     = avg(Silhouette(f$prox, prob_matrix = f$prob)),
   pac        = avg(Silhouette(f$prox, prob_matrix = f$prob, method = "pac")),
-  pp_pac     = avg(softSilhouette(f$prob)),
-  nlpp_pac   = avg(softSilhouette(f$prob, prob_type = "nlpp")),
-  cer        = avg(cerSilhouette(f$prob)),
-  db         = avg(suppressWarnings(dbSilhouette(f$prob, average = "crisp")))))
+  PACS       = avg(softSilhouette(f$prob)),
+  NLPPS      = avg(softSilhouette(f$prob, prob_type = "nlpp", method = "medoid")),
+  CeS        = avg(cerSilhouette(f$prob)),
+  DBS        = avg(suppressWarnings(dbSilhouette(f$prob, average = "crisp")))))
 ari <- sapply(labels, adjustedRandIndex, thyroid$Diagnosis)
 knitr::kable(rbind(tab, ARI_with_diagnosis = ari), digits = 3)
 ```
@@ -90,7 +90,7 @@ ord <- function(v) paste(names(sort(v, decreasing = TRUE)), collapse = ", ")
 
 The two families of widths rank the methods differently. The distance-based
 widths rank them `r ord(tab["medoid", ])`, and the probability-based widths
-rank them `r ord(tab["pp_pac", ])`. Agreement with the diagnosis, which would
+rank them `r ord(tab["PACS", ])`. Agreement with the diagnosis, which would
 not be available in practice, orders them `r ord(ari)`.
 
 The difference is expected. Distances to cluster means reward the spherical,

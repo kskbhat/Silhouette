@@ -1,12 +1,14 @@
-#' Certainty Silhouette Width (Cer) for Soft Clustering
+#' Certainty Silhouette Width (CeS) for Soft Clustering
 #'
-#' Computes the certainty width of each observation, the membership probability of its
-#' assigned cluster (by default, its largest membership).
+#' Computes the certainty silhouette (CeS) of Bhat Kapu and Kiruthika (2024) for each
+#' observation: the membership probability of its assigned cluster (by default, its largest
+#' membership).
 #'
-#' The certainty width measures how confidently each observation is assigned; it says
-#' nothing about how well separated the clusters are in the data space. It is bounded
-#' below by \eqn{1/K}, so its average is not comparable across different numbers of
-#' clusters \eqn{K}.
+#' The certainty silhouette is the counterpart of the uncertainty used in model-based
+#' clustering: values near 1 indicate high certainty that an observation belongs to its
+#' cluster, and values near \eqn{1/K} ambiguity. It is bounded below by \eqn{1/K}, so its
+#' level falls as \eqn{K} grows; Bhat Kapu and Kiruthika (2024) read the number of clusters
+#' from the reverse elbow drop of its average over \eqn{k} (see \code{\link{softSilhouette}}).
 #'
 #' @param prob_matrix A numeric matrix of posterior probabilities where rows represent observations and columns represent clusters. Must sum to 1 by row. If \code{clust_fun} is provided, \code{prob_matrix} must be a string giving the name of the matrix component (e.g., "u").
 #' @param clust_fun Optional S3 or S4 function object or function as character string specifying a clustering function that produces the membership matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prob_matrix} must be a string giving the name of the matrix component (e.g., "u"). Defaults to \code{NULL}.

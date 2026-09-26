@@ -21,10 +21,10 @@
   invisible(x)
 }
 
-# The exponent of the fuzzy weights.
+# The exponent of the fuzzy weights; a = 0 gives equal weights (the crisp average).
 .check_a <- function(a) {
-  if (!is.numeric(a) || length(a) != 1 || !is.finite(a) || a <= 0) {
-    stop("a must be a positive numeric value.")
+  if (!is.numeric(a) || length(a) != 1 || !is.finite(a) || a < 0) {
+    stop("a must be a non-negative numeric value.")
   }
   invisible(a)
 }

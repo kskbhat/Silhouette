@@ -1,12 +1,13 @@
 #' Density-Based Silhouette Width (DBS) for Soft Clustering
 #'
-#' Computes silhouette widths based on the density-based method of Menardi (2011), using
-#' log-ratios of posterior probabilities.
+#' Computes the density-based silhouette (DBS) of Menardi (2011), using log-ratios of
+#' posterior probabilities.
 #'
-#' The density-based width measures the relative dominance of the largest membership over
-#' the second largest, scaled by the most extreme observation in the sample. Like the other
-#' probability-based widths, it reflects how certain the assignments are rather than how
-#' well separated the clusters are in the data space.
+#' The DBS compares the largest membership with the second largest on the log scale, scaled
+#' by the largest such log ratio in the sample. Its numerator is that of the NLPPS of Bhat
+#' Kapu and Kiruthika (2024), with a different denominator. Following Menardi (2011), the
+#' median is the default summary, and the number of clusters is read from the local maxima
+#' of the average over \eqn{k}.
 #'
 #' @param average Character string specifying the method for computing the average silhouette width.
 #'   Options are:
@@ -71,6 +72,8 @@
 #' @references
 #'
 #' Menardi, G. (2011). Density-based silhouette diagnostics for clustering methods. \emph{Statistics and Computing}, 21(3), 295--308. \doi{10.1007/s11222-010-9169-0}
+#'
+#' Bhat Kapu, S., & Kiruthika. (2024). Some density-based silhouette diagnostics for soft clustering algorithms. Communications in Statistics: Case Studies, Data Analysis and Applications, 10(3-4), 221-238. \doi{10.1080/23737484.2024.2408534}
 #'
 #' @seealso \code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{calSilhouette}}, \code{\link{getSilhouette}}, \code{\link{is.Silhouette}}, \code{\link{plotSilhouette}}
 #' @export

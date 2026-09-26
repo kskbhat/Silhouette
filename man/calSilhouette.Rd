@@ -26,7 +26,7 @@ If \code{clust_fun} is provided, \code{prob_matrix} can be given as the name of 
 component (e.g., \code{"u"} for the \code{\link[ppclust]{fcm}} function).
 Defaults to \code{NULL}.}
 
-\item{a}{Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.}
+\item{a}{Non-negative number, the exponent \eqn{\alpha} of the weights in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences; \code{a = 0} gives every observation the same weight, so the fuzzy average equals the crisp average. Defaults to \code{2}.}
 
 \item{print.summary}{Logical; if \code{TRUE}, reports the summary table through \code{\link{message}}. Defaults to \code{FALSE}.}
 
@@ -50,14 +50,14 @@ A data frame with one row per method and the following columns:
 }
 \description{
 Computes every silhouette width available in the package for one clustering and returns
-a data frame comparing the crisp, fuzzy, and median averages of each. All rows score the
-same partition.
+a data frame comparing the crisp, fuzzy, and median averages of each.
 }
 \details{
 The rows are not independent pieces of evidence: several are exact or monotone
-transformations of one another (see \emph{Relations between the rows}). Distance-based
-rows measure separation relative to the cluster representatives; probability-based rows
-measure how certain the assignments are.
+transformations of one another (see \emph{Relations between the rows}). The distance-based
+rows compare distances to the cluster representatives; the probability-based rows are the
+silhouettes of Bhat Kapu and Kiruthika (2024), which treat the posterior probabilities or
+the component densities as proximities, and the density-based silhouette of Menardi (2011).
 
 The methods included depend on the available input matrices:
 
@@ -69,14 +69,14 @@ The methods included depend on the available input matrices:
 
 \strong{If \code{prob_matrix} is available:}
 \itemize{
-\item \code{pp_pac} - Posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
-\item \code{pp_medoid} - Posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
-\item \code{nlpp_pac} - Negative log posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
-\item \code{nlpp_medoid} - Negative log posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
-\item \code{pd_pac} - Probability distribution silhouette with PAC method using \code{\link{softSilhouette}}
-\item \code{pd_medoid} - Probability distribution silhouette with Medoid method using \code{\link{softSilhouette}}
-\item \code{cer} - Certainty-based silhouette using \code{\link{cerSilhouette}}
-\item \code{db} - Density-based silhouette using \code{\link{dbSilhouette}}
+\item \code{pp_pac} - PACS: posterior probabilities with the PAC normalization (\code{\link{softSilhouette}})
+\item \code{pp_medoid} - PPS: posterior probability silhouette (\code{\link{softSilhouette}})
+\item \code{nlpp_pac} - Negative log posterior probabilities with the PAC normalization (\code{\link{softSilhouette}})
+\item \code{nlpp_medoid} - NLPPS: negative log of posterior probability silhouette (\code{\link{softSilhouette}})
+\item \code{pd_pac} - Probability densities with the PAC normalization (\code{\link{softSilhouette}})
+\item \code{pd_medoid} - PDS: probability density silhouette (\code{\link{softSilhouette}})
+\item \code{cer} - CeS: certainty silhouette (\code{\link{cerSilhouette}})
+\item \code{db} - DBS: density-based silhouette of Menardi (2011) (\code{\link{dbSilhouette}})
 }
 
 At least one of \code{prox_matrix} or \code{prob_matrix} must be provided. Each width is
@@ -89,11 +89,14 @@ reported once.
 }
 \section{Cluster labels}{
 
-Every row uses the same labels, taken in order of precedence from \code{cluster}, from the
-largest membership in \code{prob_matrix}, or from the closest cluster in \code{prox_matrix}.
-(In version 0.9.6 and earlier, the crisp and median distance-based rows used the closest
-cluster in \code{prox_matrix} even when \code{prob_matrix} was supplied, and so could
-describe a different partition from the other rows.)
+When \code{cluster} is supplied, every row scores that partition. Otherwise every row
+except the PDS rows (\code{pd_pac}, \code{pd_medoid}) uses the largest membership in
+\code{prob_matrix}, or the closest cluster in \code{prox_matrix} when there are no
+memberships. The PDS rows assign each observation to its largest density, as in the
+definition of the PDS (see \code{\link{softSilhouette}}); this agrees with the largest
+membership when the clusters have equal estimated weights. (In version 0.9.6 and earlier,
+the crisp and median distance-based rows used the closest cluster in \code{prox_matrix}
+even when \code{prob_matrix} was supplied.)
 }
 
 \section{Relations between the rows}{
@@ -109,7 +112,7 @@ functions of the ratio of the two largest memberships, so they too rank observat
 identically. The averages still differ, and may peak at different numbers of
 clusters.}
 \item{Equal in special cases.}{
-\code{pd} equals \code{pp} when all estimated cluster weights are equal. For fuzzy
+\code{pd} (PDS) equals \code{pp} (PPS) when all estimated cluster weights are equal. For fuzzy
 c-means with fuzzifier \eqn{m}, \code{pp_medoid} and \code{pp_pac} equal
 \code{medoid} and \code{pac} computed from the dissimilarities
 \eqn{d_{ik}^{1/(m-1)}}, where \eqn{d_{ik}} are squared Euclidean distances to the
@@ -119,6 +122,15 @@ The distance-based rows (in general), \code{nlpp} (which also depends on the siz
 the neighboring membership), and \code{cer} (the largest membership alone, bounded
 below by \eqn{1/K}).}
 }
+}
+
+\section{Choosing the number of clusters}{
+
+Computing \code{calSilhouette()} over \eqn{k = 2, 3, \ldots} gives one curve per row.
+The distance-based rows are usually read at their maximum. Bhat Kapu and Kiruthika (2024)
+read the probability-based rows from the reverse elbow drop of the curve, and the DBS from
+its local maxima (Menardi, 2011). The suggested number of clusters depends on the
+algorithm that produced the memberships, on the width and on the averaging.
 }
 
 \examples{
@@ -149,6 +161,11 @@ if (requireNamespace("ppclust", quietly = TRUE)) {
     print.summary = TRUE
   )
 }
+}
+\references{
+Bhat Kapu, S., & Kiruthika. (2024). Some density-based silhouette diagnostics for soft clustering algorithms. Communications in Statistics: Case Studies, Data Analysis and Applications, 10(3-4), 221-238. \doi{10.1080/23737484.2024.2408534}
+
+Menardi, G. (2011). Density-based silhouette diagnostics for clustering methods. \emph{Statistics and Computing}, 21(3), 295--308. \doi{10.1007/s11222-010-9169-0}
 }
 \seealso{
 \code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}

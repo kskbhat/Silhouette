@@ -142,8 +142,8 @@ test_that("Silhouette() errors with invalid a parameter", {
   km <- kmeans(iris[, -5], centers = 3)
   dist_mat <- proxy::dist(iris[, -5], km$centers)
   
-  expect_error(Silhouette(dist_mat, a = -1), "positive numeric value")
-  expect_error(Silhouette(dist_mat, a = "invalid"), "positive numeric value")
+  expect_error(Silhouette(dist_mat, a = -1), "non-negative numeric value")
+  expect_error(Silhouette(dist_mat, a = "invalid"), "non-negative numeric value")
 })
 
 test_that("Silhouette() errors with invalid proximity_type", {

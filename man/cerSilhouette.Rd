@@ -2,7 +2,7 @@
 % Please edit documentation in R/cerSilhouette.R
 \name{cerSilhouette}
 \alias{cerSilhouette}
-\title{Certainty Silhouette Width (Cer) for Soft Clustering}
+\title{Certainty Silhouette Width (CeS) for Soft Clustering}
 \usage{
 cerSilhouette(
   prob_matrix,
@@ -27,7 +27,7 @@ Options are:
 }
 Defaults to \code{"crisp"}.}
 
-\item{a}{Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.}
+\item{a}{Non-negative number, the exponent \eqn{\alpha} of the weights in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences; \code{a = 0} gives every observation the same weight, so the fuzzy average equals the crisp average. Defaults to \code{2}.}
 
 \item{sort}{Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.}
 
@@ -39,9 +39,10 @@ Defaults to \code{"crisp"}.}
 
 \item{cluster}{Optional integer vector of length \eqn{n} giving the cluster of each
 observation as a column number of \code{prob_matrix}. If \code{NULL} (the default), each
-observation is assigned to the cluster with its largest membership. If \code{clust_fun}
-is provided, \code{cluster} may be the name of the label component of its output. Must be
-named in the call because it follows \code{...}.}
+observation is assigned to the cluster with its largest membership (for \code{"pp"} and
+\code{"nlpp"}) or its largest density (for \code{"pd"}); see \emph{Cluster labels}. If
+\code{clust_fun} is provided, \code{cluster} may be the name of the label component of its
+output. Must be named in the call because it follows \code{...}.}
 }
 \value{
 A data frame of class \code{"Silhouette"} with one row per observation and columns
@@ -54,14 +55,16 @@ A data frame of class \code{"Silhouette"} with one row per observation and colum
 }
 }
 \description{
-Computes the certainty width of each observation, the membership probability of its
-assigned cluster (by default, its largest membership).
+Computes the certainty silhouette (CeS) of Bhat Kapu and Kiruthika (2024) for each
+observation: the membership probability of its assigned cluster (by default, its largest
+membership).
 }
 \details{
-The certainty width measures how confidently each observation is assigned; it says
-nothing about how well separated the clusters are in the data space. It is bounded
-below by \eqn{1/K}, so its average is not comparable across different numbers of
-clusters \eqn{K}.
+The certainty silhouette is the counterpart of the uncertainty used in model-based
+clustering: values near 1 indicate high certainty that an observation belongs to its
+cluster, and values near \eqn{1/K} ambiguity. It is bounded below by \eqn{1/K}, so its
+level falls as \eqn{K} grows; Bhat Kapu and Kiruthika (2024) read the number of clusters
+from the reverse elbow drop of its average over \eqn{k} (see \code{\link{softSilhouette}}).
 
 Let the posterior probability matrix or cluster membership matrix be
 \eqn{\Gamma = [\gamma_{ik}]_{n \times K}}.
@@ -93,8 +96,10 @@ the \strong{fuzzy silhouette index} (\eqn{FS}) of Campello and Hruschka (2006) i
 }
 where \eqn{\gamma_{i(1)}} and \eqn{\gamma_{i(2)}} are the largest and second largest
 memberships of observation \eqn{i}, and \eqn{\alpha} (the \code{a} argument) controls the
-emphasis on confident assignments. The weight \eqn{w_i} is stored in the \code{weight}
-column and does not depend on the cluster labels. If all weights are zero, the fuzzy
+emphasis on confident assignments (\eqn{\alpha \ge 0}; \eqn{\alpha = 0} gives the crisp
+average). The weight \eqn{w_i} is stored in the \code{weight} column and does not depend on
+the cluster labels; it equals Equation (8) of Bhat Kapu and Kiruthika (2024) when each
+observation is assigned to its largest membership. If all weights are zero, the fuzzy
 average is undefined (\code{NaN}) and a warning is given.
 
 If \code{average = "median"}, the median width is reported.

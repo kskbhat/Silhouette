@@ -43,53 +43,46 @@ gm <- Mclust(X, G = 3, verbose = FALSE)          # Gaussian mixture
 # Widths from membership probabilities
 
 Write $\gamma_{ik}$ for the membership of observation $i$ in cluster $k$, with
-$\sum_k \gamma_{ik} = 1$. Each observation is assigned to the cluster $c_i$ with
-the largest membership (or to the cluster given in the `cluster` argument), and
-its neighbor $\nu_i$ is the closest other cluster. `softSilhouette()` treats a
-transformation of the memberships as a proximity matrix and applies the medoid
-or PAC width to it [@bhatkapu2024density]:
+$\sum_k \gamma_{ik} = 1$. `softSilhouette()` treats the memberships, or a
+transformation of them, as a proximity matrix and applies the medoid or PAC
+width to it [@bhatkapu2024density]. The table gives the names used in that
+paper:
 
-| `prob_type` | Proximity | Type |
-|:---|:---|:---|
-| `"pp"` (default) | $\gamma_{ik}$ | similarity |
-| `"nlpp"` | $-\log \gamma_{ik}$ | dissimilarity |
-| `"pd"` | $\gamma_{ik} / \hat\pi_k$, with $\hat\pi_k = n^{-1} \sum_i \gamma_{ik}$ | similarity |
+| Name | Call | Proximity | Type |
+|:---|:---|:---|:---|
+| PACS | `softSilhouette(z)` | posterior $\gamma_{ik}$ | similarity, PAC width |
+| PPS | `softSilhouette(z, method = "medoid")` | posterior $\gamma_{ik}$ | similarity, medoid width |
+| NLPPS | `softSilhouette(z, prob_type = "nlpp", method = "medoid")` | $-\log \gamma_{ik}$ | dissimilarity |
+| PDS | `softSilhouette(z, prob_type = "pd", method = "medoid")` | density $f_k(x_i)$, computed as $\gamma_{ik} / \hat\pi_k$ | similarity |
+| CeS | `cerSilhouette(z)` | largest membership $\max_k \gamma_{ik}$ | certainty |
+| DBS | `dbSilhouette(z)` | $\log(\gamma_{ic_i} / \gamma_{i\nu_i})$, scaled by its sample maximum [@menardi2011density] | log ratio |
 
-The `"pd"` form divides by the estimated size of each cluster, so it favors
-small clusters. Two further widths use the memberships directly:
-
-- `cerSilhouette()`: the certainty width $\max_k \gamma_{ik}$, which lies
-  between $1/K$ and 1.
-- `dbSilhouette()`: the density-based width of @menardi2011density,
-  $R_i / \max_j |R_j|$ with $R_i = \log(\gamma_{ic_i} / \gamma_{i\nu_i})$. With
-  the default labels it lies between 0 and 1, and the most confidently assigned
-  observation in the sample always has width 1.
-
-These widths measure something different from a distance-based silhouette:
-
-| Width | Function | Mainly measures |
-|:---|:---|:---|
-| classical silhouette | `cluster::silhouette()` | separation between observations: average distance to the own cluster against the nearest other cluster |
-| simplified (medoid, PAC) | `Silhouette()` | separation relative to the cluster representatives |
-| `pp`, `nlpp`, `pd` | `softSilhouette()` | certainty of the assignment: the margin between the two largest memberships |
-| certainty | `cerSilhouette()` | the largest membership alone |
-| density-based | `dbSilhouette()` | dominance of the largest membership over the second, relative to the most extreme observation |
-
-A well-separated mixture and a mixture fitted with too few components can both
-assign observations decisively, so membership-based widths can be high when the
-clusters are poorly separated in the data space.
+PACS, PPS and NLPPS take the posterior probabilities as a similarity (or, on the
+log scale, a dissimilarity) and assign each observation to its largest
+membership. The PDS takes the component densities as the similarity: for a
+mixture, $\gamma_{ik} = \pi_k f_k(x_i) / f(x_i)$, so
+$\gamma_{ik} / \hat\pi_k = f_k(x_i) / f(x_i)$ with $\hat\pi_k = n^{-1} \sum_i \gamma_{ik}$,
+and the PDS can be computed from the memberships of any soft clustering
+algorithm. It assigns each observation to its largest density, so it lies
+between 0 and 1. The certainty silhouette lies between $1/K$ and 1. The DBS of
+@menardi2011density lies between 0 and 1, and the most confidently assigned
+observation in the sample always has width 1; Menardi summarizes it by the
+median, which is the default of `dbSilhouette()`.
 
 ```{r widths}
 avg <- function(s) summary(s, print.summary = FALSE)$avg.width
-c(pp   = avg(softSilhouette(gm$z)),
-  nlpp = avg(softSilhouette(gm$z, prob_type = "nlpp")),
-  pd   = avg(softSilhouette(gm$z, prob_type = "pd")),
-  cer  = avg(cerSilhouette(gm$z)),
-  db   = avg(dbSilhouette(gm$z, average = "crisp")))
+c(PACS  = avg(softSilhouette(gm$z)),
+  PPS   = avg(softSilhouette(gm$z, method = "medoid")),
+  NLPPS = avg(softSilhouette(gm$z, prob_type = "nlpp", method = "medoid")),
+  PDS   = avg(softSilhouette(gm$z, prob_type = "pd", method = "medoid")),
+  CeS   = avg(cerSilhouette(gm$z)),
+  DBS   = avg(dbSilhouette(gm$z)))
 ```
 
 These are different indices on different scales. Compare each one across fits,
-never one index with another.
+never one index with another. Because they depend only on the memberships, they
+describe the clustering as the fitted model sees it; the distance-based widths
+of `Silhouette()` describe it in the data space.
 
 # Fuzzy c-means: soft and distance-based widths coincide
 
@@ -131,10 +124,11 @@ whose two largest memberships are close count for less. The exponent `a`
 controls how strongly:
 
 ```{r exponent}
-sapply(c(a0.5 = 0.5, a1 = 1, a2 = 2, a4 = 4), function(a)
+sapply(c(a0 = 0, a0.5 = 0.5, a1 = 1, a2 = 2, a4 = 4), function(a)
   avg(softSilhouette(fm$u, average = "fuzzy", a = a)))
 ```
 
+With `a = 0` every weight is 1 and the fuzzy average equals the crisp one.
 Larger exponents shift weight toward decisively assigned observations and raise
 the average, so fuzzy averages are comparable only at the same `a`.
 
@@ -167,50 +161,67 @@ substitute for deciding what kind of cluster the analysis is after.
 
 # Choosing the number of clusters
 
-Posterior-based widths measure how decisively observations are assigned, and a
-model with fewer components usually assigns more decisively. Consider four
-well-separated groups of different spread:
+For a distance-based width, the number of clusters is usually read where the
+average is largest. The widths computed from memberships behave differently:
+their average over $k$ typically starts near 1 and falls, and
+@bhatkapu2024density read the number of clusters from the *reverse elbow drop*,
+the value of $k$ after which the average drops sharply. Below, that reading is
+made automatic as the $k$ just before the largest one-step drop; the DBS is
+read from its local maxima, following @menardi2011density. Consider four
+well-separated groups of different spread, clustered by a Gaussian mixture and
+by fuzzy c-means:
 
-```{r choose-k, fig.alt = "Line chart of average width against the number of clusters from 2 to 7 for four simulated groups. The k-means medoid width peaks at 4 clusters; the posterior-based pp width from Gaussian mixtures peaks at 3 clusters and falls sharply from 5 clusters on."}
+```{r choose-k, fig.alt = "Line chart of average width against the number of clusters from 2 to 8 for four simulated groups: the k-means medoid width and the PACS and certainty widths from Gaussian mixtures and from fuzzy c-means."}
 set.seed(42)
 mu <- rbind(c(0, 0), c(6, 0), c(0, 6), c(6, 6))
 sds <- c(0.8, 1.2, 1, 1.5)
 id <- rep(1:4, c(120, 80, 100, 60))
 Y <- mu[id, ] + matrix(rnorm(2 * length(id)), ncol = 2) * sds[id]
 
-res <- t(sapply(2:7, function(k) {
+res <- t(sapply(2:8, function(k) {
   g <- Mclust(Y, G = k, modelNames = "VVV", verbose = FALSE)
   set.seed(k)
   km <- kmeans(Y, k, nstart = 20)
+  fc <- ppclust::fcm(Y, centers = k)
   c(k = k,
     medoid_kmeans = avg(Silhouette(proxy::dist(Y, km$centers))),
-    pp_mixture = avg(softSilhouette(g$z)),
+    PACS_mixture = avg(softSilhouette(g$z)),
+    CeS_mixture = avg(cerSilhouette(g$z)),
+    PACS_fcm = avg(softSilhouette(fc$u)),
+    CeS_fcm = avg(cerSilhouette(fc$u)),
     bic = g$bic)
 }))
 round(res, 3)
-matplot(res[, "k"], res[, c("medoid_kmeans", "pp_mixture")], type = "b",
-        pch = c(19, 17), lty = 1, col = c("#2a78d6", "#eb6834"),
-        xlab = "Number of clusters", ylab = "Average width")
-legend("bottomleft", c("medoid (k-means)", "pp (mixture)"),
-       pch = c(19, 17), col = c("#2a78d6", "#eb6834"), bty = "n")
+cols <- c("#2a78d6", "#eb6834", "#eda100", "#1baf7a", "#8a6fd1")
+matplot(res[, "k"], res[, 2:6], type = "b", pch = c(19, 17, 2, 15, 0), lty = 1,
+        col = cols, xlab = "Number of clusters", ylab = "Average width")
+legend("bottomleft", colnames(res)[2:6], pch = c(19, 17, 2, 15, 0), col = cols,
+       bty = "n", cex = 0.8)
 ```
 
 ```{r choose-k-values, include = FALSE}
-best <- apply(res[, -1], 2, function(v) res[which.max(v), "k"])
+elbow <- function(v) res[which.max(-diff(v)), "k"]
+best <- c(medoid = res[which.max(res[, "medoid_kmeans"]), "k"],
+          bic = res[which.max(res[, "bic"]), "k"],
+          apply(res[, c("PACS_mixture", "CeS_mixture", "PACS_fcm", "CeS_fcm")], 2, elbow))
 ```
 
-`r if (best["medoid_kmeans"] == best["bic"]) sprintf("The distance-based width and BIC both pick $K = %d$, the number of simulated groups,", best["bic"]) else sprintf("The distance-based width picks $K = %d$ and BIC picks $K = %d$,", best["medoid_kmeans"], best["bic"])`
-while the posterior-based width peaks at $K = `r best["pp_mixture"]`$. Use posterior-based widths to compare fits with
-the same $K$, or to find uncertain observations within one fit, and not on
-their own to choose $K$. For the same reason, the certainty width, which cannot
-fall below $1/K$, should not be compared across different $K$.
+The distance-based width is largest at $K = `r best["medoid"]`$ and BIC selects
+$K = `r best["bic"]`$. Read by the reverse elbow drop, the PACS and certainty
+averages point to $K = `r best["PACS_mixture"]`$ and `r best["CeS_mixture"]` for
+the mixture and to `r best["PACS_fcm"]` and `r best["CeS_fcm"]` for fuzzy
+c-means. Their maximum, by contrast, is not a useful guide, since the averages
+start near 1. The number of clusters suggested by these widths depends on the
+algorithm that produced the memberships, on the width and on the averaging, so
+report all three, and the reading used, with the result.
 
 # Pitfalls
 
 **Which partition is scored.** Every width function scores one partition: the
 labels in `cluster` if given, otherwise the largest membership in `prob_matrix`,
-otherwise the closest cluster in the proximity matrix. `calSilhouette()` uses
-the same labels in every row. For a mixture, the most probable component and
+otherwise the closest cluster in the proximity matrix (the PDS, below, is the
+exception). `calSilhouette()` uses the same labels in every row except the PDS
+rows. For a mixture, the most probable component and
 the nearest mean can differ; those observations are closer to another cluster's
 mean than to their own and receive negative distance-based widths:
 
@@ -223,19 +234,24 @@ Without `prob_matrix` or `cluster`, `Silhouette()` would instead assign every
 observation to its nearest mean, scoring a different partition from the one the
 mixture produced.
 
-**The `"pd"` transformation can give negative widths.** Observations are
-assigned to the cluster with the largest membership, but the `"pd"` proximities
-divide each membership by the estimated cluster weight $\hat\pi_k$. When the
-cluster weights differ, an observation's largest membership need not be its
-largest ratio, and such observations get negative widths:
+**The PDS assigns by density.** The PDS places each observation in the cluster
+with the largest density $f_k(x_i)$, which ignores the mixing proportions,
+whereas the other widths use the largest membership. When the cluster weights
+differ, the two can disagree, and the PDS then scores a slightly different
+partition. To score the mixture's own partition with the PDS, pass it as
+`cluster`; observations that then receive negative widths are those for which
+the neighboring component has the higher density:
 
 ```{r pd}
 set.seed(4)
 z <- c(rnorm(270, 0), rnorm(30, 2.5))
 g2 <- Mclust(z, G = 2, modelNames = "E", verbose = FALSE)
-pd <- softSilhouette(g2$z, prob_type = "pd")
-c(largest_ratio_differs = sum(max.col(sweep(g2$z, 2, colMeans(g2$z), "/")) != max.col(g2$z)),
-  negative = sum(pd$sil_width < 0))
+pds <- softSilhouette(g2$z, prob_type = "pd", method = "medoid")
+pds_map <- softSilhouette(g2$z, prob_type = "pd", method = "medoid",
+                          cluster = max.col(g2$z))
+c(density_label_differs = sum(pds$cluster != max.col(g2$z)),
+  negative_default = sum(pds$sil_width < 0),
+  negative_with_map_labels = sum(pds_map$sil_width < 0))
 ```
 
 **Zero probabilities and the density-based width.** Mixture posteriors often

@@ -147,8 +147,8 @@ test_that("softSilhouette() errors with invalid prob_matrix", {
 test_that("softSilhouette() errors with invalid a parameter", {
   data(iris)
   fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
-  expect_error(softSilhouette(fcm_out$u, a = -1), "positive numeric value")
-  expect_error(softSilhouette(fcm_out$u, a = "invalid"), "positive numeric value")
+  expect_error(softSilhouette(fcm_out$u, a = -1), "non-negative numeric value")
+  expect_error(softSilhouette(fcm_out$u, a = "invalid"), "non-negative numeric value")
 })
 
 test_that("softSilhouette() errors with invalid prob_type", {

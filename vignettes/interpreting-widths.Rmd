@@ -147,11 +147,11 @@ sum(Silhouette(P_gmm, prob_matrix = gm$z)$sil_width < 0)
 |:---|:---|:---|
 | medoid | `Silhouette(method = "medoid")` | $[0, 1]$ with labels from the same matrix |
 | PAC | `Silhouette(method = "pac")` | $[0, 1]$ with labels from the same matrix |
-| posterior probabilities | `softSilhouette(prob_type = "pp")` | $[0, 1]$ |
-| negative log posteriors | `softSilhouette(prob_type = "nlpp")` | $[0, 1]$ |
-| size-adjusted posteriors | `softSilhouette(prob_type = "pd")` | $[-1, 1]$; negative when the largest membership is not the largest ratio $\gamma_{ik}/\hat\pi_k$ |
-| certainty | `cerSilhouette()` | $[1/K, 1]$ |
-| density-based | `dbSilhouette()` | $[0, 1]$, and the maximum in each sample is always 1 |
+| PACS, PPS (posterior probabilities) | `softSilhouette(prob_type = "pp")` | $[0, 1]$ |
+| NLPPS (negative log posteriors) | `softSilhouette(prob_type = "nlpp")` | $[0, 1]$ |
+| PDS (probability densities) | `softSilhouette(prob_type = "pd")` | $[0, 1]$ |
+| CeS (certainty) | `cerSilhouette()` | $[1/K, 1]$ |
+| DBS (density-based) | `dbSilhouette()` | $[0, 1]$, and the maximum in each sample is always 1 |
 
 The ranges assume the default labels. With labels supplied through `cluster`
 (or, for `Silhouette()`, through `prob_matrix`), every width except the
@@ -171,21 +171,24 @@ that comes first. With ties, the labels (though not the widths, which are then
 - **Not one width against another.** The rows of `calSilhouette()` are on
   different scales. Choosing "the best method" by the largest value compares
   scales, not clusterings. Nor are the rows independent evidence: each PAC row
-  is a monotone transformation of the matching medoid row, the `pp` and
-  density-based widths rank observations identically, `pd` equals `pp` when the
-  clusters have equal weights, and for fuzzy c-means the `pp` and distance-based
-  widths coincide (see `?calSilhouette`).
+  is a monotone transformation of the matching medoid row, the PPS, PACS and
+  DBS rank observations identically, the PDS equals the PPS when the clusters
+  have equal weights, and for fuzzy c-means the PPS and distance-based widths
+  coincide (see `?calSilhouette`).
 - **Not simplified against classical.** See the first section.
 - **Fuzzy averages only at the same `a`.** The weights
   $(\gamma_{i(1)} - \gamma_{i(2)})^a$, built from the two largest memberships,
   change with `a`, and so does the average.
 - **Certainty and density-based widths with care.** The certainty width cannot
-  fall below $1/K$, so its average is not comparable across $K$. The
-  density-based width is scaled by the most confident observation in the
-  sample, so its average depends on that one observation.
-- **Choosing $K$ by the maximum.** For silhouette averages, the preferred
-  number of clusters is where the average is largest, not an "elbow".
-  Posterior-based widths tend to favor fewer clusters; see
+  fall below $1/K$, so its level falls as $K$ grows. The density-based width is
+  scaled by the most confident observation in the sample, so its average
+  depends on that one observation.
+- **Choosing $K$ needs a stated reading.** For the distance-based widths, the
+  number of clusters is usually read where the average is largest. For the
+  widths computed from memberships (PACS, PPS, NLPPS, CeS, PDS), whose average
+  typically starts near 1 and falls, @bhatkapu2024density read it from the
+  reverse elbow drop, and the DBS is read from its local maxima
+  [@menardi2011density]. The result depends on the algorithm, the width and the averaging; see
   `vignette("soft-clustering", package = "Silhouette")`.
 
 # Session information

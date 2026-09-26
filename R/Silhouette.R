@@ -34,7 +34,7 @@
 #'   When \code{NULL} and \code{average = "fuzzy"}, the function falls back to computing the
 #'   \code{"crisp"} silhouette with a warning, since fuzzy silhouette widths require membership
 #'   probabilities. Defaults to \code{NULL}.
-#' @param a Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.
+#' @param a Non-negative number, the exponent \eqn{\alpha} of the weights in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences; \code{a = 0} gives every observation the same weight, so the fuzzy average equals the crisp average. Defaults to \code{2}.
 #' @param sort Logical; if \code{TRUE}, sorts the output \code{widths} data frame by cluster and descending silhouette width. Defaults to \code{FALSE}.
 #' @param print.summary Logical; if \code{TRUE}, reports a summary table of average silhouette widths and sizes for each cluster through \code{\link{message}}. Defaults to \code{FALSE} for \code{Silhouette()} and \code{TRUE} for \code{summary()}.
 #' @param clust_fun Optional S3 or S4 function object or function as character string specifying a clustering function that produces the proximity measure matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"d"} for \code{\link[ppclust]{fcm}} when \code{proximity_type = "dissimilarity"}). Defaults to \code{NULL}.
@@ -123,8 +123,10 @@
 #' }
 #' where \eqn{\gamma_{i(1)}} and \eqn{\gamma_{i(2)}} are the largest and second largest
 #' memberships of observation \eqn{i}, and \eqn{\alpha} (the `a` argument) controls the
-#' emphasis on confident assignments. The weight \eqn{w_i} is stored in the \code{weight}
-#' column and does not depend on the cluster labels. If all weights are zero, the fuzzy
+#' emphasis on confident assignments (\eqn{\alpha \ge 0}; \eqn{\alpha = 0} gives the crisp
+#' average). The weight \eqn{w_i} is stored in the \code{weight} column and does not depend on
+#' the cluster labels; it equals Equation (8) of Bhat Kapu and Kiruthika (2024) when each
+#' observation is assigned to its largest membership. If all weights are zero, the fuzzy
 #' average is undefined (\code{NaN}) and a warning is given.
 #'
 #' If `average = "median"`, the median width is reported.

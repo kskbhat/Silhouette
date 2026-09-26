@@ -7,18 +7,22 @@
   hierarchical clustering). When `clust_fun` is used, `cluster` may name the label component of
   its output (e.g. `cluster = "cluster"` for `kmeans()`). The argument follows `...`, so it must
   be named.
-- Labels now follow one rule everywhere: `cluster` if supplied, otherwise the largest membership
-  in `prob_matrix`, otherwise the closest cluster in `prox_matrix`. The neighboring cluster is the
+- Labels now follow one rule: `cluster` if supplied, otherwise the largest membership in
+  `prob_matrix`, otherwise the closest cluster in `prox_matrix`. The exception is the probability
+  density silhouette (PDS, `prob_type = "pd"`), which assigns each observation to its largest
+  density, as in its definition (Bhat Kapu and Kiruthika, 2024). The neighboring cluster is the
   closest other cluster in the proximity matrix used.
 
 **Behavior changes**
 
-- `calSilhouette()` scores the same partition in every row. Previously its crisp and median
-  distance-based rows ignored `prob_matrix` and used nearest-center labels, so they could describe
-  a different partition from the other rows.
-- `softSilhouette(prob_type = "pd")` uses the largest membership as the label for every average.
-  Previously crisp and median averaging used the largest ratio to the cluster weight, and fuzzy
-  averaging the largest membership, so the three averages could describe different partitions.
+- `calSilhouette()` scores the same partition in every row except the PDS rows (see above).
+  Previously its crisp and median distance-based rows ignored `prob_matrix` and used
+  nearest-center labels.
+- `softSilhouette(prob_type = "pd")` assigns each observation to its largest density for every
+  average, so the PDS lies in [0, 1] as defined. Previously fuzzy averaging used the largest
+  membership instead, which gave negative widths.
+- The exponent `a` of the fuzzy weights may now be 0 (every weight is then 1 and the fuzzy average
+  equals the crisp average), as in Bhat Kapu and Kiruthika (2024); negative values are rejected.
 - In `Silhouette()` with `prob_matrix`, the neighbor is now the closest other cluster in
   `prox_matrix` (it was the second largest membership).
 - The fuzzy weights are now the gap between the two largest memberships, as defined by Campello
@@ -65,9 +69,12 @@
   non-positive).
 - Roxygen markdown is enabled, so bold text and lists in the help pages render properly.
 - `?plotSilhouette` cites `factoextra::fviz_silhouette()`, whose design the plot follows.
-- `?softSilhouette` explains negative `"pd"` widths: for a mixture, the neighboring component
-  has the higher density at that observation, which is assigned only because its cluster is
-  larger.
+- The help pages use the names of Bhat Kapu and Kiruthika (2024): PACS, PPS, NLPPS and PDS
+  (`softSilhouette()`), CeS (`cerSilhouette()`) and DBS (`dbSilhouette()`), and `?softSilhouette`
+  gives the PDS in terms of component densities (for a mixture, gamma/pi-hat = f_k/f).
+- The help pages describe how the number of clusters is read from these widths: the reverse
+  elbow drop of the average for the probability-based widths and local maxima for the DBS, with
+  the result depending on the algorithm, the width and the averaging.
 - New tests cover zero distances and probabilities, ties, K = 2, singleton and empty clusters,
   `NA`/`Inf` input, similarity versus dissimilarity input, supplied labels, objects from other
   packages, and the exact identities between widths (PAC and medoid; fuzzy c-means memberships and

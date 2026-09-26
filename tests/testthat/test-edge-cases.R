@@ -191,14 +191,18 @@ test_that("cluster = works for every width and in calSilhouette()", {
 })
 
 ## 7. Consistent labels ------------------------------------------------------------
-test_that("the pd transformation uses the same labels for every average", {
+test_that("the PDS assigns by the largest density for every average", {
   set.seed(4)
   prob <- prop.table(matrix(rexp(300), ncol = 3) %*% diag(c(4, 1, 1)), 1)
-  labs <- lapply(c("crisp", "fuzzy", "median"), function(av)
-    softSilhouette(prob, prob_type = "pd", average = av)$cluster)
+  fits <- lapply(c("crisp", "fuzzy", "median"), function(av)
+    softSilhouette(prob, prob_type = "pd", average = av))
+  labs <- lapply(fits, `[[`, "cluster")
   expect_identical(labs[[1]], labs[[2]])
   expect_identical(labs[[1]], labs[[3]])
-  expect_identical(labs[[1]], max.col(prob, ties.method = "first"))
+  dens <- sweep(prob, 2, colMeans(prob), "/")
+  expect_identical(labs[[1]], max.col(dens, ties.method = "first"))
+  expect_true(any(labs[[1]] != max.col(prob, ties.method = "first")))
+  for (f in fits) expect_true(all(f$sil_width >= 0 & f$sil_width <= 1))
 })
 
 test_that("calSilhouette() scores one partition in every row", {
@@ -294,7 +298,7 @@ test_that("extSilhouette() supports size, equal and user weights", {
   expect_error(extSilhouette(list(s1, s2), weights = "other"), "should be one of")
 })
 
-test_that("negative pd widths mean a higher neighboring density for an EM mixture", {
+test_that("with MAP labels, negative PDS widths mean a higher neighboring density", {
   skip_if_not_installed("mclust")
   suppressPackageStartupMessages(library(mclust))
   set.seed(4)
@@ -304,9 +308,25 @@ test_that("negative pd widths mean a higher neighboring density for an EM mixtur
   post <- mclust::estep(data = z, modelName = "E", parameters = g$parameters)$z
   sd_k <- sqrt(g$parameters$variance$sigmasq)
   f <- sapply(1:2, function(k) dnorm(z, g$parameters$mean[k], sd_k))
-  pd <- softSilhouette(post, prob_type = "pd")
+  # gamma / pi equals f_k / f (Bayes' theorem), so pd compares component densities
+  fx <- as.vector(f %*% g$parameters$pro)
+  expect_equal(unname(sweep(post, 2, g$parameters$pro, "/")), f / fx, tolerance = 1e-8)
+  # default PDS labels are the largest densities, so the widths are non-negative
+  expect_true(all(softSilhouette(post, prob_type = "pd")$sil_width >= 0))
+  # scoring the MAP partition instead gives negative widths exactly where the
+  # neighboring component has the higher density
+  pd <- softSilhouette(post, prob_type = "pd", cluster = max.col(post))
   i <- seq_along(z)
   nb_higher <- f[cbind(i, pd$neighbor)] > f[cbind(i, pd$cluster)]
   expect_true(any(pd$sil_width < 0))
   expect_equal(pd$sil_width < 0, nb_higher)
+})
+
+test_that("a = 0 gives the crisp average", {
+  set.seed(9)
+  prob <- prop.table(matrix(runif(60), ncol = 3), 1)
+  s0 <- softSilhouette(prob, average = "fuzzy", a = 0)
+  expect_equal(s0$weight, rep(1, 20))
+  expect_equal(summary(s0, print.summary = FALSE)$avg.width, mean(s0$sil_width))
+  expect_error(softSilhouette(prob, a = -0.5), "non-negative")
 })

@@ -179,9 +179,11 @@ calSilhouette(prob_matrix = gm$z)
 The rows are different indices on different scales, so compare each row across
 fits, never the rows with each other. They are also not independent evidence:
 several rows are monotone transformations of one another (see
-`?calSilhouette`). Widths computed from memberships measure how *certain* the
-assignments are rather than how well separated the clusters are, and they tend
-to favor fewer clusters. The vignette
+`?calSilhouette`). The rows computed from memberships are the silhouettes of
+@bhatkapu2024density (PACS, PPS, NLPPS, PDS and the certainty silhouette CeS)
+and the density-based silhouette of @menardi2011density; to choose the number
+of clusters they are read differently from the distance-based widths. The
+vignette
 `vignette("soft-clustering", package = "Silhouette")` explains each index and
 when to use it.
 
