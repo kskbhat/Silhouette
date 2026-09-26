@@ -99,6 +99,13 @@ For \code{"pd"}, an observation whose largest membership is not its largest rati
 clusters have equal estimated weights. (Before version 0.9.7, \code{"pd"} with crisp or
 median averaging assigned observations by the largest ratio instead.)
 
+For a finite mixture fitted by EM, at convergence \eqn{\hat\pi_k} is the fitted mixing
+proportion and \eqn{\gamma_{ik}/\hat\pi_k = f_k(x_i)/f(x_i)} (up to the convergence
+tolerance), so \code{"pd"} compares the component densities at \eqn{x_i} with the mixing
+proportions removed. A negative \code{"pd"} width then means that the neighboring
+component has the higher density at \eqn{x_i}: the observation is assigned to its cluster
+only because that cluster has the larger weight.
+
 Ties are resolved in favor of the first column; see \code{\link{Silhouette}}.
 }
 

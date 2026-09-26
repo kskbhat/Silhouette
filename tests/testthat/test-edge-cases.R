@@ -293,3 +293,20 @@ test_that("extSilhouette() supports size, equal and user weights", {
   expect_error(extSilhouette(list(s1, s2), weights = 1), "one entry per element")
   expect_error(extSilhouette(list(s1, s2), weights = "other"), "should be one of")
 })
+
+test_that("negative pd widths mean a higher neighboring density for an EM mixture", {
+  skip_if_not_installed("mclust")
+  suppressPackageStartupMessages(library(mclust))
+  set.seed(4)
+  z <- c(rnorm(270, 0), rnorm(30, 2.5))
+  g <- mclust::Mclust(z, G = 2, modelNames = "E", verbose = FALSE)
+  # posteriors at the fitted parameters (the EM fixed point)
+  post <- mclust::estep(data = z, modelName = "E", parameters = g$parameters)$z
+  sd_k <- sqrt(g$parameters$variance$sigmasq)
+  f <- sapply(1:2, function(k) dnorm(z, g$parameters$mean[k], sd_k))
+  pd <- softSilhouette(post, prob_type = "pd")
+  i <- seq_along(z)
+  nb_higher <- f[cbind(i, pd$neighbor)] > f[cbind(i, pd$cluster)]
+  expect_true(any(pd$sil_width < 0))
+  expect_equal(pd$sil_width < 0, nb_higher)
+})

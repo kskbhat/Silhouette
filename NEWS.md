@@ -64,8 +64,10 @@
 - Corrected the fuzzy weight formula and the description of `nlpp` (non-negative, not
   non-positive).
 - Roxygen markdown is enabled, so bold text and lists in the help pages render properly.
-- `plotSilhouette()` is adapted from `factoextra::fviz_silhouette()`; its authors, Alboukadel
-  Kassambara and Fabian Mundt, are now listed as contributors.
+- `?plotSilhouette` cites `factoextra::fviz_silhouette()`, whose design the plot follows.
+- `?softSilhouette` explains negative `"pd"` widths: for a mixture, the neighboring component
+  has the higher density at that observation, which is assigned only because its cluster is
+  larger.
 - New tests cover zero distances and probabilities, ties, K = 2, singleton and empty clusters,
   `NA`/`Inf` input, similarity versus dissimilarity input, supplied labels, objects from other
   packages, and the exact identities between widths (PAC and medoid; fuzzy c-means memberships and

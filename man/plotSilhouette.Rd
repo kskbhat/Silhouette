@@ -53,7 +53,7 @@ This function is the S3 \code{plot} method for objects of class \code{"Silhouett
 }
 For these classes (\code{"eclust"}, \code{"hcut"}, \code{"pam"}, \code{"clara"}, \code{"fanny"}, \code{"silhouette"}), users should explicitly call \code{plotSilhouette()} (e.g., \code{plotSilhouette(pam_result)}) to ensure the correct method is used, as the generic \code{plot()} may not dispatch to this function for these objects.
 
-The plot and its handling of objects from \pkg{cluster} and \pkg{factoextra} are adapted from \code{\link[factoextra]{fviz_silhouette}} in the \pkg{factoextra} package (Kassambara and Mundt, 2020), extended to the \code{"Silhouette"} class, fuzzy and median averages, and grayscale output.
+The design of the plot follows \code{\link[factoextra]{fviz_silhouette}} in the \pkg{factoextra} package (Kassambara and Mundt, 2020), extended to the \code{"Silhouette"} class, fuzzy and median averages, and grayscale output.
 }
 \examples{
 \donttest{
