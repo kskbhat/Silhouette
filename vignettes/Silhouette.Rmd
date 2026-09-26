@@ -104,6 +104,28 @@ sil_pac <- Silhouette(P, method = "pac")
 all.equal(sil_pac$sil_width, sil$sil_width / (2 - sil$sil_width))
 ```
 
+# Scoring a partition from elsewhere
+
+A silhouette scores a partition. By default `Silhouette()` takes it from the
+matrix, assigning each observation to its nearest cluster, which for k-means is
+the partition the algorithm produced. For other methods, pass the partition as
+`cluster` (column numbers of the matrix). Here an average-linkage partition is
+scored against the centroids of its own groups:
+
+```{r cluster-arg}
+hc <- cutree(hclust(dist(X), method = "average"), k = 3)
+centers <- apply(X, 2, function(v) tapply(v, hc, mean))
+sil_hc <- Silhouette(proxy::dist(X, centers), cluster = hc)
+summary(sil_hc, print.summary = FALSE)$avg.width
+sum(sil_hc$sil_width < 0)   # flowers closer to another group's centroid
+```
+
+Observations that are closer to another cluster's centroid than to their own
+receive negative widths. Without `cluster`, they would silently be moved to the
+nearest centroid and a different partition would be scored. Memberships passed
+as `prob_matrix` play the same role: each observation keeps the cluster with
+its largest membership.
+
 # Letting a clustering function do the work
 
 Many clustering functions return the proximity matrix themselves. Instead of
@@ -155,7 +177,11 @@ calSilhouette(prob_matrix = gm$z)
 ```
 
 The rows are different indices on different scales, so compare each row across
-fits, never the rows with each other. The vignette
+fits, never the rows with each other. They are also not independent evidence:
+several rows are monotone transformations of one another (see
+`?calSilhouette`). Widths computed from memberships measure how *certain* the
+assignments are rather than how well separated the clusters are, and they tend
+to favor fewer clusters. The vignette
 `vignette("soft-clustering", package = "Silhouette")` explains each index and
 when to use it.
 

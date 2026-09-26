@@ -1,11 +1,81 @@
-# Silhouette 0.9.7 (June 2026)
+# Silhouette 0.9.7
+
+**Scoring a given partition**
+
+- `Silhouette()`, `softSilhouette()`, `cerSilhouette()`, `dbSilhouette()` and `calSilhouette()`
+  gain a `cluster` argument for scoring a partition produced elsewhere (for example, by
+  hierarchical clustering). When `clust_fun` is used, `cluster` may name the label component of
+  its output (e.g. `cluster = "cluster"` for `kmeans()`). The argument follows `...`, so it must
+  be named.
+- Labels now follow one rule everywhere: `cluster` if supplied, otherwise the largest membership
+  in `prob_matrix`, otherwise the closest cluster in `prox_matrix`. The neighboring cluster is the
+  closest other cluster in the proximity matrix used.
+
+**Behavior changes**
+
+- `calSilhouette()` scores the same partition in every row. Previously its crisp and median
+  distance-based rows ignored `prob_matrix` and used nearest-center labels, so they could describe
+  a different partition from the other rows.
+- `softSilhouette(prob_type = "pd")` uses the largest membership as the label for every average.
+  Previously crisp and median averaging used the largest ratio to the cluster weight, and fuzzy
+  averaging the largest membership, so the three averages could describe different partitions.
+- In `Silhouette()` with `prob_matrix`, the neighbor is now the closest other cluster in
+  `prox_matrix` (it was the second largest membership).
+- The fuzzy weights are now the gap between the two largest memberships, as defined by Campello
+  and Hruschka (2006), for every function; they no longer depend on the labels.
+- `extSilhouette()` no longer rounds `ext_sil_width` and `avg_sil_width` to four decimals; the new
+  print method shows four decimals.
+
+**Numerical robustness**
+
+- `dbSilhouette()`: a zero neighboring membership (for example, an underflowed posterior
+  probability) no longer makes every other width zero. Such observations get width 1, the other
+  widths are scaled by the largest finite log ratio, and a warning reports how many there were.
+  When the largest log ratio is below `sqrt(.Machine$double.eps)`, the widths are set to 0 with a
+  warning instead of magnifying rounding error. Equal memberships give width 0.
+- `softSilhouette(prob_type = "nlpp")`: zero probabilities (infinite `-log`) no longer give `NaN`
+  widths or a neighbor equal to the assigned cluster.
+- All width functions: two equal proximities, including two zero distances, give width 0 rather
+  than `NaN`; infinite proximities give widths of 1 or -1.
+- Input checks are shared by all functions: matrices must be numeric with at least two columns and
+  no `NA`/`NaN` (`+Inf` is allowed in `prox_matrix`, `-Inf` is not); negative proximities give a
+  warning; membership rows must be non-negative and sum to 1 within `sqrt(.Machine$double.eps)`;
+  `prob_matrix` must have the same dimensions as `prox_matrix`; `cluster` must hold column numbers.
+- A fuzzy average whose weights are all zero now gives a warning (the average is `NaN`).
+
+**Other improvements**
+
+- `extSilhouette()` gains a `weights` argument: `"size"` (default, as before), `"equal"`, or a
+  numeric vector of user weights. `dim_table` gains a `weight` column with each mode's share, and
+  the result has `print()` and `format()` methods.
+- Summaries requested with `print.summary = TRUE` (and `summary()`) are reported with `message()`
+  only, so they can be suppressed with `suppressMessages()`.
+- `cerSilhouette(print.summary = TRUE)` reported its method as "db"; it now reports "certainty".
+- `plotSilhouette()` labeled the legend incorrectly when a cluster was empty.
+- Error messages about `prob_matrix` no longer refer to `prob_type = 'pd'` when it was not used.
+
+**Documentation**
+
+- The help pages describe what each width measures, the labeling rule, tie handling (the first
+  column wins), the row-sum tolerance, when widths can be negative, and why the `"medoid"`
+  normalization keeps its name although it applies equally to centroids.
+- `?calSilhouette` explains which rows are monotone transformations of each other, which coincide
+  in special cases, and which are genuinely different, and lists its actual return columns.
+- Corrected the fuzzy weight formula and the description of `nlpp` (non-negative, not
+  non-positive).
+- Roxygen markdown is enabled, so bold text and lists in the help pages render properly.
+- `plotSilhouette()` is adapted from `factoextra::fviz_silhouette()`; its authors, Alboukadel
+  Kassambara and Fabian Mundt, are now listed as contributors.
+- New tests cover zero distances and probabilities, ties, K = 2, singleton and empty clusters,
+  `NA`/`Inf` input, similarity versus dissimilarity input, supplied labels, objects from other
+  packages, and the exact identities between widths (PAC and medoid; fuzzy c-means memberships and
+  distances; squared distances).
 
 **Performance Optimizations**
 
 - Fully vectorized core silhouette computation algorithms (`Silhouette`, `dbSilhouette`, `cerSilhouette`).
 - Replaced slow row-wise `apply()` and `order()` sorting routines with highly optimized, C-implemented `max.col()` and matrix-based masking.
 - Replaced row-wise `for` loops for calculating silhouette widths and weights with vectorized matrix-index extraction and element-wise arithmetic, yielding dramatic speedups for large datasets.
-- Verified 100% regression-free behavior across all 257 package unit tests.
 
 **Documentation**
 

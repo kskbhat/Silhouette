@@ -44,10 +44,10 @@ gm <- Mclust(X, G = 3, verbose = FALSE)          # Gaussian mixture
 
 Write $\gamma_{ik}$ for the membership of observation $i$ in cluster $k$, with
 $\sum_k \gamma_{ik} = 1$. Each observation is assigned to the cluster $c_i$ with
-the largest membership, and its neighbor $\nu_i$ is the cluster with the second
-largest. `softSilhouette()` treats a transformation of the memberships as a
-proximity matrix and applies the medoid or PAC width to it
-[@bhatkapu2024density]:
+the largest membership (or to the cluster given in the `cluster` argument), and
+its neighbor $\nu_i$ is the closest other cluster. `softSilhouette()` treats a
+transformation of the memberships as a proximity matrix and applies the medoid
+or PAC width to it [@bhatkapu2024density]:
 
 | `prob_type` | Proximity | Type |
 |:---|:---|:---|
@@ -61,9 +61,23 @@ small clusters. Two further widths use the memberships directly:
 - `cerSilhouette()`: the certainty width $\max_k \gamma_{ik}$, which lies
   between $1/K$ and 1.
 - `dbSilhouette()`: the density-based width of @menardi2011density,
-  $R_i / \max_j |R_j|$ with $R_i = \log(\gamma_{ic_i} / \gamma_{i\nu_i})$. It lies
-  between 0 and 1, and the most confidently assigned observation in the sample
-  always has width 1.
+  $R_i / \max_j |R_j|$ with $R_i = \log(\gamma_{ic_i} / \gamma_{i\nu_i})$. With
+  the default labels it lies between 0 and 1, and the most confidently assigned
+  observation in the sample always has width 1.
+
+These widths measure something different from a distance-based silhouette:
+
+| Width | Function | Mainly measures |
+|:---|:---|:---|
+| classical silhouette | `cluster::silhouette()` | separation between observations: average distance to the own cluster against the nearest other cluster |
+| simplified (medoid, PAC) | `Silhouette()` | separation relative to the cluster representatives |
+| `pp`, `nlpp`, `pd` | `softSilhouette()` | certainty of the assignment: the margin between the two largest memberships |
+| certainty | `cerSilhouette()` | the largest membership alone |
+| density-based | `dbSilhouette()` | dominance of the largest membership over the second, relative to the most extreme observation |
+
+A well-separated mixture and a mixture fitted with too few components can both
+assign observations decisively, so membership-based widths can be high when the
+clusters are poorly separated in the data space.
 
 ```{r widths}
 avg <- function(s) summary(s, print.summary = FALSE)$avg.width
@@ -111,8 +125,10 @@ the simplified silhouette of @vanderlaan2003pam.
 Every width function offers three averages. `average = "crisp"` is the plain
 mean and `average = "median"` the median. `average = "fuzzy"` is the weighted
 mean of @campello2006fuzzy, with weights
-$w_i = (\gamma_{ic_i} - \gamma_{i\nu_i})^a$, so observations whose two largest
-memberships are close count for less. The exponent `a` controls how strongly:
+$w_i = (\gamma_{i(1)} - \gamma_{i(2)})^a$, where $\gamma_{i(1)}$ and
+$\gamma_{i(2)}$ are the two largest memberships of observation $i$. Observations
+whose two largest memberships are close count for less. The exponent `a`
+controls how strongly:
 
 ```{r exponent}
 sapply(c(a0.5 = 0.5, a1 = 1, a2 = 2, a4 = 4), function(a)
@@ -126,7 +142,8 @@ the average, so fuzzy averages are comparable only at the same `a`.
 
 To compare algorithms fitted to the same data with the same number of clusters,
 compute each width for every fit. Pass the memberships to `Silhouette()` as
-`prob_matrix` so that each observation keeps the cluster the algorithm assigned.
+`prob_matrix` (or the labels as `cluster`) so that each observation keeps the
+cluster the algorithm assigned.
 
 ```{r compare}
 P_fcm <- sqrt(fm$d)                                        # Euclidean distances
@@ -190,52 +207,55 @@ fall below $1/K$, should not be compared across different $K$.
 
 # Pitfalls
 
-**`calSilhouette()` and assigned clusters.** When `prob_matrix` is supplied,
-the fuzzy distance-based rows of `calSilhouette()` use the membership labels,
-but its crisp and median distance-based rows reassign every observation to the
-nearest cluster center. For a mixture, the most probable component and the
-nearest mean can differ:
+**Which partition is scored.** Every width function scores one partition: the
+labels in `cluster` if given, otherwise the largest membership in `prob_matrix`,
+otherwise the closest cluster in the proximity matrix. `calSilhouette()` uses
+the same labels in every row. For a mixture, the most probable component and
+the nearest mean can differ; those observations are closer to another cluster's
+mean than to their own and receive negative distance-based widths:
 
 ```{r relabel}
-sum(max.col(gm$z) != max.col(-P_gmm))
+c(nearest_mean_differs = sum(max.col(gm$z) != max.col(-P_gmm)),
+  negative_widths = sum(Silhouette(P_gmm, prob_matrix = gm$z)$sil_width < 0))
 ```
 
-To score the partition the algorithm produced, call `Silhouette()` with
-`prob_matrix`, as in the comparison above.
+Without `prob_matrix` or `cluster`, `Silhouette()` would instead assign every
+observation to its nearest mean, scoring a different partition from the one the
+mixture produced.
 
-**The `"pd"` transformation labels by averaging method.** With crisp or median
-averaging, observations are assigned to the cluster with the largest
-$\gamma_{ik} / \hat\pi_k$; with fuzzy averaging, to the largest membership. When
-cluster sizes differ, the two assignments differ, and observations on which they
-disagree get negative widths under fuzzy averaging:
+**The `"pd"` transformation can give negative widths.** Observations are
+assigned to the cluster with the largest membership, but the `"pd"` proximities
+divide each membership by the estimated cluster weight $\hat\pi_k$. When the
+cluster weights differ, an observation's largest membership need not be its
+largest ratio, and such observations get negative widths:
 
 ```{r pd}
 set.seed(4)
 z <- c(rnorm(270, 0), rnorm(30, 2.5))
 g2 <- Mclust(z, G = 2, modelNames = "E", verbose = FALSE)
-pd_crisp <- softSilhouette(g2$z, prob_type = "pd")
-pd_fuzzy <- softSilhouette(g2$z, prob_type = "pd", average = "fuzzy")
-c(relabelled = sum(pd_crisp$cluster != max.col(g2$z)),
-  negative_fuzzy = sum(pd_fuzzy$sil_width < 0))
+pd <- softSilhouette(g2$z, prob_type = "pd")
+c(largest_ratio_differs = sum(max.col(sweep(g2$z, 2, colMeans(g2$z), "/")) != max.col(g2$z)),
+  negative = sum(pd$sil_width < 0))
 ```
 
-**Zero probabilities and the density-based width.** If any neighboring
-probability is exactly zero, its log ratio is infinite, the scaling in
-`dbSilhouette()` becomes infinite, and every other width becomes zero. Mixture
-posteriors often underflow to zero for well-separated data. Bound them away
-from zero first:
+**Zero probabilities and the density-based width.** Mixture posteriors often
+underflow to exactly zero for well-separated data. A zero neighboring
+probability makes the log ratio infinite; `dbSilhouette()` then gives that
+observation width 1, scales the other widths by the largest finite log ratio,
+and warns:
 
 ```{r db-zero}
 data(thyroid, package = "mclust")
 gt <- Mclust(scale(thyroid[, -1]), G = 3, verbose = FALSE)
-c(raw = avg(dbSilhouette(gt$z, average = "crisp")),
-  bounded = avg(dbSilhouette(pmax(gt$z, 1e-300), average = "crisp")))
+db <- dbSilhouette(gt$z, average = "crisp")
+avg(db)
 ```
 
-The bounded widths are finite, but the bounded observations keep the largest
-log ratios and set the scale, so the average stays small. The individual widths
-still rank observations by how decisively they are assigned; the average should
-not be compared with that of a fit without zero probabilities.
+The finite log ratios can still be very large (a posterior of $10^{-300}$ gives
+a log ratio near 690), and the largest one sets the scale, so the average stays
+small. The individual widths still rank observations by how decisively they are
+assigned; the average should not be compared with that of a fit without such
+extreme probabilities.
 
 # Session information
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calSilhouette.R
 \name{calSilhouette}
 \alias{calSilhouette}
-\title{Compute Calculate of All Possible Silhouette Methods}
+\title{Calculate All Available Silhouette Summaries}
 \usage{
 calSilhouette(
   prox_matrix = NULL,
@@ -11,63 +11,116 @@ calSilhouette(
   a = 2,
   print.summary = FALSE,
   clust_fun = NULL,
-  ...
+  ...,
+  cluster = NULL
 )
 }
 \arguments{
-\item{prox_matrix}{A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}).}
+\item{prox_matrix}{A numeric matrix where rows represent observations and columns represent proximity measures (e.g., distances or similarities) to clusters. Typically, this is a membership or dissimilarity matrix from clustering results. If \code{clust_fun} is provided, \code{prox_matrix} should be the name of the matrix component as a string (e.g., if \code{clust_fun = \link[ppclust]{fcm}} from \pkg{ppclust} package the \code{prox_matrix = "d"}). Defaults to \code{NULL}.}
 
 \item{proximity_type}{Character string specifying the type of proximity measure in \code{prox_matrix}. Options are \code{"similarity"} (higher values indicate closer proximity) or \code{"dissimilarity"} (lower values indicate closer proximity). Defaults to \code{"dissimilarity"}.}
 
 \item{prob_matrix}{A numeric matrix of cluster membership probabilities, where rows represent
-observations and columns represent clusters (depending on \code{prob_type}).
+observations and columns represent clusters in the same order as \code{prox_matrix}.
 If \code{clust_fun} is provided, \code{prob_matrix} can be given as the name of the matrix
 component (e.g., \code{"u"} for the \code{\link[ppclust]{fcm}} function).
 Defaults to \code{NULL}.}
 
 \item{a}{Numeric value controlling the fuzzifier or weight scaling in fuzzy silhouette averaging. Higher values increase the emphasis on strong membership differences. Must be positive. Defaults to \code{2}.}
 
-\item{print.summary}{Logical; if \code{TRUE}, prints a summary table of average silhouette widths and sizes for each cluster. Defaults to \code{FALSE}.}
+\item{print.summary}{Logical; if \code{TRUE}, reports the summary table through \code{\link{message}}. Defaults to \code{FALSE}.}
 
 \item{clust_fun}{Optional S3 or S4 function object or function as character string specifying a clustering function that produces the proximity measure matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prox_matrix} must be the name of the matrix component in the clustering output (e.g., \code{"d"} for \code{\link[ppclust]{fcm}} when \code{proximity_type = "dissimilarity"}). Defaults to \code{NULL}.}
 
 \item{...}{Additional arguments passed to \code{clust_fun}, such as \code{x,centers} for \code{\link[ppclust]{fcm}}.}
+
+\item{cluster}{Optional integer vector of length \eqn{n} giving the cluster of each
+observation as a column number (\eqn{1, \ldots, K}). If \code{clust_fun} is provided,
+\code{cluster} may be the name of the label component of its output. Must be named in the
+call because it follows \code{...}. See \emph{Cluster labels}.}
 }
 \value{
-A data frame with the following columns:
+A data frame with one row per method and the following columns:
 \describe{
-  \item{Method}{Character vector of method names}
-  \item{Crisp_Silhouette}{Numeric vector of crisp (unweighted) average silhouette values}
-  \item{Fuzzy_Silhouette}{Numeric vector of fuzzy (weighted) average silhouette values (NA if \code{prob_matrix} is not available for the method)}
-  \item{Median_Silhouette}{Numeric vector of median silhouette values}
+\item{Method}{Character vector of method names, as listed in Details.}
+\item{Crisp}{Crisp (unweighted mean) average silhouette width.}
+\item{Fuzzy}{Fuzzy (membership-weighted) average silhouette width; present only when \code{prob_matrix} is supplied.}
+\item{Median}{Median silhouette width.}
 }
 }
 \description{
-Computes all possible silhouette indices from available functions in the package and returns a summary data frame comparing crisp, fuzzy, and median silhouette values across different methods.
+Computes every silhouette width available in the package for one clustering and returns
+a data frame comparing the crisp, fuzzy, and median averages of each. All rows score the
+same partition.
 }
 \details{
-This function computes all available silhouette methods from the package and returns a comparative summary. The methods included depend on the available input matrices:
+The rows are not independent pieces of evidence: several are exact or monotone
+transformations of one another (see \emph{Relations between the rows}). Distance-based
+rows measure separation relative to the cluster representatives; probability-based rows
+measure how certain the assignments are.
 
-**If \code{prox_matrix} is available:**
+The methods included depend on the available input matrices:
+
+\strong{If \code{prox_matrix} is available:}
 \itemize{
-  \item \code{medoid} - Medoid-based silhouette using \code{\link{Silhouette}}
-  \item \code{pac} - PAC-based silhouette using \code{\link{Silhouette}}
+\item \code{medoid} - Medoid-based silhouette using \code{\link{Silhouette}}
+\item \code{pac} - PAC-based silhouette using \code{\link{Silhouette}}
 }
 
-**If \code{prob_matrix} is available:**
+\strong{If \code{prob_matrix} is available:}
 \itemize{
-  \item \code{pp_pac} - Posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
-  \item \code{pp_medoid} - Posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
-  \item \code{nlpp_pac} - Negative log posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
-  \item \code{nlpp_medoid} - Negative log posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
-  \item \code{pd_pac} - Probability distribution silhouette with PAC method using \code{\link{softSilhouette}}
-  \item \code{pd_medoid} - Probability distribution silhouette with Medoid method using \code{\link{softSilhouette}}
-  \item \code{cer} - Certainty-based silhouette using \code{\link{cerSilhouette}}
-  \item \code{db} - Density-based silhouette using \code{\link{dbSilhouette}}
+\item \code{pp_pac} - Posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
+\item \code{pp_medoid} - Posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
+\item \code{nlpp_pac} - Negative log posterior probabilities silhouette with PAC method using \code{\link{softSilhouette}}
+\item \code{nlpp_medoid} - Negative log posterior probabilities silhouette with Medoid method using \code{\link{softSilhouette}}
+\item \code{pd_pac} - Probability distribution silhouette with PAC method using \code{\link{softSilhouette}}
+\item \code{pd_medoid} - Probability distribution silhouette with Medoid method using \code{\link{softSilhouette}}
+\item \code{cer} - Certainty-based silhouette using \code{\link{cerSilhouette}}
+\item \code{db} - Density-based silhouette using \code{\link{dbSilhouette}}
 }
 
-At least one of \code{prox_matrix} or \code{prob_matrix} must be provided.
+At least one of \code{prox_matrix} or \code{prob_matrix} must be provided. Each width is
+computed once and summarized by all available averages; the fuzzy average needs
+\code{prob_matrix}.
+
+If a width cannot be computed, its row is \code{NA} and a warning gives the reason.
+Warnings from the individual functions are collected and each distinct warning is
+reported once.
 }
+\section{Cluster labels}{
+
+Every row uses the same labels, taken in order of precedence from \code{cluster}, from the
+largest membership in \code{prob_matrix}, or from the closest cluster in \code{prox_matrix}.
+(In version 0.9.6 and earlier, the crisp and median distance-based rows used the closest
+cluster in \code{prox_matrix} even when \code{prob_matrix} was supplied, and so could
+describe a different partition from the other rows.)
+}
+
+\section{Relations between the rows}{
+
+For the same labels, the rows fall into the following groups.
+\describe{
+\item{Monotone transformations of each other (same ranking of observations).}{
+Each \code{pac} width is \eqn{s/(2 - |s|)} of the corresponding \code{medoid} width
+\eqn{s}: \code{medoid}/\code{pac}, \code{pp_medoid}/\code{pp_pac},
+\code{nlpp_medoid}/\code{nlpp_pac} and \code{pd_medoid}/\code{pd_pac}. With the
+default labels, \code{pp_medoid}, \code{pp_pac} and \code{db} are all increasing
+functions of the ratio of the two largest memberships, so they too rank observations
+identically. The averages still differ, and may peak at different numbers of
+clusters.}
+\item{Equal in special cases.}{
+\code{pd} equals \code{pp} when all estimated cluster weights are equal. For fuzzy
+c-means with fuzzifier \eqn{m}, \code{pp_medoid} and \code{pp_pac} equal
+\code{medoid} and \code{pac} computed from the dissimilarities
+\eqn{d_{ik}^{1/(m-1)}}, where \eqn{d_{ik}} are squared Euclidean distances to the
+prototypes (for \eqn{m = 2}, the \code{d} component of \code{\link[ppclust]{fcm}}).}
+\item{Genuinely different.}{
+The distance-based rows (in general), \code{nlpp} (which also depends on the size of
+the neighboring membership), and \code{cer} (the largest membership alone, bounded
+below by \eqn{1/K}).}
+}
+}
+
 \examples{
 if (requireNamespace("ppclust", quietly = TRUE)) {
   # Example with FCM clustering

@@ -107,9 +107,9 @@ test_that("extSilhouette() works with print.summary = TRUE", {
   sil1 <- softSilhouette(prob_matrix = fcm_out1$u, print.summary = FALSE)
   sil2 <- softSilhouette(prob_matrix = fcm_out2$u, print.summary = FALSE)
   
-  # Capture output and check if it printed
-  output <- capture.output(extSilhouette(list(sil1, sil2), print.summary = TRUE))
-  expect_true(length(output) > 0)
+  # The summary is reported as a message; printing uses the print method
+  expect_message(extSilhouette(list(sil1, sil2), print.summary = TRUE), "Extended silhouette")
+  output <- capture.output(print(extSilhouette(list(sil1, sil2))))
   expect_true(any(grepl("Extended silhouette", output)))
 })
 

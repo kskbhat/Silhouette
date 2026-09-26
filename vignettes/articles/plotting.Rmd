@@ -102,10 +102,10 @@ rownames(USArrests)[sil_us$sil_width < 0.2]
 
 # Negative widths
 
-When the labels come from a membership matrix passed as `prob_matrix`, an
-observation whose assigned cluster is not its nearest cluster center gets a
-negative width, and its bar points downward. For a Gaussian mixture of the iris
-data, scored against the component means:
+When the labels come from a membership matrix passed as `prob_matrix`, or from
+the `cluster` argument, an observation whose assigned cluster is not its
+nearest cluster center gets a negative width, and its bar points downward. For
+a Gaussian mixture of the iris data, scored against the component means:
 
 ```{r negative, fig.alt = "Silhouette plot of the iris data in three Gaussian mixture components, with widths computed from distances to the component means. A handful of observations in two clusters have negative widths."}
 suppressPackageStartupMessages(library(mclust))

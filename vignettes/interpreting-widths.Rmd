@@ -79,21 +79,23 @@ proximities, and multi-way partitions.
 Write $a_i$ and $b_i$ for the proximities to the assigned and neighboring
 clusters, and $r_i = a_i / b_i$ for dissimilarities.
 
-**1. The widths are not negative.** `Silhouette()` assigns each observation to
-its nearest cluster, so $a_i \le b_i$ and the medoid width $1 - r_i$ lies in
+**1. With labels from the same matrix, the widths are not negative.** Without
+`cluster` or `prob_matrix`, `Silhouette()` assigns each observation to its
+nearest cluster, so $a_i \le b_i$ and the medoid width $1 - r_i$ lies in
 $[0, 1]$. Unlike the classical silhouette, where a negative width flags an
 observation that is closer on average to another cluster, poorly placed
-observations show up here as widths near zero.
+observations show up here as widths near zero. Negative widths appear only when
+the partition comes from elsewhere (next section).
 
 ```{r nonnegative}
 min(s_simple)
 ```
 
 **2. PAC is a monotone shrinkage of the medoid width.** The PAC width is
-$(1 - r_i)/(1 + r_i) = s_i / (2 - s_i)$. It orders observations exactly as the
-medoid width does and is never larger (a medoid width of 0.5 becomes 1/3), so
-the choice between them changes the level of the average, not which
-observations look poorly clustered.
+$(1 - r_i)/(1 + r_i) = s_i / (2 - s_i)$, and $s_i / (2 - |s_i|)$ in general. It
+orders observations exactly as the medoid width does and is never larger in
+absolute value (a medoid width of 0.5 becomes 1/3), so the choice between them
+changes the level of the average, not which observations look poorly clustered.
 
 **3. Squared distances inflate the widths.** Replacing every distance by its
 square replaces $r_i$ by $r_i^2$, and the width by $1 - r_i^2 = s_i(2 - s_i)$.
@@ -106,23 +108,31 @@ all.equal(Silhouette(P^2)$sil_width, s_simple * (2 - s_simple))
 
 # Where the cluster labels come from
 
-`Silhouette()` and `softSilhouette()` derive the assigned cluster from the
-matrix they are given: the nearest cluster for dissimilarities, the largest
-value for similarities and memberships. They have no argument for an external
-partition. For k-means at convergence, the nearest center is the assigned
-cluster, but for other methods it need not be. Scoring an average-linkage
-partition against its own centroids reassigns some observations:
+A silhouette scores a partition, so it matters which partition is scored. Every
+width function takes its labels, in order of precedence, from
+
+1. the `cluster` argument, when supplied;
+2. the largest membership in `prob_matrix`, when supplied;
+3. the closest cluster in the proximity matrix.
+
+For k-means at convergence, the nearest center is the assigned cluster, but for
+other methods it need not be. Without `cluster`, scoring an average-linkage
+partition against its own centroids would silently reassign some observations
+to their nearest centroid; with `cluster`, the partition is kept and those
+observations receive negative widths:
 
 ```{r relabel}
 hc <- cutree(hclust(dist(X), method = "average"), k = 3)
 centers <- apply(X, 2, function(v) tapply(v, hc, mean))
-sum(Silhouette(proxy::dist(X, centers))$cluster != hc)
+P_hc <- proxy::dist(X, centers)
+c(reassigned_without_cluster = sum(Silhouette(P_hc)$cluster != hc),
+  negative_with_cluster = sum(Silhouette(P_hc, cluster = hc)$sil_width < 0))
 ```
 
 If a membership matrix is supplied as `prob_matrix`, the labels come from the
-memberships instead. An observation whose most probable cluster is not its
-nearest center then gets a negative width, which is informative: it marks
-disagreement between the fitted model and the geometry. For a Gaussian mixture:
+memberships. An observation whose most probable cluster is not its nearest
+center then gets a negative width, which is informative: it marks disagreement
+between the fitted model and the geometry. For a Gaussian mixture:
 
 ```{r negative}
 suppressPackageStartupMessages(library(mclust))
@@ -139,12 +149,18 @@ sum(Silhouette(P_gmm, prob_matrix = gm$z)$sil_width < 0)
 | PAC | `Silhouette(method = "pac")` | $[0, 1]$ with labels from the same matrix |
 | posterior probabilities | `softSilhouette(prob_type = "pp")` | $[0, 1]$ |
 | negative log posteriors | `softSilhouette(prob_type = "nlpp")` | $[0, 1]$ |
-| size-adjusted posteriors | `softSilhouette(prob_type = "pd")` | $[0, 1]$; negative values possible with `average = "fuzzy"` |
+| size-adjusted posteriors | `softSilhouette(prob_type = "pd")` | $[-1, 1]$; negative when the largest membership is not the largest ratio $\gamma_{ik}/\hat\pi_k$ |
 | certainty | `cerSilhouette()` | $[1/K, 1]$ |
 | density-based | `dbSilhouette()` | $[0, 1]$, and the maximum in each sample is always 1 |
 
-With labels supplied through `prob_matrix`, the medoid and PAC widths range over
-$[-1, 1]$.
+The ranges assume the default labels. With labels supplied through `cluster`
+(or, for `Silhouette()`, through `prob_matrix`), every width except the
+certainty width can be negative and ranges over $[-1, 1]$; the certainty width
+ranges over $[0, 1]$.
+
+Exactly tied proximities or memberships are resolved in favor of the column
+that comes first. With ties, the labels (though not the widths, which are then
+0) depend on the order of the columns; supply `cluster` to control them.
 
 # Which comparisons are valid
 
@@ -154,10 +170,15 @@ $[-1, 1]$.
   favors a particular kind of cluster.
 - **Not one width against another.** The rows of `calSilhouette()` are on
   different scales. Choosing "the best method" by the largest value compares
-  scales, not clusterings.
+  scales, not clusterings. Nor are the rows independent evidence: each PAC row
+  is a monotone transformation of the matching medoid row, the `pp` and
+  density-based widths rank observations identically, `pd` equals `pp` when the
+  clusters have equal weights, and for fuzzy c-means the `pp` and distance-based
+  widths coincide (see `?calSilhouette`).
 - **Not simplified against classical.** See the first section.
 - **Fuzzy averages only at the same `a`.** The weights
-  $(\gamma_{ic_i} - \gamma_{i\nu_i})^a$ change with `a`, and so does the average.
+  $(\gamma_{i(1)} - \gamma_{i(2)})^a$, built from the two largest memberships,
+  change with `a`, and so does the average.
 - **Certainty and density-based widths with care.** The certainty width cannot
   fall below $1/K$, so its average is not comparable across $K$. The
   density-based width is scaled by the most confident observation in the

@@ -34,9 +34,12 @@ objects and average width $\bar S_m$,
 $$
 \mathrm{ExS} = \frac{\sum_m n_m \bar S_m}{\sum_m n_m}.
 $$
-The weights are the numbers of objects, so a mode with many more objects than
-another dominates the combined value. This vignette shows the workflow and what
-that weighting means in practice.
+The weights are the numbers of objects, so ExS is the average width over all
+clustered objects, each counting once, and a mode with many more objects than
+another dominates the combined value. `extSilhouette(weights = "equal")` gives
+every mode the same weight instead, and a numeric vector sets the weights
+directly. This vignette shows the workflow and what the weighting means in
+practice.
 
 ```{r library}
 library(Silhouette)
@@ -78,15 +81,15 @@ block_sil <- function(Xs, K, Q, seed) {
   U <- fit$U
   V <- fit$V
   C <- solve(crossprod(U), t(U) %*% Xs %*% V) %*% solve(crossprod(V))
-  rows <- Silhouette(proxy::dist(Xs, C %*% t(V)))      # n x K distances
-  cols <- Silhouette(proxy::dist(t(Xs), t(U %*% C)))   # p x Q distances
-  extSilhouette(list(rows, cols), dim_names = c("rows", "columns"))
+  list(rows = Silhouette(proxy::dist(Xs, C %*% t(V))),       # n x K distances
+       columns = Silhouette(proxy::dist(t(Xs), t(U %*% C))))  # p x Q distances
 }
-block_sil(Xb, K = 4, Q = 3, seed = 1)
+modes <- block_sil(Xb, K = 4, Q = 3, seed = 1)
+extSilhouette(modes, dim_names = names(modes))
 ```
 
-The result holds the extended silhouette and a table of the number of objects
-and the average width for each mode.
+The result holds the extended silhouette and a table of the number of objects,
+the share of the weight, and the average width for each mode.
 
 # Choosing the numbers of row and column clusters
 
@@ -97,9 +100,10 @@ mode-wise averages.
 grid <- expand.grid(K = 2:5, Q = 2:4)
 fits <- lapply(seq_len(nrow(grid)),
                function(g) block_sil(Xb, grid$K[g], grid$Q[g], seed = g))
-grid$ExS <- sapply(fits, `[[`, "ext_sil_width")
-grid$rows <- sapply(fits, function(e) e$dim_table$avg_sil_width[1])
-grid$columns <- sapply(fits, function(e) e$dim_table$avg_sil_width[2])
+ext <- lapply(fits, extSilhouette)
+grid$ExS <- sapply(ext, `[[`, "ext_sil_width")
+grid$rows <- sapply(ext, function(e) e$dim_table$avg_sil_width[1])
+grid$columns <- sapply(ext, function(e) e$dim_table$avg_sil_width[2])
 grid[order(-grid$ExS), ][1:4, ]
 ```
 
@@ -127,7 +131,7 @@ ggplot(long, aes(K, Q, fill = value)) +
 ```{r grid-values, include = FALSE}
 top <- grid[which.max(grid$ExS), ]
 w_rows <- n / (n + p)
-grid$equal <- (grid$rows + grid$columns) / 2
+grid$equal <- sapply(fits, function(f) extSilhouette(f, weights = "equal")$ext_sil_width)
 top_eq <- grid[which.max(grid$equal), ]
 ```
 
@@ -141,11 +145,12 @@ partition but can only tip close decisions.
 
 When the modes differ greatly in size, report the mode-wise averages alongside
 the extended silhouette, and consider how much weight each mode should get. In
-this example an equally weighted average of the two modes is largest at
+this example the equally weighted extended silhouette,
+`extSilhouette(..., weights = "equal")`, is largest at
 $(K, Q) = (`r top_eq$K`, `r top_eq$Q`)$:
 
 ```{r equal-weight}
-grid$equal <- (grid$rows + grid$columns) / 2
+grid$equal <- sapply(fits, function(f) extSilhouette(f, weights = "equal")$ext_sil_width)
 grid[order(-grid$equal), ][1:3, c("K", "Q", "rows", "columns", "equal")]
 ```
 

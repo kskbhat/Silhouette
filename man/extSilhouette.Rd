@@ -2,51 +2,87 @@
 % Please edit documentation in R/extSilhouette.R
 \name{extSilhouette}
 \alias{extSilhouette}
+\alias{format.extSilhouette}
+\alias{print.extSilhouette}
 \title{Calculate Extended Silhouette Width for Multi-Way Clustering}
 \usage{
-extSilhouette(sil_list, dim_names = NULL, print.summary = FALSE)
+extSilhouette(
+  sil_list,
+  dim_names = NULL,
+  print.summary = FALSE,
+  weights = c("size", "equal")
+)
+
+\method{format}{extSilhouette}(x, digits = 4, ...)
+
+\method{print}{extSilhouette}(x, digits = 4, ...)
 }
 \arguments{
 \item{sil_list}{A list of objects of class \code{"Silhouette"}, typically the output of \code{\link{Silhouette}} or \code{\link{softSilhouette}}, where each object represents the silhouette analysis for one mode of multi-way clustering (e.g., rows, columns, or other dimensions in biclustering or tensor clustering).}
 
 \item{dim_names}{An optional character vector of dimension names (e.g., \code{c("Rows", "Columns")}). If \code{NULL}, defaults to \code{"Mode 1"}, \code{"Mode 2"}, etc.}
 
-\item{print.summary}{Logical; if \code{TRUE}, prints a summary of the extended silhouette width and dimension table. Default is \code{FALSE}.}
+\item{print.summary}{Logical; if \code{TRUE}, reports the extended silhouette width and the dimension table through \code{\link{message}}. Default is \code{FALSE}.}
+
+\item{weights}{How the modes are weighted: \code{"size"} (the default) weights each mode
+by its number of objects, \code{"equal"} gives every mode the same weight, and a
+non-negative numeric vector with one entry per mode gives user-specified weights (they
+are rescaled to sum to 1).}
+
+\item{x}{An object of class \code{"extSilhouette"}.}
+
+\item{digits}{Number of decimal places shown.}
+
+\item{...}{Further arguments, currently ignored.}
 }
 \value{
 A list of class \code{"extSilhouette"} with the following components:
 \describe{
-  \item{ext_sil_width}{A numeric scalar representing the extended silhouette width.}
-  \item{dim_table}{A data frame with columns \code{dimension} (e.g., "Mode 1", "Mode 2"), \code{n_obs} (number of observations), and \code{avg_sil_width} (average silhouette width for each mode).}
+\item{ext_sil_width}{A numeric scalar, the extended silhouette width.}
+\item{dim_table}{A data frame with columns \code{dimension} (e.g., "Mode 1", "Mode 2"), \code{n_obs} (number of objects), \code{weight} (the share of the total weight given to the mode) and \code{avg_sil_width} (average silhouette width of the mode).}
+\item{weights}{The weighting used: \code{"size"}, \code{"equal"} or \code{"user"}.}
 }
+Values are not rounded; the print method shows four decimals.
 }
 \description{
-`r lifecycle::badge('experimental')`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Computes an extended silhouette width for multi-way clustering (e.g., biclustering, triclustering, or n-mode tensor clustering) by combining silhouette widths from a list of Silhouette objects, each representing one mode of clustering. The extended silhouette width is the weighted average of the average silhouette widths from each mode, weighted by the number of observations in each mode's silhouette analysis. The output is an object of class \code{extSilhouette}.
+Computes an extended silhouette width for multi-way clustering (e.g., biclustering, triclustering, or n-mode tensor clustering) by combining silhouette widths from a list of Silhouette objects, each representing one mode of clustering. The extended silhouette width is a weighted average of the average silhouette widths of the modes. By default each mode is weighted by its number of objects; equal or user-specified weights are also available. The output is an object of class \code{extSilhouette}.
 }
 \details{
 The extended silhouette width is computed as:
-\deqn{ ExS = \frac{ \sum (n_i \cdot w_i) }{ \sum n_i } }
-where \eqn{n_i} is the number of observations in mode \eqn{i} (derived from \code{nrow(x$widths)}), and \eqn{w_i} is the average silhouette width for that mode (from \code{x$avg.width}).
-Each \code{Silhouette} object in \code{sil_list} must contain a non-empty \code{widths} data frame and a numeric \code{avg.width} value. Modes with zero observations (\eqn{n_i = 0}) are not allowed, as they would result in an undefined weighted average. For consistency make sure all \code{Silhouette} objects derived from same `method` and arguments.
+\deqn{ ExS = \frac{ \sum_{i} \omega_i \bar{S}_i }{ \sum_{i} \omega_i } }
+where \eqn{\bar{S}_i} is the average silhouette width of mode \eqn{i} (from
+\code{summary(x)$avg.width}, so it follows the averaging rule of that object) and
+\eqn{\omega_i} is its weight. With \code{weights = "size"}, \eqn{\omega_i = n_i}, the
+number of objects in mode \eqn{i} (\code{nrow(x)}), as in Schepers et al. (2008); ExS is
+then the average width over all objects of all modes, each object counting once. With
+\code{weights = "equal"}, \eqn{\omega_i = 1}, so ExS is the mean of the mode-wise
+averages.
+
+Size weighting treats every clustered object alike, but when the modes differ greatly in
+size the largest mode dominates: with 200 rows and 30 columns, the rows receive about 87\\%
+of the weight. Equal weighting gives every mode the same say regardless of its size.
+Because the choice can change which model is selected, report the mode-wise averages in
+\code{dim_table} together with ExS.
+
+Each \code{Silhouette} object in \code{sil_list} must contain at least one observation and have a finite average width. For consistency, compute all \code{Silhouette} objects with the same function, \code{method} and averaging rule.
 }
 \examples{
-# Example using mock two-mode cluster membership matrices
-# Mode 1: 150 observations, 3 clusters
+# Two modes: 150 objects in 3 clusters and 4 variables in 2 clusters
 set.seed(123)
 prob_mode1 <- matrix(runif(150 * 3), nrow = 150, ncol = 3)
 prob_mode1 <- prob_mode1 / rowSums(prob_mode1)
-
-# Mode 2: 4 variables, 2 clusters
 prob_mode2 <- matrix(runif(4 * 2), nrow = 4, ncol = 2)
 prob_mode2 <- prob_mode2 / rowSums(prob_mode2)
 
 sil_mode1 <- softSilhouette(prob_matrix = prob_mode1, method = "pac")
 sil_mode2 <- softSilhouette(prob_matrix = prob_mode2, method = "pac")
 
-# Compute Extended silhouette
-ext_sil <- extSilhouette(list(sil_mode1, sil_mode2), print.summary = TRUE)
+# Size-weighted (default) and equally weighted extended silhouette
+extSilhouette(list(sil_mode1, sil_mode2), dim_names = c("Rows", "Columns"))
+extSilhouette(list(sil_mode1, sil_mode2), dim_names = c("Rows", "Columns"),
+              weights = "equal")
 }
 \references{
 Schepers, J., Ceulemans, E., & Van Mechelen, I. (2008). Selecting among multi-mode partitioning models of different complexities: A comparison of four model selection criteria. \emph{Journal of Classification}, 25(1), 67--85. \doi{10.1007/s00357-008-9005-9}

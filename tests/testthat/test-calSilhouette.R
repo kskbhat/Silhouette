@@ -55,7 +55,7 @@ test_that("calSilhouette() works with clust_fun argument", {
   mock_clust_s3 <- function(data, k) {
     list(
       d = matrix(runif(nrow(data) * k, 0, 1), ncol = k),
-      u = matrix(runif(nrow(data) * k, 0, 1), ncol = k)
+      u = prop.table(matrix(runif(nrow(data) * k, 0, 1), ncol = k), 1)
     )
   }
   
@@ -118,7 +118,7 @@ test_that("calSilhouette() works with S4 clustering outputs", {
   mock_clust_s4 <- function(data, k) {
     new("MockClustS4",
       d = matrix(runif(nrow(data) * k, 0, 1), ncol = k),
-      u = matrix(runif(nrow(data) * k, 0, 1), ncol = k)
+      u = prop.table(matrix(runif(nrow(data) * k, 0, 1), ncol = k), 1)
     )
   }
   
@@ -157,7 +157,7 @@ test_that("calSilhouette() error handling, fallbacks, and safe_compute paths", {
   assignInNamespace("dbSilhouette", function(...) stop("Mock DB error"), ns = "Silhouette")
   expect_warning(
     calSilhouette(prob_matrix = fcm_out$u, print.summary = TRUE),
-    "Error computing silhouette: Mock DB error"
+    "Error computing silhouette \\(db\\): Mock DB error"
   )
   
   # Restore original functions

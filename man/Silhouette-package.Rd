@@ -26,5 +26,11 @@ Authors:
   \item Kiruthika C (\href{https://orcid.org/0000-0001-9655-702X}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Alboukadel Kassambara (Author of factoextra::fviz_silhouette(), from which plotSilhouette() is adapted) [contributor]
+  \item Fabian Mundt (Author of factoextra::fviz_silhouette(), from which plotSilhouette() is adapted) [contributor]
+}
+
 }
 \keyword{internal}

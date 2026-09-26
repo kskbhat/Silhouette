@@ -174,19 +174,19 @@ test_that("cerSilhouette() works with print.summary = TRUE for all average metho
   # Crisp average
   expect_message(
     cerSilhouette(prob_matrix = fcm_out$u, average = "crisp", print.summary = TRUE),
-    "Average crisp similarity db silhouette"
+    "Average crisp similarity certainty silhouette"
   )
   
   # Fuzzy average
   expect_message(
     cerSilhouette(prob_matrix = fcm_out$u, average = "fuzzy", print.summary = TRUE),
-    "Average fuzzy similarity db silhouette"
+    "Average fuzzy similarity certainty silhouette"
   )
   
   # Median average
   expect_message(
     cerSilhouette(prob_matrix = fcm_out$u, average = "median", print.summary = TRUE),
-    "Median similarity db silhouette"
+    "Median similarity certainty silhouette"
   )
 })
 
