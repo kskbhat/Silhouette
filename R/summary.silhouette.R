@@ -1,7 +1,6 @@
 #' @rdname Silhouette
 #' @method summary Silhouette
 #' @export
-#' @import methods
 #' @param object An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}},  \code{\link{dbSilhouette}}, and  \code{\link{cerSilhouette}} function.
 #'
 #' @return Further, \code{summary} returns (invisibly) a list containing:
@@ -12,11 +11,11 @@
 #' }
 summary.Silhouette <- function(object, print.summary = TRUE, ...) {
   if (!is.Silhouette(object, strict = TRUE)) {
-    stop("object must be of class 'Silhouette'.")
+    stop("object is not a valid 'Silhouette' object; see is.Silhouette(object, strict = TRUE).")
   }
   stats <- .silhouette_summary(object)
   if (isTRUE(print.summary)) {
-    .report_silhouette(object, stats, attributes = FALSE)
+    .report_silhouette(object, stats)
   }
   invisible(stats)
 }

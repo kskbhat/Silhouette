@@ -9,13 +9,13 @@
 #' @param sil_width Numeric vector of silhouette widths for each observation (must be between -1 and +1)
 #' @param weight Numeric vector of weights for each observation (must be between 0 and 1, only used when average = "fuzzy")
 #' @param proximity_type Character; the proximity type used. Options: "similarity" or "dissimilarity"
-#' @param method Character; the silhouette calculation method used (default: NULL, can be any custom name)
+#' @param method Character; the silhouette calculation method used (default: \code{NA}; any custom name is allowed)
 #' @param average Character; the averaging method. Options: "crisp", "fuzzy", or "median"
 #'
 #' @return A data frame of class \code{"Silhouette"} containing cluster assignments, nearest neighbor clusters, silhouette widths for each observation, and weights (for fuzzy clustering). The object includes the following attributes:
 #' \describe{
 #'   \item{proximity_type}{The proximity type used (\code{"similarity"} or \code{"dissimilarity"}).}
-#'   \item{method}{The silhouette calculation method used (\code{"medoid"} or \code{"pac"}).}
+#'   \item{method}{The silhouette calculation method supplied in \code{method}.}
 #'   \item{average}{Character — the averaging method: \code{"crisp"}, \code{"fuzzy"}, or \code{"median"}.}
 #' }
 #'

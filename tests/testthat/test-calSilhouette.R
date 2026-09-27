@@ -1,5 +1,6 @@
 library(testthat)
 library(Silhouette)
+skip_if_not_installed("ppclust")
 
 test_that("calSilhouette() errors on empty/invalid inputs", {
   # At least one of prox_matrix or prob_matrix must be provided
@@ -108,7 +109,7 @@ test_that("calSilhouette() works with clust_fun argument", {
 
 test_that("calSilhouette() works with S4 clustering outputs", {
   # Define custom S4 class for mock clustering
-  setClass("MockClustS4",
+  setClass("MockClustS4Cal",
     slots = list(
       d = "matrix",
       u = "matrix"
@@ -116,7 +117,7 @@ test_that("calSilhouette() works with S4 clustering outputs", {
   )
   
   mock_clust_s4 <- function(data, k) {
-    new("MockClustS4",
+    new("MockClustS4Cal",
       d = matrix(runif(nrow(data) * k, 0, 1), ncol = k),
       u = prop.table(matrix(runif(nrow(data) * k, 0, 1), ncol = k), 1)
     )
@@ -141,28 +142,26 @@ test_that("calSilhouette() works with S4 clustering outputs", {
 })
 
 test_that("calSilhouette() error handling, fallbacks, and safe_compute paths", {
-  # Save original functions
-  orig_db <- Silhouette::dbSilhouette
-  orig_cer <- Silhouette::cerSilhouette
-  
-  # 1. Mock dbSilhouette to return non-Silhouette object (hits line 147)
-  assignInNamespace("dbSilhouette", function(...) "not_a_silhouette", ns = "Silhouette")
-  
   data(iris)
   fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
-  res <- calSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
-  expect_true(!"db" %in% colnames(res))
-  
-  # 2. Mock dbSilhouette to throw an error with print.summary = TRUE (hits line 151)
-  assignInNamespace("dbSilhouette", function(...) stop("Mock DB error"), ns = "Silhouette")
-  expect_warning(
-    calSilhouette(prob_matrix = fcm_out$u, print.summary = TRUE),
-    "Error computing silhouette \\(db\\): Mock DB error"
-  )
-  
-  # Restore original functions
-  assignInNamespace("dbSilhouette", orig_db, ns = "Silhouette")
-  assignInNamespace("cerSilhouette", orig_cer, ns = "Silhouette")
+
+  # A width function that returns something other than a Silhouette object gives NA
+  local({
+    local_mocked_bindings(dbSilhouette = function(...) "not_a_silhouette")
+    res <- calSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
+    expect_true(all(is.na(unlist(res[res$Method == "db", -1]))))
+    expect_false(anyNA(unlist(res[res$Method != "db", -1])))
+  })
+
+  # An error in one width function becomes a warning and an NA row
+  local({
+    local_mocked_bindings(dbSilhouette = function(...) stop("Mock DB error"))
+    expect_warning(
+      res <- calSilhouette(prob_matrix = fcm_out$u, print.summary = TRUE),
+      "Error computing silhouette \\(db\\): Mock DB error"
+    )
+    expect_true(all(is.na(unlist(res[res$Method == "db", -1]))))
+  })
 })
 
 test_that("calSilhouette() S4 generic fallback", {

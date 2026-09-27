@@ -111,8 +111,8 @@ test_that("missing and -Inf proximities are rejected, +Inf is allowed", {
   expect_equal(Silhouette(inf)$sil_width[1], 0)
 })
 
-test_that("negative proximities give a warning", {
-  expect_warning(Silhouette(rbind(c(-1, 2), c(2, 1))), "negative values")
+test_that("negative proximities are rejected", {
+  expect_error(Silhouette(rbind(c(-1, 2), c(2, 1))), "must not contain negative values")
 })
 
 test_that("membership matrices are checked with a documented tolerance", {

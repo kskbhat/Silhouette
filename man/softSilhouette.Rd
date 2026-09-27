@@ -14,7 +14,8 @@ softSilhouette(
   print.summary = FALSE,
   clust_fun = NULL,
   ...,
-  cluster = NULL
+  cluster = NULL,
+  clust_args = list()
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ observation is assigned to the cluster with its largest membership (for \code{"p
 \code{"nlpp"}) or its largest density (for \code{"pd"}); see \emph{Cluster labels}. If
 \code{clust_fun} is provided, \code{cluster} may be the name of the label component of its
 output. Must be named in the call because it follows \code{...}.}
+
+\item{clust_args}{A list of further arguments for \code{clust_fun}. Arguments given through \code{...} are matched first against this function's own arguments, and R matches names partially: \code{m = 3} meant for the fuzzifier of \code{\link[ppclust]{fcm}} would be taken as \code{method}. Pass such arguments here instead, e.g. \code{clust_args = list(m = 3)}. Defaults to \code{list()}.}
 }
 \value{
 A data frame of class \code{"Silhouette"} with one row per observation and columns

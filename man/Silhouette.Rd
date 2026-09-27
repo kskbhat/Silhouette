@@ -18,7 +18,8 @@ Silhouette(
   print.summary = FALSE,
   clust_fun = NULL,
   ...,
-  cluster = NULL
+  cluster = NULL,
+  clust_args = list()
 )
 
 \method{plot}{Silhouette}(
@@ -76,6 +77,8 @@ provided, \code{cluster} may be the name of the label component of its output (e
 \code{"cluster"} for \code{\link[stats]{kmeans}}). Must be named in the call because it
 follows \code{...}. Defaults to \code{NULL}.}
 
+\item{clust_args}{A list of further arguments for \code{clust_fun}. Arguments given through \code{...} are matched first against this function's own arguments, and R matches names partially: \code{m = 3} meant for the fuzzifier of \code{\link[ppclust]{fcm}} would be taken as \code{method}. Pass such arguments here instead, e.g. \code{clust_args = list(m = 3)}. Defaults to \code{list()}.}
+
 \item{x}{An object of class \code{"Silhouette"}, typically the output of the \code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}} and \code{\link{cerSilhouette}} function. Also supports objects classes \code{\link[factoextra]{eclust}}, \code{\link[factoextra]{hcut}}, \code{\link[cluster]{pam}}, \code{\link[cluster]{clara}}, \code{\link[cluster]{fanny}}, \code{\link[cluster]{silhouette}}, or \code{\link[drclust]{silhouette}} from \pkg{cluster}, \pkg{factoextra}, \pkg{drclust} packages. For these classes, explicitly call \code{plotSilhouette()} to generate the plot.}
 
 \item{label}{Logical; if \code{TRUE}, the x-axis is labeled with observation row indices from the input data and titled "Row Index". Defaults to \code{FALSE}.}
@@ -89,7 +92,7 @@ to be used for the horizontal reference line indicating the average
 silhouette width. Accepts standard ggplot2 linetype values, such as:
 \itemize{
 \item Character: \code{"solid"}, \code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, \code{"twodash"}.
-\item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+\item Numeric: a single integer from 0 to 6 corresponding to ggplot2 line patterns.
 }
 Defaults to \code{"dashed"}.}
 
@@ -227,8 +230,8 @@ Missing widths are removed before averaging.
 
 \code{prox_matrix} must be a numeric matrix with at least two columns and no missing
 values; \code{+Inf} is allowed (for example, \eqn{-\log 0}) but \code{-Inf} is not.
-Negative proximities give a warning, because the widths are then no longer guaranteed to
-lie in \eqn{[-1, 1]}.
+Negative proximities are rejected, because the widths would then no longer lie in
+\eqn{[-1, 1]}; transform them first (for example, \eqn{(1 + r)/2} for correlations).
 \code{prob_matrix} must be non-negative with rows summing to 1 within a tolerance of
 \code{sqrt(.Machine$double.eps)} (about \eqn{1.5 \times 10^{-8}}); rows are not
 renormalized.

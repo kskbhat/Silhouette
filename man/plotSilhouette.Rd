@@ -27,11 +27,11 @@ to be used for the horizontal reference line indicating the average
 silhouette width. Accepts standard ggplot2 linetype values, such as:
 \itemize{
 \item Character: \code{"solid"}, \code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, \code{"twodash"}.
-\item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+\item Numeric: a single integer from 0 to 6 corresponding to ggplot2 line patterns.
 }
 Defaults to \code{"dashed"}.}
 
-\item{...}{Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}).}
+\item{...}{Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}). A \code{palette} (a vector of colors or a palette name accepted by \code{\link[ggpubr]{get_palette}}) colors the clusters and keeps the summary legend; it is ignored when \code{grayscale = TRUE}.}
 }
 \value{
 A \code{ggplot2} object representing the Silhouette plot.
@@ -62,12 +62,12 @@ data(iris)
 # Crisp Silhouette with k-means
 out <- kmeans(iris[, -5], 3)
 if (requireNamespace("proxy", quietly = TRUE)) {
-  library(proxy)
-  dist <- dist(iris[, -5], out$centers)
-  plot(Silhouette(dist))
+  d_km <- proxy::dist(iris[, -5], out$centers)
+  plot(Silhouette(d_km))
+  plot(Silhouette(d_km), palette = "jco")
 }
 
-#' # Fuzzy Silhouette with ppclust::fcm
+# Fuzzy Silhouette with ppclust::fcm
 if (requireNamespace("ppclust", quietly = TRUE)) {
   library(ppclust)
   out_fuzzy <- Silhouette(
@@ -122,11 +122,11 @@ if (requireNamespace("factoextra", quietly = TRUE)) {
   plotSilhouette(hcut_result)
 }
 
-# Silhouette plot for hcut clustering
+# Silhouette plot for a drclust partition (3 clusters, 2 components)
 if (requireNamespace("drclust", quietly = TRUE)) {
   library(drclust)
   iris_mat <- as.matrix(iris[,-5])
-  drclust_out <- dpcakm(iris_mat, 20, 3)
+  drclust_out <- dpcakm(iris_mat, 3, 2)
   d <- silhouette(iris_mat, drclust_out)
   plotSilhouette(d$cl.silhouette)
 }

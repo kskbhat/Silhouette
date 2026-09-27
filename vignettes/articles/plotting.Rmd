@@ -68,8 +68,8 @@ plotSilhouette(sil,
   legend = "bottom", palette = c("#2a78d6", "#eb6834", "#1f9d74"))
 ```
 
-A `palette` replaces the color scale that carries the summary legend, so the
-legend then lists only the cluster numbers.
+The palette colors the clusters and the summary legend is kept. With
+`grayscale = TRUE` the palette is ignored.
 
 Because the result is a ggplot, layers and themes can also be added with `+`,
 and `ggplot2::ggsave()` saves it to a file:

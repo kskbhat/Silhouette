@@ -62,7 +62,6 @@
 #' extSilhouette(list(sil_mode1, sil_mode2), dim_names = c("Rows", "Columns"))
 #' extSilhouette(list(sil_mode1, sil_mode2), dim_names = c("Rows", "Columns"),
 #'               weights = "equal")
-#' @import lifecycle
 #' @export
 extSilhouette <- function(sil_list, dim_names = NULL, print.summary = FALSE,
                           weights = c("size", "equal")) {
@@ -74,16 +73,19 @@ extSilhouette <- function(sil_list, dim_names = NULL, print.summary = FALSE,
   }
 
   n_rows <- vapply(sil_list, nrow, integer(1))
-  avg_widths <- vapply(sil_list, function(x) summary(x, print.summary = FALSE)$avg.width, numeric(1))
-
-  if (any(!is.finite(avg_widths))) {
-    stop("One or more Silhouette objects have non-finite average silhouette widths (NA, NaN, or Inf).")
-  }
-  if (sum(n_rows) == 0) {
-    stop("No observations found in any Silhouette object.")
-  }
   if (any(n_rows == 0)) {
     stop("Every Silhouette object in sil_list must contain at least one observation.")
+  }
+  kinds <- vapply(sil_list, function(x) paste(attr(x, "proximity_type"), attr(x, "method"),
+                                              attr(x, "average")), character(1))
+  if (length(unique(kinds)) > 1) {
+    warning("The Silhouette objects in sil_list differ in proximity type, method or averaging (",
+            paste(unique(kinds), collapse = "; "), "), so their averages are on different scales.",
+            call. = FALSE)
+  }
+  avg_widths <- vapply(sil_list, function(x) summary(x, print.summary = FALSE)$avg.width, numeric(1))
+  if (any(!is.finite(avg_widths))) {
+    stop("One or more Silhouette objects have non-finite average silhouette widths (NA, NaN, or Inf).")
   }
 
   if (is.numeric(weights)) {

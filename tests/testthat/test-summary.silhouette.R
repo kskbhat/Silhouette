@@ -1,6 +1,6 @@
 library(testthat)
 library(Silhouette)
-library(ppclust)
+skip_if_not_installed("ppclust")
 
 set.seed(123) # Global seed for reproducibility
 
@@ -49,8 +49,8 @@ test_that("summary.Silhouette() works with different average methods", {
 ## 2. Error handling tests
 test_that("summary.Silhouette() errors with invalid object", {
   invalid_sil <- structure(list(), class = "Silhouette")
-  expect_error(summary(invalid_sil), "object must be of class 'Silhouette'")
-  expect_error(summary.Silhouette(iris), "object must be of class 'Silhouette'")
+  expect_error(summary(invalid_sil), "not a valid 'Silhouette' object")
+  expect_error(summary.Silhouette(iris), "not a valid 'Silhouette' object")
 })
 
 ## 3. Output validation tests

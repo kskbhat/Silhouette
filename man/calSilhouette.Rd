@@ -12,7 +12,8 @@ calSilhouette(
   print.summary = FALSE,
   clust_fun = NULL,
   ...,
-  cluster = NULL
+  cluster = NULL,
+  clust_args = list()
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ Defaults to \code{NULL}.}
 observation as a column number (\eqn{1, \ldots, K}). If \code{clust_fun} is provided,
 \code{cluster} may be the name of the label component of its output. Must be named in the
 call because it follows \code{...}. See \emph{Cluster labels}.}
+
+\item{clust_args}{A list of further arguments for \code{clust_fun}. Arguments given through \code{...} are matched first against this function's own arguments, and R matches names partially: \code{m = 3} meant for the fuzzifier of \code{\link[ppclust]{fcm}} would be taken as \code{method}. Pass such arguments here instead, e.g. \code{clust_args = list(m = 3)}. Defaults to \code{list()}.}
 }
 \value{
 A data frame with one row per method and the following columns:

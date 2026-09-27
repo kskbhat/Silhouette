@@ -11,10 +11,10 @@
 #'   silhouette width. Accepts standard ggplot2 linetype values, such as:
 #'   \itemize{
 #'     \item Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, `"twodash"`.
-#'     \item Numeric: integers from 0 to 6 corresponding to ggplot2 line patterns.
+#'     \item Numeric: a single integer from 0 to 6 corresponding to ggplot2 line patterns.
 #'   }
 #'   Defaults to `"dashed"`.
-#' @param ... Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{palette}, \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}).
+#' @param ... Additional arguments passed to \code{\link[ggpubr]{ggpar}} for customizing the plot (e.g., \code{legend}, \code{xlab}, \code{ylab}, \code{subtitle}, \code{title}). A \code{palette} (a vector of colors or a palette name accepted by \code{\link[ggpubr]{get_palette}}) colors the clusters and keeps the summary legend; it is ignored when \code{grayscale = TRUE}.
 #'
 #' @details
 #' The Silhouette plot displays the silhouette width (\code{sil_width}) for each observation, grouped by cluster, with bars sorted by cluster and descending silhouette width. The \code{summary.legend} option adds cluster sizes and average silhouette widths to the legend.
@@ -48,12 +48,12 @@
 #' # Crisp Silhouette with k-means
 #' out <- kmeans(iris[, -5], 3)
 #' if (requireNamespace("proxy", quietly = TRUE)) {
-#'   library(proxy)
-#'   dist <- dist(iris[, -5], out$centers)
-#'   plot(Silhouette(dist))
+#'   d_km <- proxy::dist(iris[, -5], out$centers)
+#'   plot(Silhouette(d_km))
+#'   plot(Silhouette(d_km), palette = "jco")
 #' }
 #'
-#' #' # Fuzzy Silhouette with ppclust::fcm
+#' # Fuzzy Silhouette with ppclust::fcm
 #' if (requireNamespace("ppclust", quietly = TRUE)) {
 #'   library(ppclust)
 #'   out_fuzzy <- Silhouette(
@@ -108,17 +108,16 @@
 #'   plotSilhouette(hcut_result)
 #' }
 #'
-#' # Silhouette plot for hcut clustering
+#' # Silhouette plot for a drclust partition (3 clusters, 2 components)
 #' if (requireNamespace("drclust", quietly = TRUE)) {
 #'   library(drclust)
 #'   iris_mat <- as.matrix(iris[,-5])
-#'   drclust_out <- dpcakm(iris_mat, 20, 3)
+#'   drclust_out <- dpcakm(iris_mat, 3, 2)
 #'   d <- silhouette(iris_mat, drclust_out)
 #'   plotSilhouette(d$cl.silhouette)
 #' }
 #' }
 #' @export
-#' @importFrom dplyr mutate arrange %>%
 #' @importFrom ggplot2 ggplot aes geom_bar labs ylim geom_hline theme scale_fill_grey scale_color_grey scale_fill_discrete scale_color_discrete element_text
 #' @importFrom ggpubr ggpar
 plotSilhouette <- function(x,
@@ -127,7 +126,8 @@ plotSilhouette <- function(x,
                            grayscale = FALSE,
                            linetype = c("dashed", "solid", "dotted", "dotdash", "longdash", "twodash"),
                            ...) {
-  cluster <- sil_width <- original_name <- name <- NULL
+  sil_width <- name <- cluster <- NULL
+  dots <- list(...)
 
   if (is.Silhouette(x, strict = TRUE)) {
     df <- as.data.frame(x, stringsAsFactors = TRUE)
@@ -137,6 +137,10 @@ plotSilhouette <- function(x,
     average <- attr(x, "average")
     method <- attr(x, "method")
   } else if (inherits(x, c("eclust", "hcut", "pam", "clara", "fanny"))) {
+    if (is.null(x$silinfo)) {
+      stop("This ", class(x)[1], " object has no silhouette information (component 'silinfo'); ",
+           "it is missing, for example, when there is only one cluster.")
+    }
     df <- as.data.frame(x$silinfo$widths, stringsAsFactors = TRUE)
     clus.avg.widths <- x$silinfo$clus.avg.widths
     avg.width <- x$silinfo$avg.width
@@ -159,21 +163,18 @@ plotSilhouette <- function(x,
   }
   # Allow numeric codes 1:6 OR named linetypes
   if (is.numeric(linetype)) {
-    if (!linetype %in% 1:6) {
-      stop("If numeric, 'linetype' must be between 1 and 6.")
+    if (length(linetype) != 1 || !linetype %in% 0:6) {
+      stop("If numeric, 'linetype' must be a single integer between 0 and 6.")
     }
   } else {
     linetype <- match.arg(linetype)
   }
 
   # Preserve original row names before arranging
-  df <- df %>%
-    dplyr::mutate(original_name = row.names(df)) %>%
-    dplyr::arrange(cluster, dplyr::desc(sil_width)) %>%
-    dplyr::mutate(
-      name = factor(original_name, levels = original_name),
-      cluster = factor(cluster)
-    )
+  df$original_name <- row.names(df)
+  df <- df[order(df$cluster, -df$sil_width), , drop = FALSE]
+  df$name <- factor(df$original_name, levels = df$original_name)
+  df$cluster <- factor(df$cluster)
 
   # Create custom legend labels
   cluster_levels <- as.integer(levels(df$cluster))
@@ -245,13 +246,20 @@ plotSilhouette <- function(x,
     p <- p +
       ggplot2::scale_fill_grey(name = legend_title, labels = legend_labels, start = 0.2, end = 0.8) +
       ggplot2::scale_color_grey(name = legend_title, labels = legend_labels, start = 0.2, end = 0.8)
+  } else if (!is.null(dots$palette)) {
+    cols <- ggpubr::get_palette(dots$palette, length(cluster_levels))
+    p <- p +
+      ggplot2::scale_fill_manual(name = legend_title, labels = legend_labels, values = cols) +
+      ggplot2::scale_color_manual(name = legend_title, labels = legend_labels, values = cols)
   } else {
     p <- p +
       ggplot2::scale_fill_discrete(name = legend_title, labels = legend_labels) +
       ggplot2::scale_color_discrete(name = legend_title, labels = legend_labels)
   }
 
-  p <- ggpubr::ggpar(p, ...)
+  # The palette is applied above, so that the summary legend is kept
+  dots$palette <- NULL
+  p <- do.call(ggpubr::ggpar, c(list(p), dots))
 
   # Labels
   if (!label) {

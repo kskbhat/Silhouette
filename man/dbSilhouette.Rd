@@ -12,7 +12,8 @@ dbSilhouette(
   print.summary = FALSE,
   clust_fun = NULL,
   ...,
-  cluster = NULL
+  cluster = NULL,
+  clust_args = list()
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ observation is assigned to the cluster with its largest membership (for \code{"p
 \code{"nlpp"}) or its largest density (for \code{"pd"}); see \emph{Cluster labels}. If
 \code{clust_fun} is provided, \code{cluster} may be the name of the label component of its
 output. Must be named in the call because it follows \code{...}.}
+
+\item{clust_args}{A list of further arguments for \code{clust_fun}; use it for arguments whose names could be partially matched to this function's own (for example \code{clust_args = list(m = 3)} for the fuzzifier of \code{\link[ppclust]{fcm}}). Defaults to \code{list()}.}
 }
 \value{
 A data frame of class \code{"Silhouette"} with one row per observation and columns

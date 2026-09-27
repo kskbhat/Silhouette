@@ -25,7 +25,7 @@
 #' \itemize{
 #'   \item \code{proximity_type}: Must be one of "dissimilarity" or "similarity"
 #'   \item \code{average}: Must be one of "crisp", "fuzzy", or "median"
-#'   \item \code{method}: Can be NULL or any string
+#'   \item \code{method}: any string, or \code{NA}
 #' }
 #'
 #' @seealso \code{\link{Silhouette}}, \code{\link{softSilhouette}}, \code{\link{dbSilhouette}}, \code{\link{cerSilhouette}}, \code{\link{getSilhouette}}, \code{\link{plotSilhouette}}

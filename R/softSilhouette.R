@@ -123,12 +123,13 @@ softSilhouette <- function(prob_matrix,
                            sort = FALSE,
                            print.summary = FALSE,
                            clust_fun = NULL, ...,
-                           cluster = NULL) {
+                           cluster = NULL,
+                           clust_args = list()) {
 
   prob_name <- "prob_matrix"
   if (!is.null(clust_fun)) {
     .check_name(prob_matrix, "prob_matrix")
-    clust_out <- .run_clust_fun(clust_fun, ..., envir = parent.frame())
+    clust_out <- .run_clust_fun(clust_fun, ..., clust_args = clust_args, envir = parent.frame())
     prob_matrix <- .extract_component(clust_out, prob_matrix, "prob_matrix")
     if (is.character(cluster) && length(cluster) == 1) {
       cluster <- .extract_component(clust_out, cluster, "cluster")

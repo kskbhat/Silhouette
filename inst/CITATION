@@ -1,8 +1,14 @@
 citHeader("To cite the Silhouette package in publications use:")
 
+year <- if (!is.null(meta$`Date/Publication`)) {
+  substr(meta$`Date/Publication`, 1, 4)
+} else {
+  format(Sys.Date(), "%Y")
+}
+
 bibentry(
   bibtype = "Manual",
-  title = "Silhouette: Proximity Measure Based Diagnostics for Standard, Soft, and Multi-Way Clustering",
+  title = paste0("Silhouette: ", meta$Title),
   author = c(
     person(given = "Shrikrishna", family = "Bhat K",
            email = "skbhat.in@gmail.com",
@@ -12,8 +18,8 @@ bibentry(
            role = "aut",
            comment = c(ORCID = "0000-0001-9655-702X"))
   ),
-  year = 2025,
-  note = "R package version 0.9.5",
+  year = year,
+  note = paste("R package version", meta$Version),
   doi = "10.32614/CRAN.package.Silhouette",
   url = "https://kskbhat.github.io/Silhouette/"
 )

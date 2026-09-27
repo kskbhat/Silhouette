@@ -1,10 +1,8 @@
 # Internal helpers shared by the width functions. None of these are exported.
 
 # Take a component (or S4 slot) out of the object a clustering function returned.
+# Callers check first that `name` is a single string (see .check_name()).
 .extract_component <- function(clust_out, name, arg) {
-  if (!is.character(name) || length(name) != 1) {
-    stop("When clust_fun is not NULL, ", arg, " must be a single string naming a matrix component.")
-  }
   if (isS4(clust_out)) {
     if (name %in% methods::slotNames(clust_out)) return(methods::slot(clust_out, name))
     stop("Slot '", name, "' not found in clustering output.")
@@ -29,19 +27,27 @@
   invisible(a)
 }
 
-# Run clust_fun (a function or the name of one) with the arguments in `...`.
-.run_clust_fun <- function(clust_fun, ..., envir = parent.frame(2)) {
-  if (!(is.function(clust_fun) || is.character(clust_fun))) {
+# Run clust_fun (a function, or the name of one, possibly as "pkg::fun") with the
+# arguments in `...` and in the list `clust_args`.
+.run_clust_fun <- function(clust_fun, ..., clust_args = list(), envir = parent.frame(2)) {
+  if (!(is.function(clust_fun) || (is.character(clust_fun) && length(clust_fun) == 1))) {
     stop("clust_fun must be a function object or a string naming a function (e.g., 'kmeans').")
   }
-  if (is.character(clust_fun)) {
-    if (exists(clust_fun, mode = "function", envir = envir)) {
-      clust_fun <- get(clust_fun, mode = "function", envir = envir)
-    } else {
-      stop("Function '", clust_fun, "' not found")
-    }
+  if (!is.list(clust_args)) {
+    stop("clust_args must be a list of arguments for clust_fun.")
   }
-  tryCatch(clust_fun(...),
+  if (is.character(clust_fun)) {
+    parts <- strsplit(clust_fun, ":::?")[[1]]
+    fun <- if (length(parts) == 2) {
+      if (!requireNamespace(parts[1], quietly = TRUE)) NULL
+      else get0(parts[2], envir = asNamespace(parts[1]), mode = "function")
+    } else {
+      get0(clust_fun, envir = envir, mode = "function")
+    }
+    if (is.null(fun)) stop("Function '", clust_fun, "' not found")
+    clust_fun <- fun
+  }
+  tryCatch(do.call(clust_fun, c(list(...), clust_args)),
            error = function(e) stop("Error in clustering function: ", conditionMessage(e), call. = FALSE))
 }
 
@@ -61,8 +67,9 @@
     stop(name, " must not contain -Inf.")
   }
   if (any(prox_matrix < 0)) {
-    warning(name, " contains negative values; silhouette widths assume non-negative ",
-            "proximities and may fall outside [-1, 1].", call. = FALSE)
+    stop(name, " must not contain negative values: the widths assume non-negative ",
+         "proximities. Transform them first, for example (1 + r) / 2 for correlations.",
+         call. = FALSE)
   }
   invisible(prox_matrix)
 }
@@ -212,7 +219,7 @@
 }
 
 # Report a summary through message(), as the R Journal asks of non-print functions.
-.report_silhouette <- function(widths, stats, attributes = TRUE) {
+.report_silhouette <- function(widths, stats) {
   average <- attr(widths, "average")
   proximity_type <- attr(widths, "proximity_type")
   method <- attr(widths, "method")
@@ -223,8 +230,5 @@
   rule <- strrep("-", nchar(header))
   table <- paste(utils::capture.output(print(stats$sil.sum, row.names = FALSE)), collapse = "\n")
   message(rule, "\n", header, "\n", rule, "\n\n", table, "\n")
-  if (attributes) {
-    message("Available attributes: ", paste(names(attributes(widths)), collapse = ", "))
-  }
   invisible(NULL)
 }

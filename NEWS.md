@@ -5,8 +5,8 @@
 - `Silhouette()`, `softSilhouette()`, `cerSilhouette()`, `dbSilhouette()` and `calSilhouette()`
   gain a `cluster` argument for scoring a partition produced elsewhere (for example, by
   hierarchical clustering). When `clust_fun` is used, `cluster` may name the label component of
-  its output (e.g. `cluster = "cluster"` for `kmeans()`). The argument follows `...`, so it must
-  be named.
+  its output (e.g. `cluster = "cluster"` for `ppclust::fcm()`). The argument follows `...`, so
+  it must be named.
 - Labels now follow one rule: `cluster` if supplied, otherwise the largest membership in
   `prob_matrix`, otherwise the closest cluster in `prox_matrix`. The exception is the probability
   density silhouette (PDS, `prob_type = "pd"`), which assigns each observation to its largest
@@ -42,8 +42,8 @@
 - All width functions: two equal proximities, including two zero distances, give width 0 rather
   than `NaN`; infinite proximities give widths of 1 or -1.
 - Input checks are shared by all functions: matrices must be numeric with at least two columns and
-  no `NA`/`NaN` (`+Inf` is allowed in `prox_matrix`, `-Inf` is not); negative proximities give a
-  warning; membership rows must be non-negative and sum to 1 within `sqrt(.Machine$double.eps)`;
+  no `NA`/`NaN` (`+Inf` is allowed in `prox_matrix`, `-Inf` is not); negative proximities are
+  rejected (they would give widths outside [-1, 1]); membership rows must be non-negative and sum to 1 within `sqrt(.Machine$double.eps)`;
   `prob_matrix` must have the same dimensions as `prox_matrix`; `cluster` must hold column numbers.
 - A fuzzy average whose weights are all zero now gives a warning (the average is `NaN`).
 
@@ -57,6 +57,21 @@
 - `cerSilhouette(print.summary = TRUE)` reported its method as "db"; it now reports "certainty".
 - `plotSilhouette()` labeled the legend incorrectly when a cluster was empty.
 - Error messages about `prob_matrix` no longer refer to `prob_type = 'pd'` when it was not used.
+- New argument `clust_args` (a list) in every width function and `calSilhouette()`. Arguments
+  passed through `...` are matched partially against the function's own arguments first, so
+  `m = 3` meant for the fuzzifier of `ppclust::fcm()` was taken as `method`; pass such arguments
+  as `clust_args = list(m = 3)`. `clust_fun` may also be a string of the form `"pkg::fun"`.
+- `plotSilhouette(palette = )` keeps the summary legend (the palette used to replace it), a
+  numeric `linetype` of 0 is accepted as documented, and objects from **cluster** or
+  **factoextra** without silhouette information give a clear error.
+- Negative proximities are now an error: they gave widths outside [-1, 1], which `summary()`
+  and `plot()` then rejected with a misleading message. That message now points to
+  `is.Silhouette(strict = TRUE)`.
+- `extSilhouette()` warns when the modes differ in proximity type, method or averaging, and
+  checks for empty objects before computing their averages.
+- The line listing the object's attributes after `print.summary = TRUE` is gone.
+- **dplyr** and **lifecycle** are no longer imported; `inst/CITATION` takes the version from
+  the package metadata.
 
 **Documentation**
 

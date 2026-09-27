@@ -1,6 +1,6 @@
 library(testthat)
 library(Silhouette)
-library(ppclust)
+skip_if_not_installed("ppclust")
 
 set.seed(123) # Global seed for reproducibility
 
@@ -98,13 +98,10 @@ test_that("softSilhouette() works with sort = TRUE", {
     print.summary = FALSE
   )
   expect_s3_class(result, "Silhouette")
-  # Check if sorted by cluster and descending sil_width
-  clusters <- result$cluster
-  widths <- result$sil_width
-  is_sorted <- all(diff(widths[clusters == clusters[1]]) <= 0) ||
-    all(diff(widths[clusters == clusters[2]]) <= 0) ||
-    all(diff(widths[clusters == clusters[3]]) <= 0)
-  expect_true(is.logical(is_sorted))
+  expect_false(is.unsorted(result$cluster))
+  for (k in unique(result$cluster)) {
+    expect_false(is.unsorted(-result$sil_width[result$cluster == k]))
+  }
 })
 
 ## 2. clust_fun integration tests
@@ -130,7 +127,7 @@ test_that("softSilhouette() works with clust_fun as character string", {
     prob_type = "pp",
     method = "pac",
     average = "crisp",
-    clust_fun = "fcm",
+    clust_fun = "ppclust::fcm",
     x = iris[, -5],
     centers = 3,
     print.summary = FALSE
@@ -179,7 +176,7 @@ test_that("softSilhouette() errors with invalid average", {
 # })
 
 test_that("softSilhouette() errors with clust_fun but invalid prob_matrix", {
-  expect_error(softSilhouette(matrix(1:4, ncol = 2), clust_fun = "fcm"), "single string")
+  expect_error(softSilhouette(matrix(1:4, ncol = 2), clust_fun = "ppclust::fcm"), "single string")
 })
 
 test_that("softSilhouette() errors with clust_fun but invalid function", {
@@ -190,7 +187,7 @@ test_that("softSilhouette() errors with clust_fun but invalid function", {
 
 test_that("softSilhouette() errors when component not found in clust_fun output", {
   data(iris)
-  expect_error(softSilhouette("nonexistent_component", clust_fun = "fcm", x = iris[, -5], centers = 3), "not found")
+  expect_error(softSilhouette("nonexistent_component", clust_fun = "ppclust::fcm", x = iris[, -5], centers = 3), "not found")
 })
 
 ## 4. Attribute validation tests

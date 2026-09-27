@@ -141,7 +141,8 @@ calSilhouette <- function(prox_matrix = NULL,
                           a = 2,
                           print.summary = FALSE,
                           clust_fun = NULL, ...,
-                          cluster = NULL) {
+                          cluster = NULL,
+                          clust_args = list()) {
 
   if (is.null(prox_matrix) && is.null(prob_matrix)) {
     stop("At least one of 'prox_matrix' or 'prob_matrix' must be provided.")
@@ -153,7 +154,7 @@ calSilhouette <- function(prox_matrix = NULL,
   if (!is.null(clust_fun)) {
     if (!is.null(prox_matrix)) .check_name(prox_matrix, "prox_matrix")
     if (!is.null(prob_matrix)) .check_name(prob_matrix, "prob_matrix")
-    clust_out <- .run_clust_fun(clust_fun, ..., envir = parent.frame())
+    clust_out <- .run_clust_fun(clust_fun, ..., clust_args = clust_args, envir = parent.frame())
     if (!is.null(prox_matrix)) {
       prox_matrix <- .extract_component(clust_out, prox_matrix, "prox_matrix")
     }
@@ -188,19 +189,20 @@ calSilhouette <- function(prox_matrix = NULL,
   }
 
   averages <- if (is.null(prob_matrix)) c("crisp", "median") else c("crisp", "fuzzy", "median")
-  collected <- character(0)
+  notes <- new.env(parent = emptyenv())  # messages collected while computing
+  notes$msgs <- character(0)
 
   # Compute one width, summarize it by every average, and collect its warnings.
   summarize <- function(name, compute) {
     out <- stats::setNames(rep(NA_real_, length(averages)), averages)
     widths <- withCallingHandlers(
       tryCatch(compute(), error = function(e) {
-        collected <<- c(collected, paste0("Error computing silhouette (", name, "): ",
-                                          conditionMessage(e)))
+        notes$msgs <- c(notes$msgs, paste0("Error computing silhouette (", name, "): ",
+                                       conditionMessage(e)))
         NULL
       }),
       warning = function(w) {
-        collected <<- c(collected, conditionMessage(w))
+        notes$msgs <- c(notes$msgs, conditionMessage(w))
         invokeRestart("muffleWarning")
       })
     if (!is.Silhouette(widths)) return(out)
@@ -209,7 +211,7 @@ calSilhouette <- function(prox_matrix = NULL,
       out[[avg]] <- withCallingHandlers(
         .silhouette_summary(widths)$avg.width,
         warning = function(w) {
-          collected <<- c(collected, paste0(name, ": ", conditionMessage(w)))
+          notes$msgs <- c(notes$msgs, paste0(name, ": ", conditionMessage(w)))
           invokeRestart("muffleWarning")
         })
     }
@@ -253,7 +255,7 @@ calSilhouette <- function(prox_matrix = NULL,
   if (!is.null(prob_matrix)) summary_df$Fuzzy <- unname(values[, "fuzzy"])
   summary_df$Median <- unname(values[, "median"])
 
-  for (msg in unique(collected)) warning(msg, call. = FALSE)
+  for (msg in unique(notes$msgs)) warning(msg, call. = FALSE)
 
   if (isTRUE(print.summary)) {
     table <- paste(utils::capture.output(print(summary_df, row.names = FALSE)), collapse = "\n")

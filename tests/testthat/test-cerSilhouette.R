@@ -1,6 +1,6 @@
 library(testthat)
 library(Silhouette)
-library(ppclust)
+skip_if_not_installed("ppclust")
 
 set.seed(123) # Global seed for reproducibility
 
@@ -51,13 +51,10 @@ test_that("cerSilhouette() works with sort = TRUE", {
     print.summary = FALSE
   )
   expect_s3_class(result, "Silhouette")
-  # Check if sorted by cluster and descending sil_width
-  clusters <- result$cluster
-  widths <- result$sil_width
-  is_sorted <- all(diff(widths[clusters == clusters[1]]) <= 0) || 
-    all(diff(widths[clusters == clusters[2]]) <= 0) || 
-    all(diff(widths[clusters == clusters[3]]) <= 0)
-  expect_true(is.logical(is_sorted))
+  expect_false(is.unsorted(result$cluster))
+  for (k in unique(result$cluster)) {
+    expect_false(is.unsorted(-result$sil_width[result$cluster == k]))
+  }
 })
 
 ## 2. clust_fun integration tests
@@ -79,7 +76,7 @@ test_that("cerSilhouette() works with clust_fun as character string", {
   result <- cerSilhouette(
     prob_matrix = "u",
     average = "crisp",
-    clust_fun = "fcm",
+    clust_fun = "ppclust::fcm",
     x = iris[, -5],
     centers = 3,
     print.summary = FALSE
@@ -114,7 +111,7 @@ test_that("cerSilhouette() errors with rows not summing to 1", {
 })
 
 test_that("cerSilhouette() errors with clust_fun but invalid prob_matrix", {
-  expect_error(cerSilhouette(matrix(1:4, ncol = 2), clust_fun = "fcm"), "single string")
+  expect_error(cerSilhouette(matrix(1:4, ncol = 2), clust_fun = "ppclust::fcm"), "single string")
 })
 
 test_that("cerSilhouette() errors with clust_fun but invalid function", {
@@ -125,7 +122,7 @@ test_that("cerSilhouette() errors with clust_fun but invalid function", {
 
 test_that("cerSilhouette() errors when component not found in clust_fun output", {
   data(iris)
-  expect_error(cerSilhouette("nonexistent_component", clust_fun = "fcm", x = iris[, -5], centers = 3), "not found")
+  expect_error(cerSilhouette("nonexistent_component", clust_fun = "ppclust::fcm", x = iris[, -5], centers = 3), "not found")
 })
 
 ## 4. Attribute validation tests
@@ -212,8 +209,8 @@ test_that("cerSilhouette() clust_fun extraction and validations", {
   )
   
   # S4 slot missing
-  setClass("MockClustS4", slots = list(u = "matrix"))
-  mock_s4_fun <- function(data) { new("MockClustS4", u = matrix(runif(20), ncol = 2)) }
+  setClass("MockClustS4Cer", slots = list(u = "matrix"))
+  mock_s4_fun <- function(data) { new("MockClustS4Cer", u = matrix(runif(20), ncol = 2)) }
   expect_error(
     cerSilhouette("missing_slot", clust_fun = mock_s4_fun, data = df_dummy),
     "Slot 'missing_slot' not found"

@@ -1,6 +1,6 @@
 library(testthat)
 library(Silhouette)
-library(ppclust)
+skip_if_not_installed("ppclust")
 
 set.seed(123) # Global seed for reproducibility
 
@@ -78,26 +78,13 @@ test_that("extSilhouette() errors with non-finite average silhouette widths", {
   )
 })
 
-test_that("extSilhouette() errors with zero observations", {
-  # Define a subclass and a custom summary method that returns a finite average width
-  # for an empty data frame to bypass the summary.Silhouette NaN calculation
-  summary.EmptySilMock <- function(object, ...) {
-    list(avg.width = 0.5)
-  }
-  registerS3method("summary", "EmptySilMock", summary.EmptySilMock)
-  
-  empty_sil <- structure(
-    data.frame(cluster = integer(0), neighbor = integer(0), sil_width = numeric(0)),
-    class = c("EmptySilMock", "Silhouette", "data.frame"),
-    proximity_type = "dissimilarity",
-    method = "medoid",
-    average = "crisp"
-  )
-  
-  expect_error(
-    extSilhouette(list(empty_sil)),
-    "No observations found in any Silhouette object"
-  )
+test_that("extSilhouette() errors with empty or invalid input", {
+  empty <- getSilhouette(cluster = integer(0), neighbor = integer(0), sil_width = numeric(0))
+  one <- getSilhouette(cluster = c(1, 2), neighbor = c(2, 1), sil_width = c(0.4, 0.6))
+  expect_error(extSilhouette(list(empty)), "at least one observation")
+  expect_error(extSilhouette(list(one, empty)), "at least one observation")
+  expect_error(extSilhouette(list()), "non-empty list")
+  expect_error(extSilhouette("not a list"), "non-empty list")
 })
 
 test_that("extSilhouette() works with print.summary = TRUE", {
@@ -114,17 +101,17 @@ test_that("extSilhouette() works with print.summary = TRUE", {
 })
 
 ## 3. Edge case tests
-# test_that("extSilhouette() works with single Silhouette object", {
-#   data(iris)
-#   fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
-#   sil <- softSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
-#
-#   result <- extSilhouette(list(sil), print.summary = FALSE)
-#
-#   expect_s3_class(result, "extSilhouette")
-#   expect_equal(nrow(result$dim_table), 1)
-#   expect_equal(result$ext_sil_width, summary(sil, print.summary = FALSE)$avg.width)
-# })
+test_that("extSilhouette() works with single Silhouette object", {
+  data(iris)
+  fcm_out <- ppclust::fcm(iris[, -5], centers = 3)
+  sil <- softSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
+
+  result <- extSilhouette(list(sil), print.summary = FALSE)
+
+  expect_s3_class(result, "extSilhouette")
+  expect_equal(nrow(result$dim_table), 1)
+  expect_equal(result$ext_sil_width, summary(sil, print.summary = FALSE)$avg.width)
+})
 
 test_that("extSilhouette() works with three Silhouette objects", {
   data(iris)
@@ -157,4 +144,14 @@ test_that("extSilhouette() sets correct structure", {
   expect_true(is.numeric(result$ext_sil_width))
   expect_true(is.data.frame(result$dim_table))
   expect_true(all(c("dimension", "n_obs", "avg_sil_width") %in% colnames(result$dim_table)))
+})
+
+
+test_that("extSilhouette() warns when the modes are on different scales", {
+  a <- getSilhouette(cluster = c(1, 2), neighbor = c(2, 1), sil_width = c(0.4, 0.6),
+                     method = "medoid")
+  b <- getSilhouette(cluster = c(1, 2), neighbor = c(2, 1), sil_width = c(0.2, 0.3),
+                     method = "pac")
+  expect_warning(extSilhouette(list(a, b)), "different scales")
+  expect_silent(extSilhouette(list(a, a)))
 })

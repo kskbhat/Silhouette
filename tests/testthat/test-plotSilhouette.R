@@ -1,6 +1,8 @@
 library(testthat)
 library(Silhouette)
-library(ppclust)
+skip_if_not_installed("ppclust")
+skip_if_not_installed("cluster")
+skip_if_not_installed("factoextra")
 
 set.seed(123) # Global seed for reproducibility
 
@@ -63,7 +65,7 @@ test_that("plotSilhouette() errors with invalid linetype", {
   sil <- softSilhouette(prob_matrix = fcm_out$u, print.summary = FALSE)
 
   # Test with invalid numeric linetype
-  expect_error(plotSilhouette(sil, linetype = 7), "must be between 1 and 6")
+  expect_error(plotSilhouette(sil, linetype = 7), "between 0 and 6")
 
   # Test with invalid character linetype (this should be handled by match.arg)
   # Note: This might not error because match.arg will select the first valid option
@@ -172,4 +174,39 @@ test_that("plotSilhouette() checks for invalid 'silhouette' class objects", {
     plotSilhouette(small_sil_obj),
     "silhouette object must have at least 3 columns"
   )
+})
+
+test_that("a palette keeps the summary legend", {
+  d <- rbind(c(1, 3), c(2, 1), c(1, 4), c(5, 2))
+  s <- Silhouette(d)
+  p <- plotSilhouette(s, palette = c("red", "blue"))
+  fill <- p$scales$get_scales("fill")
+  expect_equal(fill$name, "Cluster (Size): Width")
+  expect_match(fill$labels, "^C[12] \\(2\\): ")
+  expect_equal(unname(fill$palette(2)), c("#FF0000", "#0000FF"))
+  p2 <- plotSilhouette(s, palette = "jco", summary.legend = FALSE)
+  expect_equal(p2$scales$get_scales("fill")$name, "Cluster")
+})
+
+test_that("the reference line is the average that was requested", {
+  p <- rbind(c(0.9, 0.1), c(0.6, 0.4), c(0.3, 0.7), c(0.2, 0.8))
+  for (av in c("crisp", "fuzzy", "median")) {
+    s <- cerSilhouette(p, average = av)
+    g <- plotSilhouette(s)
+    hline <- g$layers[[2]]$data$yintercept
+    if (is.null(hline)) hline <- g$layers[[2]]$aes_params$yintercept
+    expect_equal(hline, summary(s, print.summary = FALSE)$avg.width)
+  }
+})
+
+test_that("objects without silhouette information give a clear error", {
+  obj <- structure(list(silinfo = NULL), class = "pam")
+  expect_error(plotSilhouette(obj), "no silhouette information")
+})
+
+test_that("numeric linetype accepts 0 to 6 only", {
+  s <- Silhouette(rbind(c(1, 3), c(2, 1)))
+  expect_s3_class(plotSilhouette(s, linetype = 0), "ggplot")
+  expect_error(plotSilhouette(s, linetype = 7), "single integer between 0 and 6")
+  expect_error(plotSilhouette(s, linetype = c(1, 2)), "single integer between 0 and 6")
 })

@@ -1,7 +1,7 @@
 library(testthat)
 library(Silhouette)
-library(ppclust)
-library(proxy)
+skip_if_not_installed("ppclust")
+skip_if_not_installed("proxy")
 
 set.seed(123) # Global seed for reproducibility
 
@@ -82,13 +82,10 @@ test_that("Silhouette() works with sort = TRUE", {
   result <- Silhouette(dist_mat, sort = TRUE, print.summary = FALSE)
   
   expect_s3_class(result, "Silhouette")
-  # Check if sorted by cluster and descending sil_width
-  clusters <- result$cluster
-  widths <- result$sil_width
-  is_sorted <- all(diff(widths[clusters == clusters[1]]) <= 0) || 
-    all(diff(widths[clusters == clusters[2]]) <= 0) || 
-    all(diff(widths[clusters == clusters[3]]) <= 0)
-  expect_true(is.logical(is_sorted))
+  expect_false(is.unsorted(result$cluster))
+  for (k in unique(result$cluster)) {
+    expect_false(is.unsorted(-result$sil_width[result$cluster == k]))
+  }
 })
 
 ## 2. clust_fun integration tests
@@ -113,7 +110,7 @@ test_that("Silhouette() works with clust_fun as character string", {
     prox_matrix = "d",
     proximity_type = "dissimilarity",
     prob_matrix = "u",
-    clust_fun = "fcm",
+    clust_fun = "ppclust::fcm",
     x = iris[, -5],
     centers = 3,
     print.summary = FALSE
@@ -182,7 +179,7 @@ test_that("Silhouette() errors with prob_matrix rows not summing to 1", {
 })
 
 test_that("Silhouette() errors with clust_fun but invalid prox_matrix", {
-  expect_error(Silhouette(matrix(1:4, ncol = 2), clust_fun = "fcm"), "single string")
+  expect_error(Silhouette(matrix(1:4, ncol = 2), clust_fun = "ppclust::fcm"), "single string")
 })
 
 test_that("Silhouette() errors with clust_fun but invalid function", {
@@ -193,7 +190,7 @@ test_that("Silhouette() errors with clust_fun but invalid function", {
 
 test_that("Silhouette() errors when component not found in clust_fun output", {
   data(iris)
-  expect_error(Silhouette("nonexistent_component", clust_fun = "fcm", x = iris[, -5], centers = 3), "not found")
+  expect_error(Silhouette("nonexistent_component", clust_fun = "ppclust::fcm", x = iris[, -5], centers = 3), "not found")
 })
 
 ## 4. Attribute validation tests

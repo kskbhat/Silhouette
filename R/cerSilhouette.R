@@ -13,6 +13,7 @@
 #' @param prob_matrix A numeric matrix of posterior probabilities where rows represent observations and columns represent clusters. Must sum to 1 by row. If \code{clust_fun} is provided, \code{prob_matrix} must be a string giving the name of the matrix component (e.g., "u").
 #' @param clust_fun Optional S3 or S4 function object or function as character string specifying a clustering function that produces the membership matrix. For example, \code{\link[ppclust]{fcm}} or \code{"fcm"}. If provided, \code{prob_matrix} must be a string giving the name of the matrix component (e.g., "u"). Defaults to \code{NULL}.
 #' @param ... Additional arguments passed to \code{clust_fun}, such as \code{x, centers} for \code{\link[ppclust]{fcm}}.
+#' @param clust_args A list of further arguments for \code{clust_fun}; use it for arguments whose names could be partially matched to this function's own (for example \code{clust_args = list(m = 3)} for the fuzzifier of \code{\link[ppclust]{fcm}}). Defaults to \code{list()}.
 #' @inheritParams softSilhouette
 #'
 #' @details
@@ -76,12 +77,13 @@ cerSilhouette <- function(prob_matrix,
                           print.summary = FALSE,
                           clust_fun = NULL,
                           ...,
-                          cluster = NULL) {
+                          cluster = NULL,
+                          clust_args = list()) {
 
   prob_name <- "prob_matrix"
   if (!is.null(clust_fun)) {
     .check_name(prob_matrix, "prob_matrix")
-    clust_out <- .run_clust_fun(clust_fun, ..., envir = parent.frame())
+    clust_out <- .run_clust_fun(clust_fun, ..., clust_args = clust_args, envir = parent.frame())
     prob_matrix <- .extract_component(clust_out, prob_matrix, "prob_matrix")
     if (is.character(cluster) && length(cluster) == 1) {
       cluster <- .extract_component(clust_out, cluster, "cluster")
