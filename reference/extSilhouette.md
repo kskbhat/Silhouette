@@ -1,19 +1,31 @@
 # Calculate Extended Silhouette Width for Multi-Way Clustering
 
-\`r lifecycle::badge('experimental')\`
+**\[experimental\]**
 
 Computes an extended silhouette width for multi-way clustering (e.g.,
 biclustering, triclustering, or n-mode tensor clustering) by combining
 silhouette widths from a list of Silhouette objects, each representing
-one mode of clustering. The extended silhouette width is the weighted
-average of the average silhouette widths from each mode, weighted by the
-number of observations in each mode's silhouette analysis. The output is
-an object of class `extSilhouette`.
+one mode of clustering. The extended silhouette width is a weighted
+average of the average silhouette widths of the modes. By default each
+mode is weighted by its number of objects; equal or user-specified
+weights are also available. The output is an object of class
+`extSilhouette`.
 
 ## Usage
 
 ``` r
-extSilhouette(sil_list, dim_names = NULL, print.summary = FALSE)
+extSilhouette(
+  sil_list,
+  dim_names = NULL,
+  print.summary = FALSE,
+  weights = c("size", "equal")
+)
+
+# S3 method for class 'extSilhouette'
+format(x, digits = 4, ...)
+
+# S3 method for class 'extSilhouette'
+print(x, digits = 4, ...)
 ```
 
 ## Arguments
@@ -36,8 +48,28 @@ extSilhouette(sil_list, dim_names = NULL, print.summary = FALSE)
 
 - print.summary:
 
-  Logical; if `TRUE`, prints a summary of the extended silhouette width
-  and dimension table. Default is `FALSE`.
+  Logical; if `TRUE`, reports the extended silhouette width and the
+  dimension table through
+  [`message`](https://rdrr.io/r/base/message.html). Default is `FALSE`.
+
+- weights:
+
+  How the modes are weighted: `"size"` (the default) weights each mode
+  by its number of objects, `"equal"` gives every mode the same weight,
+  and a non-negative numeric vector with one entry per mode gives
+  user-specified weights (they are rescaled to sum to 1).
+
+- x:
+
+  An object of class `"extSilhouette"`.
+
+- digits:
+
+  Number of decimal places shown.
+
+- ...:
+
+  Further arguments, currently ignored.
 
 ## Value
 
@@ -45,25 +77,44 @@ A list of class `"extSilhouette"` with the following components:
 
 - ext_sil_width:
 
-  A numeric scalar representing the extended silhouette width.
+  A numeric scalar, the extended silhouette width.
 
 - dim_table:
 
   A data frame with columns `dimension` (e.g., "Mode 1", "Mode 2"),
-  `n_obs` (number of observations), and `avg_sil_width` (average
-  silhouette width for each mode).
+  `n_obs` (number of objects), `weight` (the share of the total weight
+  given to the mode) and `avg_sil_width` (average silhouette width of
+  the mode).
+
+- weights:
+
+  The weighting used: `"size"`, `"equal"` or `"user"`.
+
+Values are not rounded; the print method shows four decimals.
 
 ## Details
 
-The extended silhouette width is computed as: \$\$ ExS = \frac{ \sum
-(n_i \cdot w_i) }{ \sum n_i } \$\$ where \\n_i\\ is the number of
-observations in mode \\i\\ (derived from `nrow(x$widths)`), and \\w_i\\
-is the average silhouette width for that mode (from `x$avg.width`). Each
-`Silhouette` object in `sil_list` must contain a non-empty `widths` data
-frame and a numeric `avg.width` value. Modes with zero observations
-(\\n_i = 0\\) are not allowed, as they would result in an undefined
-weighted average. For consistency make sure all `Silhouette` objects
-derived from same \`method\` and arguments.
+The extended silhouette width is computed as: \$\$ ExS = \frac{
+\sum\_{i} \omega_i \bar{S}\_i }{ \sum\_{i} \omega_i } \$\$ where
+\\\bar{S}\_i\\ is the average silhouette width of mode \\i\\ (from
+`summary(x)$avg.width`, so it follows the averaging rule of that object)
+and \\\omega_i\\ is its weight. With `weights = "size"`, \\\omega_i =
+n_i\\, the number of objects in mode \\i\\ (`nrow(x)`), as in Schepers
+et al. (2008); ExS is then the average width over all objects of all
+modes, each object counting once. With `weights = "equal"`, \\\omega_i =
+1\\, so ExS is the mean of the mode-wise averages.
+
+Size weighting treats every clustered object alike, but when the modes
+differ greatly in size the largest mode dominates: with 200 rows and 30
+columns, the rows receive about 87\\ of the weight. Equal weighting
+gives every mode the same say regardless of its size. Because the choice
+can change which model is selected, report the mode-wise averages in
+`dim_table` together with ExS.
+
+Each `Silhouette` object in `sil_list` must contain at least one
+observation and have a finite average width. For consistency, compute
+all `Silhouette` objects with the same function, `method` and averaging
+rule.
 
 ## References
 
@@ -90,29 +141,32 @@ available at Research Square.
 ## Examples
 
 ``` r
-# Example using mock two-mode cluster membership matrices
-# Mode 1: 150 observations, 3 clusters
+# Two modes: 150 objects in 3 clusters and 4 variables in 2 clusters
 set.seed(123)
 prob_mode1 <- matrix(runif(150 * 3), nrow = 150, ncol = 3)
 prob_mode1 <- prob_mode1 / rowSums(prob_mode1)
-
-# Mode 2: 4 variables, 2 clusters
 prob_mode2 <- matrix(runif(4 * 2), nrow = 4, ncol = 2)
 prob_mode2 <- prob_mode2 / rowSums(prob_mode2)
 
 sil_mode1 <- softSilhouette(prob_matrix = prob_mode1, method = "pac")
 sil_mode2 <- softSilhouette(prob_matrix = prob_mode2, method = "pac")
 
-# Compute Extended silhouette
-ext_sil <- extSilhouette(list(sil_mode1, sil_mode2), print.summary = TRUE)
-#> ---------------------------
-#> Extended silhouette: 0.2202 
-#> ---------------------------
-#> Dimension Summary:
-#>   dimension n_obs avg_sil_width
-#> 1    Mode 1   150        0.2113
-#> 2    Mode 2     4        0.5530
-#> 
-#> Available components:
-#> [1] "ext_sil_width" "dim_table"    
+# Size-weighted (default) and equally weighted extended silhouette
+extSilhouette(list(sil_mode1, sil_mode2), dim_names = c("Rows", "Columns"))
+#> ------------------------------------------
+#> Extended silhouette (size weights): 0.2202
+#> ------------------------------------------
+#> Dimension summary:
+#>  dimension n_obs weight avg_sil_width
+#>       Rows   150  0.974        0.2113
+#>    Columns     4  0.026        0.5530
+extSilhouette(list(sil_mode1, sil_mode2), dim_names = c("Rows", "Columns"),
+              weights = "equal")
+#> -------------------------------------------
+#> Extended silhouette (equal weights): 0.3822
+#> -------------------------------------------
+#> Dimension summary:
+#>  dimension n_obs weight avg_sil_width
+#>       Rows   150    0.5        0.2113
+#>    Columns     4    0.5        0.5530
 ```

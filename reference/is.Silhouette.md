@@ -47,7 +47,7 @@ The Silhouette object attributes are validated as follows:
 
 - `average`: Must be one of "crisp", "fuzzy", or "median"
 
-- `method`: Can be NULL or any string
+- `method`: any string, or `NA`
 
 ## See also
 

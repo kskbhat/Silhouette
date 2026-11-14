@@ -47,8 +47,8 @@ getSilhouette(
 
 - method:
 
-  Character; the silhouette calculation method used (default: NULL, can
-  be any custom name)
+  Character; the silhouette calculation method used (default: `NA`; any
+  custom name is allowed)
 
 - average:
 
@@ -68,7 +68,7 @@ attributes:
 
 - method:
 
-  The silhouette calculation method used (`"medoid"` or `"pac"`).
+  The silhouette calculation method supplied in `method`.
 
 - average:
 

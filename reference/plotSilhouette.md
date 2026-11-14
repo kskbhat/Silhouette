@@ -28,8 +28,8 @@ plotSilhouette(
   and
   [`cerSilhouette`](https://kskbhat.github.io/Silhouette/reference/cerSilhouette.md)
   function. Also supports objects classes
-  [`eclust`](https://rdrr.io/pkg/factoextra/man/eclust.html),
-  [`hcut`](https://rdrr.io/pkg/factoextra/man/hcut.html),
+  [`eclust`](https://rpkgs.datanovia.com/factoextra/reference/eclust.html),
+  [`hcut`](https://rpkgs.datanovia.com/factoextra/reference/hcut.html),
   [`pam`](https://rdrr.io/pkg/cluster/man/pam.html),
   [`clara`](https://rdrr.io/pkg/cluster/man/clara.html),
   [`fanny`](https://rdrr.io/pkg/cluster/man/fanny.html),
@@ -60,20 +60,24 @@ plotSilhouette(
   the horizontal reference line indicating the average silhouette width.
   Accepts standard ggplot2 linetype values, such as:
 
-  - Character: \`"solid"\`, \`"dashed"\`, \`"dotted"\`, \`"dotdash"\`,
-    \`"longdash"\`, \`"twodash"\`.
+  - Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`,
+    `"longdash"`, `"twodash"`.
 
-  - Numeric: integers from 0 to 6 corresponding to ggplot2 line
+  - Numeric: a single integer from 0 to 6 corresponding to ggplot2 line
     patterns.
 
-  Defaults to \`"dashed"\`.
+  Defaults to `"dashed"`.
 
 - ...:
 
   Additional arguments passed to
   [`ggpar`](https://rpkgs.datanovia.com/ggpubr/reference/ggpar.html) for
-  customizing the plot (e.g., `palette`, `legend`, `xlab`, `ylab`,
-  `subtitle`, `title`).
+  customizing the plot (e.g., `legend`, `xlab`, `ylab`, `subtitle`,
+  `title`). A `palette` (a vector of colors or a palette name accepted
+  by
+  [`get_palette`](https://rpkgs.datanovia.com/ggpubr/reference/get_palette.html))
+  colors the clusters and keeps the summary legend; it is ignored when
+  `grayscale = TRUE`.
 
 ## Value
 
@@ -86,25 +90,24 @@ observation, grouped by cluster, with bars sorted by cluster and
 descending silhouette width. The `summary.legend` option adds cluster
 sizes and average silhouette widths to the legend.
 
-This function replica of S3 method for objects of class `"Silhouette"`,
-typically produced by the
+This function is the S3 `plot` method for objects of class
+`"Silhouette"`, typically produced by the
 [`Silhouette`](https://kskbhat.github.io/Silhouette/reference/Silhouette.md),
 [`softSilhouette`](https://kskbhat.github.io/Silhouette/reference/softSilhouette.md),
-,
 [`dbSilhouette`](https://kskbhat.github.io/Silhouette/reference/dbSilhouette.md)
-or ,
+or
 [`cerSilhouette`](https://kskbhat.github.io/Silhouette/reference/cerSilhouette.md)
 functions in this package. It also supports objects of the following
 classes, with silhouette information extracted from their respective
 component:
 
 - `"eclust"`: Produced by
-  [`eclust`](https://rdrr.io/pkg/factoextra/man/eclust.html) from the
-  factoextra package.
+  [`eclust`](https://rpkgs.datanovia.com/factoextra/reference/eclust.html)
+  from the factoextra package.
 
 - `"hcut"`: Produced by
-  [`hcut`](https://rdrr.io/pkg/factoextra/man/hcut.html) from the
-  factoextra package.
+  [`hcut`](https://rpkgs.datanovia.com/factoextra/reference/hcut.html)
+  from the factoextra package.
 
 - `"pam"`: Produced by [`pam`](https://rdrr.io/pkg/cluster/man/pam.html)
   from the cluster package.
@@ -127,7 +130,16 @@ For these classes (`"eclust"`, `"hcut"`, `"pam"`, `"clara"`, `"fanny"`,
 the generic [`plot()`](https://rdrr.io/r/graphics/plot.default.html) may
 not dispatch to this function for these objects.
 
+The design of the plot follows
+[`fviz_silhouette`](https://rpkgs.datanovia.com/factoextra/reference/fviz_silhouette.html)
+in the factoextra package (Kassambara and Mundt, 2020), extended to the
+`"Silhouette"` class, fuzzy and median averages, and grayscale output.
+
 ## References
+
+Kassambara, A., & Mundt, F. (2020). factoextra: Extract and Visualize
+the Results of Multivariate Data Analyses. R package version 1.0.7.
+<https://CRAN.R-project.org/package=factoextra>
 
 Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the
 interpretation and validation of cluster analysis. *Journal of
@@ -152,13 +164,13 @@ data(iris)
 # Crisp Silhouette with k-means
 out <- kmeans(iris[, -5], 3)
 if (requireNamespace("proxy", quietly = TRUE)) {
-  library(proxy)
-  dist <- dist(iris[, -5], out$centers)
-  plot(Silhouette(dist))
+  d_km <- proxy::dist(iris[, -5], out$centers)
+  plot(Silhouette(d_km))
+  plot(Silhouette(d_km), palette = "jco")
 }
 
 
-#' # Fuzzy Silhouette with ppclust::fcm
+# Fuzzy Silhouette with ppclust::fcm
 if (requireNamespace("ppclust", quietly = TRUE)) {
   library(ppclust)
   out_fuzzy <- Silhouette(
@@ -213,7 +225,7 @@ if (requireNamespace("factoextra", quietly = TRUE)) {
 }
 #> Loading required package: ggplot2
 #> Welcome to factoextra!
-#> Want to learn more? See two factoextra-related books at https://www.datanovia.com/en/product/practical-guide-to-principal-component-methods-in-r/
+#> Want to learn more? See two factoextra-related books at https://www.datanovia.com/library/principal-component-methods
 
 
 # Silhouette plot for hcut clustering
@@ -223,11 +235,11 @@ if (requireNamespace("factoextra", quietly = TRUE)) {
 }
 
 
-# Silhouette plot for hcut clustering
+# Silhouette plot for a drclust partition (3 clusters, 2 components)
 if (requireNamespace("drclust", quietly = TRUE)) {
   library(drclust)
   iris_mat <- as.matrix(iris[,-5])
-  drclust_out <- dpcakm(iris_mat, 20, 3)
+  drclust_out <- dpcakm(iris_mat, 3, 2)
   d <- silhouette(iris_mat, drclust_out)
   plotSilhouette(d$cl.silhouette)
 }
@@ -236,27 +248,10 @@ if (requireNamespace("drclust", quietly = TRUE)) {
 #> The following object is masked from ‘package:cluster’:
 #> 
 #>     silhouette
-#>    cluster size ave.sil.width
-#> 1        1   20          0.17
-#> 2        2   16          0.36
-#> 3        3   12         -0.03
-#> 4        4   12          0.11
-#> 5        5   11          0.21
-#> 6        6   10          0.14
-#> 7        7    9          0.23
-#> 8        8    8          0.40
-#> 9        9    8          0.16
-#> 10      10    7          0.15
-#> 11      11    6          0.27
-#> 12      12    5          0.18
-#> 13      13    5          0.09
-#> 14      14    5         -0.14
-#> 15      15    4          0.26
-#> 16      16    4          0.19
-#> 17      17    3         -0.35
-#> 18      18    3          0.29
-#> 19      19    1          0.00
-#> 20      20    1          0.00
+#>   cluster size ave.sil.width
+#> 1       1   52          0.39
+#> 2       2   50          0.79
+#> 3       3   48          0.32
 
 # }
 ```

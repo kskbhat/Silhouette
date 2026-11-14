@@ -1,10 +1,12 @@
 # Calculate Silhouette Widths, Summary, and Plot for Clustering Results
 
-Computes the silhouette width for each observation based on clustering
-results, measuring how similar an observation is to its own cluster
-compared to nearest neighbor cluster. The silhouette width ranges from
--1 to 1, where higher values indicate better cluster cohesion and
-separation.
+Computes the simplified silhouette width of each observation from an \\n
+\times K\\ matrix of proximities between observations and clusters (for
+example, distances to cluster centers). The width compares the proximity
+of an observation to its own cluster with its proximity to the closest
+other cluster. Widths lie in \\\[-1, 1\]\\; values near 1 indicate a
+clear assignment and negative values indicate that another cluster is
+closer.
 
 ## Usage
 
@@ -19,7 +21,9 @@ Silhouette(
   sort = FALSE,
   print.summary = FALSE,
   clust_fun = NULL,
-  ...
+  ...,
+  cluster = NULL,
+  clust_args = list()
 )
 
 # S3 method for class 'Silhouette'
@@ -57,9 +61,10 @@ summary(object, print.summary = TRUE, ...)
 
 - method:
 
-  Character string specifying the silhouette calculation method. Options
-  are `"pac"` (Probability of Alternative Cluster) or `"medoid"`.
-  Defaults to `"medoid"`.
+  Character string specifying the normalization of the silhouette width.
+  Options are `"medoid"` (divide by the larger of the two proximities)
+  or `"pac"` (Probability of Alternative Cluster; divide by their sum).
+  See Details. Defaults to `"medoid"`.
 
 - average:
 
@@ -68,8 +73,8 @@ summary(object, print.summary = TRUE, ...)
 
   - `"crisp"` – unweighted (simple) average.
 
-  - `"fuzzy"` – weighted average based on membership probability
-    differences.
+  - `"fuzzy"` – weighted average; the weight of an observation is the
+    gap between its two largest memberships raised to the power `a`.
 
   - `"median"` – median silhouette width across observations.
 
@@ -78,19 +83,24 @@ summary(object, print.summary = TRUE, ...)
 - prob_matrix:
 
   A numeric matrix of cluster membership probabilities, where rows
-  represent observations and columns represent clusters (depending on
-  `prob_type`). If `clust_fun` is provided, `prob_matrix` can be given
-  as the name of the matrix component (e.g., `"u"` for the
+  represent observations and columns represent clusters in the same
+  order as `prox_matrix`. If `clust_fun` is provided, `prob_matrix` can
+  be given as the name of the matrix component (e.g., `"u"` for the
   [`fcm`](https://rdrr.io/pkg/ppclust/man/fcm.html) function). When
-  `NULL` and `average = "fuzzy"`, the function falls back to computing
-  the `"crisp"` silhouette with a warning, since fuzzy silhouette widths
-  require membership probabilities. Defaults to `NULL`.
+  given, and `cluster` is not, each observation is assigned to the
+  cluster with its largest membership, and the weights for fuzzy
+  averaging are computed. When `NULL` and `average = "fuzzy"`, the
+  function falls back to computing the `"crisp"` silhouette with a
+  warning, since fuzzy silhouette widths require membership
+  probabilities. Defaults to `NULL`.
 
 - a:
 
-  Numeric value controlling the fuzzifier or weight scaling in fuzzy
+  Non-negative number, the exponent \\\alpha\\ of the weights in fuzzy
   silhouette averaging. Higher values increase the emphasis on strong
-  membership differences. Must be positive. Defaults to `2`.
+  membership differences; `a = 0` gives every observation the same
+  weight, so the fuzzy average equals the crisp average. Defaults to
+  `2`.
 
 - sort:
 
@@ -99,8 +109,11 @@ summary(object, print.summary = TRUE, ...)
 
 - print.summary:
 
-  Logical; if `TRUE`, prints a summary table of average silhouette
-  widths and sizes for each cluster. Defaults to `TRUE`.
+  Logical; if `TRUE`, reports a summary table of average silhouette
+  widths and sizes for each cluster through
+  [`message`](https://rdrr.io/r/base/message.html). Defaults to `FALSE`
+  for `Silhouette()` and `TRUE` for
+  [`summary()`](https://rdrr.io/r/base/summary.html).
 
 - clust_fun:
 
@@ -117,6 +130,27 @@ summary(object, print.summary = TRUE, ...)
   Additional arguments passed to `clust_fun`, such as `x,centers` for
   [`fcm`](https://rdrr.io/pkg/ppclust/man/fcm.html).
 
+- cluster:
+
+  Optional integer vector of length \\n\\ giving the cluster of each
+  observation as a column number of `prox_matrix` (\\1, \ldots, K\\).
+  Use it to score a partition produced elsewhere, for example by
+  hierarchical clustering or by a clustering algorithm whose labels
+  differ from the nearest representative. If `clust_fun` is provided,
+  `cluster` may be the name of the label component of its output (e.g.,
+  `"cluster"` for [`kmeans`](https://rdrr.io/r/stats/kmeans.html)). Must
+  be named in the call because it follows `...`. Defaults to `NULL`.
+
+- clust_args:
+
+  A list of further arguments for `clust_fun`. Arguments given through
+  `...` are matched first against this function's own arguments, and R
+  matches names partially: `m = 3` meant for the fuzzifier of
+  [`fcm`](https://rdrr.io/pkg/ppclust/man/fcm.html) would be taken as
+  `method`. Pass such arguments here instead, e.g.
+  `clust_args = list(m = 3)`. Defaults to
+  [`list()`](https://rdrr.io/r/base/list.html).
+
 - x:
 
   An object of class `"Silhouette"`, typically the output of the
@@ -126,8 +160,8 @@ summary(object, print.summary = TRUE, ...)
   and
   [`cerSilhouette`](https://kskbhat.github.io/Silhouette/reference/cerSilhouette.md)
   function. Also supports objects classes
-  [`eclust`](https://rdrr.io/pkg/factoextra/man/eclust.html),
-  [`hcut`](https://rdrr.io/pkg/factoextra/man/hcut.html),
+  [`eclust`](https://rpkgs.datanovia.com/factoextra/reference/eclust.html),
+  [`hcut`](https://rpkgs.datanovia.com/factoextra/reference/hcut.html),
   [`pam`](https://rdrr.io/pkg/cluster/man/pam.html),
   [`clara`](https://rdrr.io/pkg/cluster/man/clara.html),
   [`fanny`](https://rdrr.io/pkg/cluster/man/fanny.html),
@@ -160,13 +194,13 @@ summary(object, print.summary = TRUE, ...)
   the horizontal reference line indicating the average silhouette width.
   Accepts standard ggplot2 linetype values, such as:
 
-  - Character: \`"solid"\`, \`"dashed"\`, \`"dotted"\`, \`"dotdash"\`,
-    \`"longdash"\`, \`"twodash"\`.
+  - Character: `"solid"`, `"dashed"`, `"dotted"`, `"dotdash"`,
+    `"longdash"`, `"twodash"`.
 
-  - Numeric: integers from 0 to 6 corresponding to ggplot2 line
+  - Numeric: a single integer from 0 to 6 corresponding to ggplot2 line
     patterns.
 
-  Defaults to \`"dashed"\`.
+  Defaults to `"dashed"`.
 
 - object:
 
@@ -180,10 +214,9 @@ summary(object, print.summary = TRUE, ...)
 
 ## Value
 
-A data frame of class `"Silhouette"` containing cluster assignments,
-nearest neighbor clusters, silhouette widths for each observation, and
-weights (for fuzzy clustering). The object includes the following
-attributes:
+A data frame of class `"Silhouette"` with one row per observation and
+columns `cluster`, `neighbor`, `weight` (only when `prob_matrix` is
+supplied) and `sil_width`. The object includes the following attributes:
 
 - proximity_type:
 
@@ -197,7 +230,7 @@ attributes:
 
   Character — the averaging method: `"crisp"`, `"fuzzy"`, or `"median"`.
 
-Further, `summary` returns a list containing:
+Further, `summary` returns (invisibly) a list containing:
 
 - `clus.avg.widths`: A named numeric vector of average silhouette widths
   per cluster.
@@ -210,7 +243,15 @@ Further, `summary` returns a list containing:
 
 ## Details
 
-The \`Silhouette\` function implements the Simplified Silhouette method
+`Silhouette()` is not the same as
+[`silhouette`](https://rdrr.io/pkg/cluster/man/silhouette.html) from the
+cluster package: that function needs all \\n(n-1)/2\\ pairwise
+dissimilarities, whereas `Silhouette()` needs only the \\n \times K\\
+proximities between observations and cluster representatives (centroids,
+medoids or prototypes). The two give different, although usually
+similar, values.
+
+The `Silhouette` function implements the Simplified Silhouette method
 introduced by Van der Laan, Pollard, & Bryan (2003), which adapts and
 generalizes the classic silhouette method of Rousseeuw (1987).
 
@@ -222,49 +263,110 @@ measures. Here, \\i = 1, \ldots, n\\ indexes observations, and \\k = 1,
 dissimilarity (e.g., distance) between observation \\i\\ and cluster
 \\k\\, while \\\delta'\_{ik}\\ represents similarity values.
 
-The silhouette width \\S(x_i)\\ for observation \\i\\ depends on the
-proximity type:
+Let \\c_i\\ be the cluster of observation \\i\\ (see *Cluster labels*
+below) and \\\nu_i\\ its neighboring cluster, the closest cluster other
+than \\c_i\\. The silhouette width \\S(x_i)\\ for observation \\i\\
+depends on the proximity type:
 
-For \*\*dissimilarity\*\* measures: \$\$ S(x_i) = \frac{ \min\_{k' \neq
-k} \delta\_{ik'} - \delta\_{ik} }{ N(x_i) } \$\$ For \*\*similarity\*\*
-measures: \$\$ S(x_i) = \frac{ \delta'\_{ik} - \max\_{k' \neq k}
-\delta'\_{ik'} }{ N(x_i) } \$\$ where \\N(x_i)\\ is a normalizing factor
-defined by the method.
+For **dissimilarity** measures: \$\$ S(x_i) = \frac{ \delta\_{i\nu_i} -
+\delta\_{ic_i} }{ N(x_i) } \$\$ For **similarity** measures: \$\$ S(x_i)
+= \frac{ \delta'\_{ic_i} - \delta'\_{i\nu_i} }{ N(x_i) } \$\$ where
+\\N(x_i)\\ is a normalizing factor defined by the method.
 
-\*\*Choice of method:\*\* The normalizer \\N(x_i)\\ is selected
-according to the \`method\` argument. The method names reference their
-origins but may be used with any proximity matrix, not exclusively
-certain clustering algorithms: - For \`medoid\` (Van der Laan et al.,
-2003): - Dissimilarity: \\\max(\delta\_{ik}, \min\_{k' \neq k}
-\delta\_{ik'})\\ - Similarity: \\\max(\delta'\_{ik}, \max\_{k' \neq k}
-\delta'\_{ik'})\\ - For \`pac\` (Raymaekers & Rousseeuw, 2022): -
-Dissimilarity: \\\delta\_{ik} + \min\_{k' \neq k} \delta\_{ik'}\\ -
-Similarity: \\\delta'\_{ik} + \max\_{k' \neq k} \delta'\_{ik'}\\
+**Choice of method:** The normalizer \\N(x_i)\\ is selected according to
+the `method` argument:
 
-\*\*Note:\*\* The \`"medoid"\` and \`"pac"\` options reflect the
-normalization formula—not a requirement to use the PAM algorithm or
-posterior/ensemble methods—and are general scoring approaches. These
-methods can be applied to any suitable proximity matrix, including
-proximity, similarity, or dissimilarity matrices derived from
-\*\*classification algorithms\*\*. This flexibility means silhouette
-indices may be computed to assess group separation when clusters or
-groups are formed from classification-derived proximities, not only from
-unsupervised clustering.
+- For `medoid` (Van der Laan et al., 2003):
 
-If \`average = "crisp"\`, the \*\*crisp silhouette index\*\* is
-calculated as (\\CS\\) is: \$\$ CS = \frac{1}{n} \sum\_{i=1}^{n} S(x_i)
-\$\$ summarizing overall clustering quality.
+  - Dissimilarity: \\\max(\delta\_{ic_i}, \delta\_{i\nu_i})\\
 
-If \`average = "fuzzy"\` and \`prob_matrix\` is provided, denoted as
+  - Similarity: \\\max(\delta'\_{ic_i}, \delta'\_{i\nu_i})\\
+
+- For `pac` (Raymaekers & Rousseeuw, 2022):
+
+  - Dissimilarity: \\\delta\_{ic_i} + \delta\_{i\nu_i}\\
+
+  - Similarity: \\\delta'\_{ic_i} + \delta'\_{i\nu_i}\\
+
+The names describe the normalization, not the algorithm. The name
+`"medoid"` is kept for compatibility with earlier versions and with Van
+der Laan et al. (2003), who introduced this width for partitioning
+around medoids; it divides by the larger of the two proximities and
+applies equally to centroids (as in k-means), prototypes, or any other
+cluster representative. Likewise, `"pac"` does not require a classifier.
+For the same labels and non-negative proximities, the PAC width equals
+\\s/(2 - \|s\|)\\, where \\s\\ is the medoid width, so the two rank
+observations identically and differ only in scale. These methods can
+also be applied to proximities derived from **classification
+algorithms**, to assess the separation of groups formed by a classifier.
+
+Two equal proximities give a width of 0 (including two zero distances).
+An infinite proximity to the neighboring cluster gives a width of 1 and
+an infinite proximity to the assigned cluster gives -1.
+
+## Cluster labels
+
+The cluster \\c_i\\ of each observation is taken, in order of
+precedence, from
+
+1.  `cluster`, when supplied;
+
+2.  the largest membership in `prob_matrix`, when supplied;
+
+3.  the closest cluster in `prox_matrix`.
+
+The neighboring cluster \\\nu_i\\ is always the closest cluster other
+than \\c_i\\ in the proximity matrix. When the labels come from the
+proximity matrix itself (case 3), every width is non-negative, so a
+poorly assigned observation shows up only as a width near 0. When the
+labels come from elsewhere (cases 1 and 2), an observation that is
+closer to another cluster than to its own receives a negative width. To
+assess the partition produced by a clustering algorithm, supply that
+partition through `cluster` or `prob_matrix`.
+
+## Averages
+
+If `average = "crisp"`, the **crisp silhouette index** (\\CS\\) is the
+mean width: \$\$ CS = \frac{1}{n} \sum\_{i=1}^{n} S(x_i) \$\$
+summarizing overall clustering quality.
+
+If `average = "fuzzy"` and `prob_matrix` is provided, denoted as
 \\\Gamma = \[\gamma\_{ik}\]\_{n \times K}\\, with \\\gamma\_{ik}\\
 representing the probability of observation \\i\\ belonging to cluster
-\\k\\, the \*\*fuzzy silhouette index\*\* (\\FS\\) is calculated as:
-\$\$ FS = \frac{\sum\_{i=1}^{n} w_i S(x_i) }{\sum\_{i=1}^{n} w_i} \$\$
-where \\w_i = \sum\_{i=1}^{n} \left( \gamma\_{ik} - \max\_{k' \neq k}
-\gamma\_{ik'} \right)^{\alpha}\\ is \`weight\` and \\\alpha\\ (the \`a\`
-argument) controls the emphasis on confident assignments.
+\\k\\, the **fuzzy silhouette index** (\\FS\\) of Campello and Hruschka
+(2006) is: \$\$ FS = \frac{\sum\_{i=1}^{n} w_i S(x_i) }{\sum\_{i=1}^{n}
+w_i}, \qquad w_i = ( \gamma\_{i(1)} - \gamma\_{i(2)} )^{\alpha}, \$\$
+where \\\gamma\_{i(1)}\\ and \\\gamma\_{i(2)}\\ are the largest and
+second largest memberships of observation \\i\\, and \\\alpha\\ (the `a`
+argument) controls the emphasis on confident assignments (\\\alpha \ge
+0\\; \\\alpha = 0\\ gives the crisp average). The weight \\w_i\\ is
+stored in the `weight` column and does not depend on the cluster labels;
+it equals Equation (8) of Bhat Kapu and Kiruthika (2024) when each
+observation is assigned to its largest membership. If all weights are
+zero, the fuzzy average is undefined (`NaN`) and a warning is given.
 
-If \`average = "median"\` then median Silhouette is Calculated
+If `average = "median"`, the median width is reported.
+
+Missing widths are removed before averaging.
+
+## Input checks and ties
+
+`prox_matrix` must be a numeric matrix with at least two columns and no
+missing values; `+Inf` is allowed (for example, \\-\log 0\\) but `-Inf`
+is not. Negative proximities are rejected, because the widths would then
+no longer lie in \\\[-1, 1\]\\; transform them first (for example,
+\\(1 + r)/2\\ for correlations). `prob_matrix` must be non-negative with
+rows summing to 1 within a tolerance of `sqrt(.Machine$double.eps)`
+(about \\1.5 \times 10^{-8}\\); rows are not renormalized.
+
+The closest cluster, the neighboring cluster and the largest membership
+are found with
+[`max.col`](https://rdrr.io/r/base/maxCol.html)`(..., ties.method = "first")`.
+Exactly tied proximities or memberships are therefore resolved in favor
+of the column that comes first, so with exact ties the labels (though
+not the widths from the proximity matrix itself, which are then 0)
+depend on the order of the columns. Supply `cluster` to control the
+assignment of tied observations.
 
 ## References
 
@@ -299,44 +401,48 @@ Statistics: Case Studies, Data Analysis and Applications, 10(3-4),
 [`softSilhouette`](https://kskbhat.github.io/Silhouette/reference/softSilhouette.md),
 [`dbSilhouette`](https://kskbhat.github.io/Silhouette/reference/dbSilhouette.md),
 [`cerSilhouette`](https://kskbhat.github.io/Silhouette/reference/cerSilhouette.md),
+[`calSilhouette`](https://kskbhat.github.io/Silhouette/reference/calSilhouette.md),
 [`getSilhouette`](https://kskbhat.github.io/Silhouette/reference/getSilhouette.md),
 [`is.Silhouette`](https://kskbhat.github.io/Silhouette/reference/is.Silhouette.md),
-[`plotSilhouette`](https://kskbhat.github.io/Silhouette/reference/plotSilhouette.md)
+[`plotSilhouette`](https://kskbhat.github.io/Silhouette/reference/plotSilhouette.md),
+[`silhouette`](https://rdrr.io/pkg/cluster/man/silhouette.html)
 
 ## Examples
 
 ``` r
-# Standard silhouette with k-means on iris dataset
+# Simplified silhouette of a k-means partition of the iris data
 data(iris)
-# Crisp Silhouette with k-means
 out <- kmeans(iris[, -5], 3)
 if (requireNamespace("proxy", quietly = TRUE)) {
-  library(proxy)
-  dist <- proxy::dist(iris[, -5], out$centers)
-  silh_out <- Silhouette(dist,print.summary = TRUE)
+  d <- proxy::dist(iris[, -5], out$centers)
+  silh_out <- Silhouette(d, print.summary = TRUE)
   plot(silh_out)
+
+  # Score a partition produced elsewhere: average-linkage clustering,
+  # with the distances to the centroids of its groups
+  hc <- cutree(hclust(dist(iris[, -5]), "average"), 3)
+  centers <- apply(iris[, -5], 2, function(v) tapply(v, hc, mean))
+  silh_hc <- Silhouette(proxy::dist(iris[, -5], centers), cluster = hc)
+  summary(silh_hc)
 } else {
-  message("Install 'proxy': install.packages('ppclust')")
+  message("Install 'proxy': install.packages('proxy')")
 }
-#> 
-#> Attaching package: ‘proxy’
-#> The following objects are masked from ‘package:stats’:
-#> 
-#>     as.dist, dist
-#> The following object is masked from ‘package:base’:
-#> 
-#>     as.matrix
 #> -----------------------------------------------------
 #> Average crisp dissimilarity medoid silhouette: 0.6664
 #> -----------------------------------------------------
 #> 
-#>   cluster size avg.sil.width
-#> 1       1   50        0.8592
-#> 2       2   62        0.5546
-#> 3       3   38        0.5950
+#>  cluster size avg.sil.width
+#>        1   50        0.8592
+#>        2   62        0.5546
+#>        3   38        0.5950
+#> -----------------------------------------------------
+#> Average crisp dissimilarity medoid silhouette: 0.6662
+#> -----------------------------------------------------
 #> 
-#> Available attributes: names, class, row.names, proximity_type, method, average
-
+#>  cluster size avg.sil.width
+#>        1   50        0.8601
+#>        2   64        0.5484
+#>        3   36        0.6064
 # \donttest{
 # Scree plot for optimal clusters (2 to 7)
 if (requireNamespace("ppclust", quietly = TRUE)) {

@@ -12,12 +12,12 @@ Alternative Cluster normalization methods by [Raymaekers & Rousseeuw
 (2022)](https://doi.org/10.1080/10618600.2022.2050249), fuzzy clustering
 and silhouette diagnostics using membership probabilities by [Campello &
 Hruschka (2006)](https://doi.org/10.1016/j.fss.2006.07.006), [Menardi
-(20011)](https://doi.org/10.1007/s11222-010-9169-0) and [Bhat &
-Kiruthika (2024)](https://doi.org/10.1080/23737484.2024.2408534), and
-multi-way clustering extensions such as block and tensor clustering by
-[Schepers et al. (2008)](https://doi.org/10.1007/s00357-008-9005-9) and
-[Bhat & Kiruthika (2025)](https://doi.org/10.21203/rs.3.rs-6973596/v1).
-Provides tools for computation and visualization based on [Rousseeuw
+(2011)](https://doi.org/10.1007/s11222-010-9169-0) and [Bhat & Kiruthika
+(2024)](https://doi.org/10.1080/23737484.2024.2408534), and multi-way
+clustering extensions such as block and tensor clustering by [Schepers
+et al. (2008)](https://doi.org/10.1007/s00357-008-9005-9) and [Bhat &
+Kiruthika (2025)](https://doi.org/10.21203/rs.3.rs-6973596/v1). Provides
+tools for computation and visualization based on [Rousseeuw
 (1987)](https://doi.org/10.1016/0377-0427(87)90125-7) to support robust
 and reproducible cluster diagnostics across standard, soft, and
 multi-way clustering settings.
@@ -45,7 +45,7 @@ directly.
   [`drclust`](https://doi.org/10.32614/CRAN.package.drclust) R packages.
 - **Comparability**: Summaries and plots make it easy to compare
   clustering algorithms or tune the number of clusters.
-- **Interoperable**: All `Silhouette` class functions works with any
+- **Interoperable**: All `Silhouette` class functions work with any
   clustering output that provides a proximity or membership probability
   matrix. Users can also supply a proximity matrix and a clustering
   function—*including S3 or S4 methods*—to let `Silhouette` class
@@ -79,20 +79,39 @@ install.packages("Silhouette")
 
 ## Usage
 
-Usage of the main functions is demonstrated in the package examples and
-documentation.
-
-For an intro, see the vignette `Silhouette`, which is available as
-
 ``` r
 
-vignette("Silhouette")
+library(Silhouette)
+km <- kmeans(iris[, 1:4], centers = 3, nstart = 20)
+sil <- Silhouette(proxy::dist(iris[, 1:4], km$centers))  # n x K distances
+summary(sil)
+plot(sil)
 ```
 
-You can access the vignette from the [Get
-started](https://kskbhat.github.io/Silhouette/articles/Silhouette.html)
-tab in the top navigation bar of the package’s
-[website](https://kskbhat.github.io/Silhouette/).
+The package has four vignettes:
+
+- [Getting
+  started](https://kskbhat.github.io/Silhouette/articles/Silhouette.html):
+  [`vignette("Silhouette")`](https://kskbhat.github.io/Silhouette/articles/Silhouette.md)
+- [Silhouettes for soft and model-based
+  clustering](https://kskbhat.github.io/Silhouette/articles/soft-clustering.html):
+  [`vignette("soft-clustering", package = "Silhouette")`](https://kskbhat.github.io/Silhouette/articles/soft-clustering.md)
+- [Interpreting silhouette
+  widths](https://kskbhat.github.io/Silhouette/articles/interpreting-widths.html):
+  [`vignette("interpreting-widths", package = "Silhouette")`](https://kskbhat.github.io/Silhouette/articles/interpreting-widths.md)
+- [Extended silhouette for block and multi-way
+  clustering](https://kskbhat.github.io/Silhouette/articles/multiway.html):
+  [`vignette("multiway", package = "Silhouette")`](https://kskbhat.github.io/Silhouette/articles/multiway.md)
+
+The [package website](https://kskbhat.github.io/Silhouette/) has three
+further articles: [silhouette
+plots](https://kskbhat.github.io/Silhouette/articles/plotting.html) for
+results from this and other packages, a [case
+study](https://kskbhat.github.io/Silhouette/articles/case-study-thyroid.html)
+comparing soft clusterings of thyroid patients, and a [comparison with
+other
+packages](https://kskbhat.github.io/Silhouette/articles/benchmarks.html),
+including timings.
 
 ------------------------------------------------------------------------
 
